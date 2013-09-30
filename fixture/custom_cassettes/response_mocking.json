@@ -1,0 +1,14 @@
+[
+  {
+    "request": {
+      "url": "http://example.com"
+    },
+    "response": {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "text/html"
+      },
+      "body": "<h1>Custom Response</h1>"
+    }
+  }
+]
