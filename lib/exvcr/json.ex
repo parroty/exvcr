@@ -1,4 +1,7 @@
 defmodule ExVCR.JSON do
+  @moduledoc """
+  Provides a feature to store/load cassettes in json format.
+  """
   def save(file_name, recorder) do
     json = ExVCR.Recorder.get_responses(recorder)
             |> Enum.reverse
@@ -31,6 +34,9 @@ defmodule ExVCR.JSON do
     end)
   end
 
+  @doc """
+  Parse request and response parameters into json file.
+  """
   def parse(request, response) do
     [
       request:  ExVCR.Mock.IBrowse.parse_request(request),

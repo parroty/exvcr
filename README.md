@@ -17,7 +17,7 @@ defmodule ExVCR.MockTest do
   import ExVCR.Mock
 
   setup_all do
-    ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes", "fixture/custom_cassettes")
+    ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes")
     :ok
   end
 

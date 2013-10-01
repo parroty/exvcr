@@ -1,10 +1,14 @@
 defrecord ExVCR.Record, fixture: nil, options: nil, responses: nil
 
 defmodule ExVCR.Recorder do
+  @moduledoc """
+  Provides feature to record and replay HTTP interactions.
+  """
   alias ExVCR.Actor.Responses
   alias ExVCR.Actor.Fixture
   alias ExVCR.Actor.Options
 
+  @doc "perform initialization"
   def start(fixture, options) do
    {:ok, act_responses} = Responses.start([])
    {:ok, act_fixture}   = Fixture.start(fixture)
@@ -13,6 +17,7 @@ defmodule ExVCR.Recorder do
    ExVCR.Record.new(fixture: act_fixture, options: act_options, responses: act_responses)
   end
 
+  @doc "Save recorded results into json file"
   def save(recorder) do
     file_name = get_file_name(recorder)
     if File.exists?(file_name) == false do
@@ -20,6 +25,10 @@ defmodule ExVCR.Recorder do
     end
   end
 
+  @doc """
+  Provides entry point to be called from :meck library.
+  http request arguments are specified as args parameter.
+  """
   def respond(recorder, args) do
     file_name = get_file_name(recorder)
     case File.exists?(file_name) do

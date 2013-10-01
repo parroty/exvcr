@@ -1,5 +1,5 @@
 defmodule ExVCR.Mock do
-  @doc """
+  @moduledoc """
   Provides macro to record HTTP request/response.
   It only supports :ibrowse HTTP library at the moment.
   """
