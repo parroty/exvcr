@@ -33,7 +33,7 @@ defmodule ExVCR.Recorder do
   http request arguments are specified as args parameter.
   """
   def respond(recorder, args) do
-    if Enum.count(get_responses(recorder)) > 0 do
+    if File.exists?(get_file_path(recorder)) do
       get_response_from_cache(recorder)
     else
       get_response_from_server(args, recorder)
