@@ -10,37 +10,36 @@ defmodule ExVCR.JSON do
     File.write!(file_name, JSEX.prettify!(json))
   end
 
-  def get_file_name(fixture, options) do
-    dir = case options[:custom] do
+  def get_file_path(fixture, options) do
+    directory = case options[:custom] do
       true  -> ExVCR.Setting.get(:custom_library_dir)
       _     -> ExVCR.Setting.get(:cassette_library_dir)
     end
 
-    "#{dir}/#{fixture}.json"
+    "#{directory}/#{fixture}.json"
   end
 
-  def load(file_name) do
-    json = File.read!(file_name) |> JSEX.decode!
+  def load(fixture, options) do
+    file_name = get_file_path(fixture, options)
+    case File.exists?(file_name) do
+      true -> File.read!(file_name) |> JSEX.decode! |> Enum.map(&json_mapper/1)
+      _    -> []
+    end
+  end
 
-    Enum.map(json, fn(x) ->
-      [{"request", _request}, {"response", response}] = x
+  defp json_mapper([{"request", _request}, {"response", response}]) do
+    hash = HashDict.new(response)
 
-      h = HashDict.new(response)
-      {
-        HashDict.fetch!(h, "status_code") |> integer_to_list,
-        HashDict.fetch!(h, "headers"),
-        HashDict.fetch!(h, "body")
-      }
-    end)
+    { HashDict.fetch!(hash, "status_code") |> integer_to_list,
+      HashDict.fetch!(hash, "headers"),
+      HashDict.fetch!(hash, "body") }
   end
 
   @doc """
   Parse request and response parameters into json file.
   """
   def parse(request, response) do
-    [
-      request:  ExVCR.Mock.IBrowse.parse_request(request),
-      response: ExVCR.Mock.IBrowse.parse_response(response)
-    ]
+    [ request:  ExVCR.Mock.IBrowse.parse_request(request),
+      response: ExVCR.Mock.IBrowse.parse_response(response) ]
   end
 end
