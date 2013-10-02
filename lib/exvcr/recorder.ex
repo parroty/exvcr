@@ -32,20 +32,20 @@ defmodule ExVCR.Recorder do
   Provides entry point to be called from :meck library.
   http request arguments are specified as args parameter.
   """
-  def respond(recorder, args) do
+  def respond(recorder, request) do
     if File.exists?(get_file_path(recorder)) do
       get_response_from_cache(recorder)
     else
-      get_response_from_server(args, recorder)
+      get_response_from_server(request, recorder)
     end
   end
 
-  defp get_response_from_cache(recorder) do
+  def get_response_from_cache(recorder) do
     {status_code, headers, body} = pop_response(recorder)
     {:ok, status_code, headers, body}
   end
 
-  defp get_response_from_server(request, recorder) do
+  def get_response_from_server(request, recorder) do
     response = :meck.passthrough(request)
     append_response(recorder, ExVCR.JSON.parse(request, response))
     response

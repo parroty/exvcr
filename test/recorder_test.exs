@@ -1,12 +1,9 @@
 defmodule ExVCR.RecorderTest do
   use ExUnit.Case
+  import ExVCR.Mock
   alias ExVCR.Recorder
-  alias ExVCR.Record
 
-  setup_all do
-    ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes", "fixture/custom_cassettes")
-    :ok
-  end
+  @tmp_dir "tmp_vcr"
 
   test "initializes recorder" do
     record = Recorder.start("fixture/tmp", [test: true])
@@ -15,4 +12,28 @@ defmodule ExVCR.RecorderTest do
     assert ExVCR.Actor.Responses.get(record.responses) == []
   end
 
+  test "getting response from server by removing json in advance" do
+    File.rm_rf!(@tmp_dir)
+    ExVCR.Config.cassette_library_dir(@tmp_dir)
+
+    use_cassette "server" do
+      assert HTTPotion.get("http://httpbin.org", []).body =~ %r/httpbin/
+    end
+
+    File.rm_rf!(@tmp_dir)
+  end
+
+  test "loading from cache by recording twice" do
+    ExVCR.Config.cassette_library_dir(@tmp_dir)
+
+    use_cassette "server" do
+      assert HTTPotion.get("http://httpbin.org", []).body =~ %r/httpbin/
+    end
+
+    use_cassette "server" do
+      assert HTTPotion.get("http://httpbin.org", []).body =~ %r/httpbin/
+    end
+
+    File.rm_rf!(@tmp_dir)
+  end
 end
