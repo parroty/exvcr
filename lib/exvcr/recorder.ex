@@ -1,4 +1,6 @@
 defrecord ExVCR.Record, fixture: nil, options: nil, responses: nil
+defrecord ExVCR.Request, url: nil, headers: [], method: nil, body: nil, options: []
+defrecord ExVCR.Response, status_code: nil, headers: [], body: nil
 
 defmodule ExVCR.Recorder do
   @moduledoc """
@@ -33,16 +35,27 @@ defmodule ExVCR.Recorder do
   http request arguments are specified as args parameter.
   """
   def respond(recorder, request) do
-    if File.exists?(get_file_path(recorder)) do
-      get_response_from_cache(recorder)
-    else
-      get_response_from_server(request, recorder)
+    get_response_from_cache(request, recorder)
+      || get_response_from_server(request, recorder)
+  end
+
+  def get_response_from_cache(request, recorder) do
+    case find_response(Enum.first(request), recorder) do
+      nil -> nil
+      {status_code, headers, body} -> {:ok, status_code, headers, body}
     end
   end
 
-  def get_response_from_cache(recorder) do
-    {status_code, headers, body} = pop_response(recorder)
-    {:ok, status_code, headers, body}
+  defp find_response(url, recorder) do
+    do_find_response(get_responses(recorder), url)
+  end
+  defp do_find_response([], _target_url), do: nil
+  defp do_find_response([head|tail], target_url) do
+    if head[:request].url == iolist_to_binary(target_url) do
+      {head[:response].status_code, head[:response].headers, head[:response].body}
+    else
+      do_find_response(tail, target_url)
+    end
   end
 
   def get_response_from_server(request, recorder) do

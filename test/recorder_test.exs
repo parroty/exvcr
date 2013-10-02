@@ -3,7 +3,12 @@ defmodule ExVCR.RecorderTest do
   import ExVCR.Mock
   alias ExVCR.Recorder
 
-  @tmp_dir "tmp_vcr"
+  @tmp_dir "tmp/tmp_vcr"
+
+  setup_all do
+    :ibrowse.start
+    :ok
+  end
 
   test "initializes recorder" do
     record = Recorder.start("fixture/tmp", [test: true])

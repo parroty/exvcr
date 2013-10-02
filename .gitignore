@@ -3,3 +3,4 @@
 erl_crash.dump
 *.ez
 /fixture/vcr_cassettes
+/tmp

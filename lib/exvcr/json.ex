@@ -22,17 +22,23 @@ defmodule ExVCR.JSON do
   def load(fixture, options) do
     file_name = get_file_path(fixture, options)
     case File.exists?(file_name) do
-      true -> File.read!(file_name) |> JSEX.decode! |> Enum.map(&json_mapper/1)
+      true -> File.read!(file_name) |> JSEX.decode! |> Enum.map(&convert/1)
       _    -> []
     end
   end
 
-  defp json_mapper([{"request", _request}, {"response", response}]) do
-    hash = HashDict.new(response)
+  defp convert([{"request", request}, {"response", response}]) do
+    [ request:  parse_request_json(request),
+      response: parse_response_json(response) ]
+  end
 
-    { HashDict.fetch!(hash, "status_code") |> integer_to_list,
-      HashDict.fetch!(hash, "headers"),
-      HashDict.fetch!(hash, "body") }
+  defp parse_request_json(request) do
+    Enum.map(request, fn({x,y}) -> {binary_to_atom(x),y} end) |> ExVCR.Request.new
+  end
+
+  defp parse_response_json(response) do
+    response = Enum.map(response, fn({x,y}) -> {binary_to_atom(x),y} end) |> ExVCR.Response.new
+    response.update(status_code: integer_to_list(response.status_code))
   end
 
   @doc """

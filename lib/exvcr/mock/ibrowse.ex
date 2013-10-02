@@ -16,21 +16,21 @@ defmodule ExVCR.Mock.IBrowse do
   def parse_request([url, headers, method, body]), do: parse_request([url, headers, method, body, []])
   def parse_request([url, headers, method, body, options]), do: parse_request([url, headers, method, body, options, 0])
   def parse_request([url, headers, method, body, options, _timeout]) do
-    [
+    ExVCR.Request.new(
       url: iolist_to_binary(url),
       headers: parse_headers(headers),
       method: atom_to_binary(method),
       body: iolist_to_binary(body),
       options: options
-    ]
+    )
   end
 
   def parse_response({:ok, status_code, headers, body}) do
-    [
+    ExVCR.Response.new(
       status_code: list_to_integer(status_code),
       headers: parse_headers(headers),
       body: iolist_to_binary(body)
-    ]
+    )
   end
 
   def parse_headers(headers) do
