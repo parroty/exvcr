@@ -1,4 +1,5 @@
-# ExVCR [![Build Status](https://secure.travis-ci.org/parroty/exvcr.png?branch=master "Build Status")](http://travis-ci.org/parroty/exvcr)
+# ExVCR [![Build Status](https://secure.travis-ci.org/parroty/exvcr.png?branch=master "Build Status")](http://travis-ci.org/parroty/exvcr) [![Coverage Status](https://coveralls.io/repos/parroty/exvcr/badge.png?branch=master)](https://coveralls.io/r/parroty/exvcr?branch=master)
+
 
 Record and replay HTTP interactions library for elixir.
 It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide similar functionalities.
