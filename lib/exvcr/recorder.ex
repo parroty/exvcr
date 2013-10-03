@@ -36,15 +36,17 @@ defmodule ExVCR.Recorder do
   http request arguments are specified as args parameter.
   """
   def respond(recorder, request) do
-    get_response_from_cache(request, recorder) ||
-      get_response_from_server(request, recorder)
+    case get_response_from_cache(request, recorder) do
+      nil      -> get_response_from_server(request, recorder)
+      response -> response
+    end
   end
 
   @doc "get response from recorded json"
   def get_response_from_cache(request, recorder) do
-    case Handler.find_response(Enum.first(request), recorder) do
+    case Handler.find_response(request, recorder) do
       nil -> nil
-      {status_code, headers, body} -> {:ok, status_code, headers, body}
+      response -> {:ok, response.status_code, response.headers, response.body}
     end
   end
 
@@ -61,26 +63,4 @@ defmodule ExVCR.Recorder do
       Options.get(recorder.options)
     )
   end
-end
-
-defmodule ExVCR.Handler do
-  alias ExVCR.Actor.Responses
-
-  def find_response(url, recorder) do
-    do_find_response(get(recorder), url)
-  end
-
-  defp do_find_response([], _target_url), do: nil
-  defp do_find_response([head|tail], target_url) do
-    if head[:request].url == iolist_to_binary(target_url) do
-      { head[:response].status_code, head[:response].headers, head[:response].body }
-    else
-      do_find_response(tail, target_url)
-    end
-  end
-
-  def get(recorder),            do: Responses.get(recorder.responses)
-  def set(responses, recorder), do: Responses.set(recorder.responses, responses)
-  def append(recorder, x),      do: Responses.append(recorder.responses, x)
-  def pop(recorder),            do: Responses.pop(recorder.responses)
 end
