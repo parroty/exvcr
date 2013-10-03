@@ -12,10 +12,19 @@ defmodule ExVCR.Mock.IBrowse do
     :meck.expect(:ibrowse, :send_req, callback)
   end
 
-  def parse_request([url, headers, method]), do: parse_request([url, headers, method, [], []])
-  def parse_request([url, headers, method, body]), do: parse_request([url, headers, method, body, []])
-  def parse_request([url, headers, method, body, options]), do: parse_request([url, headers, method, body, options, 0])
-  def parse_request([url, headers, method, body, options, _timeout]) do
+  def string_to_request(string) do
+    Enum.map(string, fn({x,y}) -> {binary_to_atom(x),y} end) |> ExVCR.Request.new
+  end
+
+  def string_to_response(string) do
+    response = Enum.map(string, fn({x, y}) -> {binary_to_atom(x), y} end) |> ExVCR.Response.new
+    response.update(status_code: integer_to_list(response.status_code))
+  end
+
+  def request_to_string([url, headers, method]), do: request_to_string([url, headers, method, [], []])
+  def request_to_string([url, headers, method, body]), do: request_to_string([url, headers, method, body, []])
+  def request_to_string([url, headers, method, body, options]), do: request_to_string([url, headers, method, body, options, 0])
+  def request_to_string([url, headers, method, body, options, _timeout]) do
     ExVCR.Request.new(
       url: iolist_to_binary(url),
       headers: parse_headers(headers),
@@ -25,7 +34,7 @@ defmodule ExVCR.Mock.IBrowse do
     )
   end
 
-  def parse_response({:ok, status_code, headers, body}) do
+  def response_to_string({:ok, status_code, headers, body}) do
     ExVCR.Response.new(
       status_code: list_to_integer(status_code),
       headers: parse_headers(headers),
