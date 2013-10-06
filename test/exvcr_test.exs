@@ -73,6 +73,13 @@ defmodule ExVCR.MockTest do
     end
   end
 
+  test "custom response with regexp url" do
+    use_cassette "response_mocking_regex", custom: true do
+      HTTPotion.get("http://example.com/something/abc", []).body =~ %r/Custom Response/
+    end
+  end
+
+
   defp assert_response(response, function // nil) do
     assert response.success?(:extra)
     assert response.headers[:Connection] == "keep-alive"

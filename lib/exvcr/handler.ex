@@ -24,7 +24,8 @@ defmodule ExVCR.Handler do
 
   defp do_find_response([], _target_url), do: nil
   defp do_find_response([head|tail], target_url) do
-    case head[:request].url == iolist_to_binary(target_url) do
+    pattern = Regex.compile!("^#{head[:request].url}$")
+    case Regex.match?(pattern, target_url) do
       true  -> head[:response]
       false -> do_find_response(tail, target_url)
     end
