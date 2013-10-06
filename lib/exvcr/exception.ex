@@ -1,1 +1,2 @@
-defexception ExVCRError, message: "error"
+defexception ExVCR.InvalidRequestError, message: "error"
+defexception ExVCR.FileNotFoundError, message: "error"

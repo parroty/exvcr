@@ -16,7 +16,7 @@ defmodule ExVCR.Handler do
   defp verify_response(response, recorder, target_url) do
     options = Options.get(recorder.options)
     if response == nil and options[:custom] == true do
-      raise ExVCRError.new(message: "response for \"#{target_url}\" was not found in the custom cassette")
+      raise ExVCR.InvalidRequestError.new(message: "response for \"#{target_url}\" was not found in the custom cassette")
     else
       response
     end

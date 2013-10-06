@@ -17,9 +17,12 @@ defmodule ExVCR.JSON do
 
   def load(fixture, options) do
     file_name = get_file_path(fixture, options)
+    custom_option = options[:custom]
     case File.exists?(file_name) do
       true -> File.read!(file_name) |> JSEX.decode! |> Enum.map(&from_string/1)
-      _    -> []
+      false when custom_option ->
+        raise ExVCR.FileNotFoundError.new(message: "cassette file \"#{file_name}\" not found")
+      _ -> []
     end
   end
 

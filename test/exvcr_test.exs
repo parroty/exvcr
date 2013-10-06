@@ -59,17 +59,9 @@ defmodule ExVCR.MockTest do
     end
   end
 
-  test "custom response with valid response file" do
+  test "custom with valid response" do
     use_cassette "response_mocking", custom: true do
       assert HTTPotion.get("http://example.com", []).body =~ %r/Custom Response/
-    end
-  end
-
-  test "custom response without valid response file" do
-    assert_raise ExVCRError, fn ->
-      use_cassette "response_mocking", custom: true do
-        HTTPotion.get("http://example.com/invalid", [])
-      end
     end
   end
 
@@ -79,6 +71,22 @@ defmodule ExVCR.MockTest do
     end
   end
 
+  test "custom without valid response throws error" do
+    assert_raise ExVCR.InvalidRequestError, fn ->
+      use_cassette "response_mocking", custom: true do
+        HTTPotion.get("http://example.com/invalid", [])
+      end
+    end
+  end
+
+  test "custom without valid response file throws error" do
+    assert_raise ExVCR.FileNotFoundError, fn ->
+      use_cassette "invalid_file_response", custom: true do
+        HTTPotion.get("http://example.com", [])
+      end
+    end
+    :meck.unload(:ibrowse)  # temporary fix
+  end
 
   defp assert_response(response, function // nil) do
     assert response.success?(:extra)
