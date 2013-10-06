@@ -10,7 +10,9 @@ It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide 
 - HTTP interactions are recorded as JSON file.
     - The JSON file can be recorded automatically (vcr_cassettes) or manually updated (custom_cassettes)
 
+
 ### Usage
+#### Code
 
 ```Elixir
 defmodule ExVCR.MockTest do
@@ -37,4 +39,38 @@ defmodule ExVCR.MockTest do
     end
   end
 end
+```
+
+#### Custom Cassettes
+Custom cassette can be defined in json format, by adding 2nd parameter of ExVCR.Config.cassette_library_dir method.
+
+```Elixir
+defmodule ExVCR.MockTest do
+  use ExUnit.Case
+  import ExVCR.Mock
+
+  setup_all do
+    ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes", "fixture/custom_cassettes")
+    :ok
+  end
+```
+
+ExVCR uses url parameter to match request and cassettes. The "url" parameter in the json file is taken as regexp string.
+
+**fixture/custom_cassettes/response_mocking.json**
+```javascript
+[
+  {
+    "request": {
+      "url": "http://example.com"
+    },
+    "response": {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "text/html"
+      },
+      "body": "<h1>Custom Response</h1>"
+    }
+  }
+]
 ```
