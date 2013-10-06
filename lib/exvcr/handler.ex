@@ -10,32 +10,46 @@ defmodule ExVCR.Handler do
   """
   def find_response(request, recorder) do
     custom_mode = Options.get(recorder.options)[:custom]
-    target_url = Enum.first(request)
-    do_find_response(get(recorder), target_url, custom_mode) |> verify_response(target_url, custom_mode)
+    url    = Enum.fetch!(request, 0)
+    method = Enum.fetch!(request, 2)
+    params = [url: url, method: method]
+    do_find_response(get(recorder), params, custom_mode) |> verify_response(params, custom_mode)
   end
 
-  defp verify_response(response, target_url, custom_mode) do
+  defp verify_response(response, params, custom_mode) do
     if response == nil and custom_mode == true do
-      raise ExVCR.InvalidRequestError.new(message: "response for \"#{target_url}\" was not found in the custom cassette")
+      raise ExVCR.InvalidRequestError.new(message: "response for [URL:#{params[:url]}, METHOD:#{params[:method]}] was not found in the custom cassette")
     else
       response
     end
   end
 
-  defp do_find_response([], _target_url, _custom_mode), do: nil
-  defp do_find_response([head|tail], target_url, custom_mode) do
-    case match(head, target_url, custom_mode) do
+  defp do_find_response([], _params, _custom_mode), do: nil
+  defp do_find_response([head|tail], params, custom_mode) do
+    case match(head, params, custom_mode) do
       true  -> head[:response]
-      false -> do_find_response(tail, target_url, custom_mode)
+      false -> do_find_response(tail, params, custom_mode)
     end
   end
 
-  defp match(head, target_url, custom_mode) do
+  defp match(head, params, custom_mode) do
+    match_url(head, params, custom_mode) and match_method(head, params)
+  end
+
+  defp match_url(head, params, custom_mode) do
     if custom_mode do
       pattern = Regex.compile!("^#{head[:request].url}$")
-      Regex.match?(pattern, target_url)
+      Regex.match?(pattern, params[:url])
     else
-      head[:request].url == iolist_to_binary(target_url)
+      head[:request].url == iolist_to_binary(params[:url])
+    end
+  end
+
+  defp match_method(head, params) do
+    if params[:method] == nil || head[:request].method == nil do
+      true
+    else
+      atom_to_binary(params[:method]) == head[:request].method
     end
   end
 

@@ -88,6 +88,20 @@ defmodule ExVCR.MockTest do
     :meck.unload(:ibrowse)  # temporary fix
   end
 
+  test "match method succeeds" do
+    use_cassette "method_mocking", custom: true do
+      HTTPotion.post("http://example.com", "").body =~ %r/Custom Response/
+    end
+  end
+
+  test "match method fails" do
+    assert_raise ExVCR.InvalidRequestError, fn ->
+      use_cassette "method_mocking", custom: true do
+        HTTPotion.put("http://example.com", "").body =~ %r/Custom Response/
+      end
+    end
+  end
+
   defp assert_response(response, function // nil) do
     assert response.success?(:extra)
     assert response.headers[:Connection] == "keep-alive"
