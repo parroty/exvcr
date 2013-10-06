@@ -1,12 +1,25 @@
 defmodule ExVCR.Handler do
   @moduledoc """
-  Provider operations for recorded responses
+  Provide operations for recorded responses.
   """
   alias ExVCR.Actor.Responses
+  alias ExVCR.Actor.Options
 
+  @doc """
+  Find a response from the recorded lists which matches the request parameter.
+  """
   def find_response(request, recorder) do
     target_url = Enum.first(request)
-    do_find_response(get(recorder), target_url)
+    do_find_response(get(recorder), target_url) |> verify_response(recorder, target_url)
+  end
+
+  defp verify_response(response, recorder, target_url) do
+    options = Options.get(recorder.options)
+    if response == nil and options[:custom] == true do
+      raise ExVCRError.new(message: "response for \"#{target_url}\" was not found in the custom cassette")
+    else
+      response
+    end
   end
 
   defp do_find_response([], _target_url), do: nil

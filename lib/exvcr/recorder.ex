@@ -57,6 +57,7 @@ defmodule ExVCR.Recorder do
     response
   end
 
+  @doc "get file path for the record json file"
   def get_file_path(recorder) do
     ExVCR.JSON.get_file_path(
       Fixture.get(recorder.fixture),

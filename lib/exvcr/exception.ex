@@ -1,0 +1,1 @@
+defexception ExVCRError, message: "error"

@@ -59,9 +59,17 @@ defmodule ExVCR.MockTest do
     end
   end
 
-  test "response mocking with custom response" do
+  test "custom response with valid response file" do
     use_cassette "response_mocking", custom: true do
       assert HTTPotion.get("http://example.com", []).body =~ %r/Custom Response/
+    end
+  end
+
+  test "custom response without valid response file" do
+    assert_raise ExVCRError, fn ->
+      use_cassette "response_mocking", custom: true do
+        HTTPotion.get("http://example.com/invalid", [])
+      end
     end
   end
 
