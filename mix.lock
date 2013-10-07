@@ -1,5 +1,5 @@
 [ "exactor": {:git, "git://github.com/sasa1977/exactor.git", "a380468012191158d768ada6c604eb0bd2f6610c", []},
-  "excoveralls": {:git, "git://github.com/parroty/excoveralls.git", "d17956789a514bf0393ea863525e3caae9732d65", []},
+  "excoveralls": {:git, "git://github.com/parroty/excoveralls.git", "3b6795d1935f984a20bb0a1315d6a3d337c01efc", []},
   "exprintf": {:git, "git://github.com/parroty/exprintf.git", "ae04b90dd0aae48e088b0c9af5cdec31fe50ec81", []},
   "httpotion": {:git, "git://github.com/myfreeweb/httpotion.git", "b688c3342f58e32e10f3caa092225b5c8c26eb8b", []},
   "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "bbad869ea595c594912cf71fbd622aa80577c8f6", []},
