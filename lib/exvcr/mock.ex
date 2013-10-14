@@ -14,6 +14,9 @@ defmodule ExVCR.Mock do
 
       try do
         unquote(test)
+        if Mix.env == :test do
+          assert :meck.validate(:ibrowse) == true
+        end
       after
         :meck.unload(:ibrowse)
         Recorder.save(recorder)
