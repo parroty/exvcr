@@ -23,6 +23,7 @@ defmodule ExVCR.Mixfile do
   def deps(:dev) do
     deps(:prod) ++
       [
+        {:ibrowse, github: "cmullaparthi/ibrowse", ref: "866b0ff5aca229f1ef53653eabc8ed1720c13cd6", override: true},
         {:httpotion, github: "myfreeweb/httpotion"},
         {:excoveralls, github: "parroty/excoveralls"}
       ]
