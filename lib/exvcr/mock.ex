@@ -14,7 +14,6 @@ defmodule ExVCR.Mock do
 
       try do
         unquote(test)
-        assert :meck.validate(:ibrowse) == true
       after
         :meck.unload(:ibrowse)
         Recorder.save(recorder)
