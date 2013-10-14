@@ -23,7 +23,7 @@ defmodule ExVCR.Mock.IBrowse do
 
   def request_to_string([url, headers, method]), do: request_to_string([url, headers, method, [], []])
   def request_to_string([url, headers, method, body]), do: request_to_string([url, headers, method, body, []])
-  def request_to_string([url, headers, method, body, options]), do: request_to_string([url, headers, method, body, options, 0])
+  def request_to_string([url, headers, method, body, options]), do: request_to_string([url, headers, method, body, options, 5000])
   def request_to_string([url, headers, method, body, options, _timeout]) do
     ExVCR.Request.new(
       url: iolist_to_binary(url),
