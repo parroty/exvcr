@@ -15,7 +15,7 @@ defmodule ExVCR.Mock do
       try do
         unquote(test)
         if Mix.env == :test do
-          assert :meck.validate(:ibrowse) == true
+          if :meck.validate(:ibrowse) == false, do: raise ":meck.validate failed"
         end
       after
         :meck.unload(:ibrowse)
