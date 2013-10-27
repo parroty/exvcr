@@ -17,7 +17,7 @@ defmodule ExVCR.RecorderTest do
     assert ExVCR.Actor.Responses.get(record.responses) == []
   end
 
-  test "getting response from server by removing json in advance" do
+  test "forcefully getting response from server by removing json in advance" do
     File.rm_rf!(@tmp_dir)
     ExVCR.Config.cassette_library_dir(@tmp_dir)
 
@@ -28,7 +28,8 @@ defmodule ExVCR.RecorderTest do
     File.rm_rf!(@tmp_dir)
   end
 
-  test "loading from cache by recording twice" do
+  test "forcefully getting response from server, then loading from cache by recording twice" do
+    File.rm_rf!(@tmp_dir)
     ExVCR.Config.cassette_library_dir(@tmp_dir)
 
     use_cassette "server" do
