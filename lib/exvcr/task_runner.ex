@@ -4,6 +4,7 @@ defmodule ExVCR.TaskRunner do
   """
   import ExPrintf
   @print_format "  %-40s %-30s\n"
+  @json_file_pattern %r/\.json$/
 
   @doc """
   Use default cassette_library_dir to execute default task
@@ -16,29 +17,30 @@ defmodule ExVCR.TaskRunner do
   Use specified path to execute default task
   """
   def show_cassettes(path) do
-    load_json(path) |> print_jsons
+    read_cassettes(path) |> print_cassettes
   end
 
-  defp load_json(path) do
-    file_names   = File.ls!(path) |> Enum.filter(&(&1 =~ %r/\.json$/))
-    json_records = Enum.map(file_names, &(do_load_json(path, &1)))
-    dates        = Enum.map(json_records, fn(record) -> find_date(record) end)
-    Enum.zip(file_names, dates)
+  defp read_cassettes(path) do
+    file_names = File.ls!(path) |> Enum.filter(&(&1 =~ @json_file_pattern))
+    recorded_times = file_names
+                       |> Enum.map(&(read_json(path, &1)))
+                       |> Enum.map(&(extract_dates(&1)))
+    Enum.zip(file_names, recorded_times)
   end
 
-  defp do_load_json(path, file_name) do
+  defp read_json(path, file_name) do
     Path.expand(file_name, path) |> ExVCR.JSON.read_json_file
   end
 
-  defp find_date(record) do
-    headers = Enum.first(record)[:response].headers
+  defp extract_dates(json) do
+    headers = Enum.first(json)[:response].headers
     case Enum.find(headers, fn(x) -> elem(x, 0) == "Date" end) do
       nil  -> nil
       item -> elem(item, 1)
     end
   end
 
-  defp print_jsons(items) do
+  defp print_cassettes(items) do
     IO.puts "Showing list of cassettes"
     printf(@print_format, ["[File Name]", "[Last Update]"])
     Enum.each(items, fn({name, date}) -> printf(@print_format, [name, date]) end)
