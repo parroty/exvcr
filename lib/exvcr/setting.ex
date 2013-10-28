@@ -4,7 +4,7 @@ defmodule ExVCR.Setting do
   """
   use ExActor, export: :singleton
 
-  @default_values [cassette_library_dir: "fixture/"]
+  @default_values [cassette_library_dir: "fixture/vcr_cassettes"]
 
   definit do: HashDict.new(@default_values)
   defcall get, state: state, do: state
