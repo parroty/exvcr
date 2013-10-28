@@ -1,5 +1,5 @@
 defmodule ExVCR.MockTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   import ExVCR.Mock
 
   setup_all do

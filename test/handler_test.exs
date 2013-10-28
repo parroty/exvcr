@@ -1,5 +1,5 @@
 defmodule ExVCR.HandlerTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   alias ExVCR.Recorder
   alias ExVCR.Handler
 

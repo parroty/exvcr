@@ -4,11 +4,13 @@ defmodule ExVCR.Setting do
   """
   use ExActor, export: :singleton
 
-  @default_values [cassette_library_dir: "fixture/vcr_cassettes"]
+  @default_path "fixture/vcr_cassettes"
 
-  definit do: HashDict.new(@default_values)
+  definit do: HashDict.new([cassette_library_dir: @default_path])
   defcall get, state: state, do: state
   defcast set(x), do: new_state(x)
+
+  def get_default_path, do: @default_path
 
   def set(key, value) do
     start

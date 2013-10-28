@@ -1,5 +1,5 @@
 defmodule ExVCR.IBrowseTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   alias ExVCR.Mock.IBrowse
 
   @request ExVCR.Request.new(url: "http://example.com", headers: [{"Accept-Ranges", "bytes"}], method: "get", body: "", options: [])

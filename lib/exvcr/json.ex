@@ -7,8 +7,8 @@ defmodule ExVCR.JSON do
     File.write!(file_name, JSEX.prettify!(json))
   end
 
-  def get_file_path(fixture, custom_option) do
-    directory = case custom_option do
+  def get_file_path(fixture, options) do
+    directory = case options[:custom] do
       true  -> ExVCR.Setting.get(:custom_library_dir)
       _     -> ExVCR.Setting.get(:cassette_library_dir)
     end
@@ -21,8 +21,8 @@ defmodule ExVCR.JSON do
   is set or not.
   """
   def load(fixture, options) do
+    file_name = get_file_path(fixture, options)
     custom_option = options[:custom]
-    file_name     = get_file_path(fixture, custom_option)
 
     case File.exists?(file_name) do
       true -> read_json_file(file_name)
