@@ -39,6 +39,7 @@ defmodule ExVCR.TaskRunner do
 
   defp find_json_files(path) do
     File.ls!(path) |> Enum.filter(&(&1 =~ @json_file_pattern))
+                   |> Enum.sort
   end
 
   defp read_json(path, file_name) do
