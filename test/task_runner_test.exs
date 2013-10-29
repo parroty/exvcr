@@ -2,15 +2,29 @@ defmodule ExVCR.TaskRunnerTest do
   use ExUnit.Case, async: false
   import ExUnit.CaptureIO
 
-  @pattern "" <>
+  @show_cassettes_result "" <>
   "Showing list of cassettes\n" <>
   "  [File Name]                              [Last Update]                 \n" <>
   "  test1.json                               Mon, 1 Jan 2013 00:00:00 GMT  \n" <>
   "  test2.json                               Mon, 2 Jan 2013 00:00:00 GMT  \n"
 
-  test "show cassette returns json" do
+  @deletes_path "test/cassettes/for_deletes/"
+
+  test "show cassettes task prints json file information" do
     assert capture_io(fn ->
       ExVCR.TaskRunner.show_cassettes("test/cassettes")
-    end) == @pattern
+    end) == @show_cassettes_result
+  end
+
+  test "delete cassettes task deletes json files" do
+    File.touch(@deletes_path <> "test1.json")
+    File.touch(@deletes_path <> "test2.json")
+
+    assert capture_io(fn ->
+      ExVCR.TaskRunner.delete_cassettes(@deletes_path, "test1")
+    end) == "Deleted test1.json.\n"
+
+    File.rm(@deletes_path <> "test1.json")
+    File.rm(@deletes_path <> "test2.json")
   end
 end
