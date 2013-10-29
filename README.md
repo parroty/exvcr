@@ -74,3 +74,30 @@ ExVCR uses url parameter to match request and cassettes. The "url" parameter in 
   }
 ]
 ```
+
+### Mix Tasks
+#### Show cassettes
+The [mix vcr] task shows the list of the recorded cassettes.
+```Shell
+$ mix vcr
+Showing list of cassettes
+  [File Name]                              [Last Update]
+  example_httpotion.json                   Mon, 14 Oct 2013 03:51:28 GMT
+  example_ibrowse.json                     Tue, 29 Oct 2013 15:36:51 GMT
+  example_ibrowse_multiple.json            Tue, 29 Oct 2013 15:36:50 GMT
+  httpotion_delete.json                    Mon, 14 Oct 2013 03:51:26 GMT
+  httpotion_patch.json                     Mon, 14 Oct 2013 03:51:29 GMT
+  httpotion_post.json                      Mon, 14 Oct 2013 03:51:30 GMT
+  httpotion_put.json                       Mon, 14 Oct 2013 03:51:31 GMT
+```
+
+#### Delete cassettes
+The [mix vcr.delete] task deletes the cassettes that contains the specified pattern in the file name.
+```Shell
+$ mix vcr.delete ibrowse
+Deleted example_ibrowse.json.
+Deleted example_ibrowse_multiple.json.
+```
+
+##### Notes
+If the cassette save directory is changed from the default, [--dir] option can be used to specify the directory.
