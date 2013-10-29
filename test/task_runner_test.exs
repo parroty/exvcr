@@ -17,6 +17,7 @@ defmodule ExVCR.TaskRunnerTest do
   end
 
   test "delete cassettes task deletes json files" do
+    File.mkdir_p!(@deletes_path)
     File.touch(@deletes_path <> "test1.json")
     File.touch(@deletes_path <> "test2.json")
 
