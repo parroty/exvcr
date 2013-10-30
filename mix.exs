@@ -32,7 +32,7 @@ defmodule ExVCR.Mixfile do
 
   def deps(:prod) do
     [
-      {:meck, "0.8.1", [github: "eproxus/meck", tag: "0.8.1"]},
+      {:meck, "0.8.1", github: "eproxus/meck"},
       {:exactor, github: "sasa1977/exactor"},
       {:jsex, github: "talentdeficit/jsex"},
       {:exprintf, github: "parroty/exprintf"}
