@@ -6,7 +6,7 @@ defmodule ExVCR.Mock do
   alias ExVCR.Recorder
 
   defmacro use_cassette(fixture, options // [], test) do
-    :ibrowse.start
+    :application.ensure_started(:ibrowse)
     quote do
       :meck.new(:ibrowse, [:passthrough])
       recorder = Recorder.start(unquote(fixture), unquote(options))
