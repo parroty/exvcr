@@ -4,7 +4,7 @@ defmodule ExVCR.Mixfile do
   def project do
     [ app: :exvcr,
       version: "0.0.1",
-      elixir: "~> 0.10.3-dev",
+      elixir: ">= 0.10.3-dev",
       deps: deps(Mix.env),
       test_coverage: [tool: ExCoveralls]
     ]
@@ -25,7 +25,7 @@ defmodule ExVCR.Mixfile do
     deps(:prod) ++
       [
         {:ibrowse, github: "cmullaparthi/ibrowse", ref: "866b0ff5aca229f1ef53653eabc8ed1720c13cd6", override: true},
-        {:httpotion, github: "myfreeweb/httpotion"},
+        {:httpotion, github: "parroty/httpotion", branch: "version"},
         {:excoveralls, github: "parroty/excoveralls"}
       ]
   end
