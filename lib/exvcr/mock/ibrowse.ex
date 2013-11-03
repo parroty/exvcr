@@ -1,4 +1,7 @@
 defmodule ExVCR.Mock.IBrowse do
+  @moduledoc """
+  Provides helpers to mock :ibrowse methods
+  """
   alias ExVCR.Recorder
 
   def mock_methods(recorder) do
