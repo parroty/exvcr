@@ -8,6 +8,7 @@ defmodule ExVCR.RecorderTest do
 
   setup_all do
     :ibrowse.start
+    HttpServer.start(path: "/server", port: 4000, response: "test_response")
     :ok
   end
 
@@ -23,7 +24,7 @@ defmodule ExVCR.RecorderTest do
     ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
 
     use_cassette "server" do
-      assert HTTPotion.get("http://httpbin.org", []).body =~ %r/httpbin/
+      assert HTTPotion.get("http://localhost:4000/server", []).body =~ %r/test_response/
     end
   end
 
@@ -32,11 +33,11 @@ defmodule ExVCR.RecorderTest do
     ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
 
     use_cassette "server" do
-      assert HTTPotion.get("http://httpbin.org", []).body =~ %r/httpbin/
+      assert HTTPotion.get("http://localhost:4000/server", []).body =~ %r/test_response/
     end
 
     use_cassette "server" do
-      assert HTTPotion.get("http://httpbin.org", []).body =~ %r/httpbin/
+      assert HTTPotion.get("http://localhost:4000/server", []).body =~ %r/test_response/
     end
   end
 end
