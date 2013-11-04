@@ -14,5 +14,6 @@ defmodule ExVCR.Config do
     File.mkdir_p!(vcr_dir)
 
     Setting.set(:custom_library_dir, custom_dir)
+    :ok
   end
 end
