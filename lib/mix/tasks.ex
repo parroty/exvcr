@@ -22,7 +22,7 @@ defmodule Mix.Tasks.Vcr do
     use Mix.Task
 
     def run(args) do
-      { options, files, _ } = OptionParser.parse(args, [@switches])
+      { options, files, _ } = OptionParser.parse(args, switches: @switches)
       dir = options[:dir] || ExVCR.Setting.get_default_path
       if Enum.count(files) == 1 do
         TaskRunner.delete_cassettes(dir, Enum.first(files))
