@@ -2,23 +2,25 @@ defmodule ExVCR.Setting do
   @moduledoc """
   An module to store the configuration settings.
   """
-  use ExActor, export: :singleton
-
+  @ets_table :exvcr_setting
   @default_path "fixture/vcr_cassettes"
 
-  definit do: HashDict.new([cassette_library_dir: @default_path])
-  defcall get, state: state, do: state
-  defcast set(x), do: new_state(x)
-
-  def get_default_path, do: @default_path
-
-  def set(key, value) do
-    start
-    HashDict.put(get, key, value) |> set
+  def setup do
+    if :ets.info(@ets_table) == :undefined do
+      :ets.new(@ets_table, [:set, :public, :named_table])
+      :ets.insert(@ets_table, {:cassette_library_dir, @default_path})
+    end
   end
 
   def get(key) do
-    start
-    HashDict.get(get, key)
+    setup
+    :ets.lookup(@ets_table, key)[key]
   end
+
+  def set(key, value) do
+    setup
+    :ets.insert(@ets_table, {key, value})
+  end
+
+  def get_default_path, do: @default_path
 end
