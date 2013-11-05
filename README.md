@@ -115,7 +115,7 @@ Deleted example_ibrowse.json.
 Deleted example_ibrowse_multiple.json.
 ```
 
-If -i (--interactive) option is specified, it ask for delete confirmation for each file.
+If -i (--interactive) option is specified, it asks for confirmation before deleting each file.
 ```Shell
 $ mix vcr.delete ibrowse -i
 delete example_ibrowse.json? y
