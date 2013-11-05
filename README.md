@@ -76,7 +76,10 @@ ExVCR uses url parameter to match request and cassettes. The "url" parameter in 
 ```
 
 ### Mix Tasks
-#### Show cassettes
+- [mix vcr](#mix-vcr-show-cassettes)
+- [mix vcr.delete](#mix-vcrdelete-delete-cassettes)
+
+#### [mix vcr] Show cassettes
 The [mix vcr] task shows the list of the recorded cassettes.
 ```Shell
 $ mix vcr
@@ -91,7 +94,7 @@ Showing list of cassettes
   httpotion_put.json                       Mon, 14 Oct 2013 03:51:31 GMT
 ```
 
-#### Delete cassettes
+#### [mix vcr.delete] Delete cassettes
 The [mix vcr.delete] task deletes the cassettes that contains the specified pattern in the file name.
 ```Shell
 $ mix vcr.delete ibrowse
