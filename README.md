@@ -115,5 +115,14 @@ Deleted example_ibrowse.json.
 Deleted example_ibrowse_multiple.json.
 ```
 
+If -i (--interactive) option is specified, it ask for delete confirmation for each file.
+```Shell
+$ mix vcr.delete ibrowse -i
+delete example_ibrowse.json? y
+Deleted example_ibrowse.json.
+delete example_ibrowse_multiple.json? y
+Deleted example_ibrowse_multiple.json.
+```
+
 ##### Notes
 If the cassette save directory is changed from the default, [--dir] option can be used to specify the directory.

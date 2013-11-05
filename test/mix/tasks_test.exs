@@ -27,6 +27,14 @@ defmodule Mix.Tasks.VcrTest do
     assert(File.exists?(@dummy_path <> @dummy_file) == false)
   end
 
+  test "mix vcr.delete with --interactive option" do
+    File.touch!(@dummy_path <> @dummy_file)
+    assert capture_io("y\n", fn ->
+      Mix.Tasks.Vcr.Delete.run(["-i", "--dir", @dummy_path, @dummy_file])
+    end) =~ %r/delete dummy.json?/
+    assert(File.exists?(@dummy_path <> @dummy_file) == false)
+  end
+
   test "mix vcr.delete with invalid file" do
     assert capture_io(fn ->
       Mix.Tasks.Vcr.Delete.run(["--dir", @dummy_path])

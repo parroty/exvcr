@@ -18,15 +18,22 @@ defmodule ExVCR.TaskRunner do
   end
 
   @doc """
-  Use specified path to delete cassettes
+  Use specified path to delete cassettes.
   """
-  def delete_cassettes(path, file_patterns) do
+  def delete_cassettes(path, file_patterns, is_interactive // false) do
     path |> find_json_files
          |> Enum.filter(&(&1 =~ file_patterns))
-         |> Enum.each(&(delete_and_print_name(path, &1)))
+         |> Enum.each(&(delete_and_print_name(path, &1, is_interactive)))
   end
 
-  defp delete_and_print_name(path, file_name) do
+  defp delete_and_print_name(path, file_name, true) do
+    line = IO.gets("delete #{file_name}? ")
+    if String.upcase(line) == "Y\n" do
+      delete_and_print_name(path, file_name, false)
+    end
+  end
+
+  defp delete_and_print_name(path, file_name, false) do
     case Path.expand(file_name, path) |> File.rm do
       :ok    -> IO.puts "Deleted #{file_name}."
       :error -> IO.puts "Failed to delete #{file_name}"
