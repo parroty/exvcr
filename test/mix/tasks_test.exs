@@ -7,6 +7,11 @@ defmodule Mix.Tasks.VcrTest do
   @dummy_path "tmp/vcr_tmp/"
   @dummy_file "dummy.json"
 
+  setup_all do
+    File.mkdir_p!(@dummy_path)
+    :ok
+  end
+
   test "mix vcr" do
     assert capture_io(fn ->
       Mix.Tasks.Vcr.run([])
