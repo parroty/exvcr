@@ -77,13 +77,14 @@ ExVCR uses url parameter to match request and cassettes. The "url" parameter in 
 
 ### Mix Tasks
 - [mix vcr](#mix-vcr-show-cassettes)
+- [mix vcr.custom](#mix-vcr-show-cassettes)
 - [mix vcr.delete](#mix-vcrdelete-delete-cassettes)
 
 #### [mix vcr] Show cassettes
 The [mix vcr] task shows the list of the recorded cassettes.
 ```Shell
 $ mix vcr
-Showing list of cassettes
+Showing list of cassettes in [fixture/vcr_cassettes]
   [File Name]                              [Last Update]
   example_httpotion.json                   Mon, 14 Oct 2013 03:51:28 GMT
   example_ibrowse.json                     Tue, 29 Oct 2013 15:36:51 GMT
@@ -93,6 +94,18 @@ Showing list of cassettes
   httpotion_post.json                      Mon, 14 Oct 2013 03:51:30 GMT
   httpotion_put.json                       Mon, 14 Oct 2013 03:51:31 GMT
 ```
+
+#### [mix vcr.custom] Show custom cassettes
+The [mix vcr.custom] task shows the list of the manually created custom cassettes.
+```Shell
+$ mix vcr
+Showing list of cassettes in [fixture/custom_cassettes]
+  [File Name]                              [Last Update]
+  method_mocking.json
+  response_mocking.json
+  response_mocking_regex.json
+```
+
 
 #### [mix vcr.delete] Delete cassettes
 The [mix vcr.delete] task deletes the cassettes that contains the specified pattern in the file name.

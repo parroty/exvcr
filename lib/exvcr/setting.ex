@@ -3,7 +3,8 @@ defmodule ExVCR.Setting do
   An module to store the configuration settings.
   """
   @ets_table :exvcr_setting
-  @default_path "fixture/vcr_cassettes"
+  @default_vcr_path    "fixture/vcr_cassettes"
+  @default_custom_path "fixture/custom_cassettes"
 
   def setup do
     if :ets.info(@ets_table) == :undefined do
@@ -22,5 +23,6 @@ defmodule ExVCR.Setting do
     :ets.insert(@ets_table, {key, value})
   end
 
-  def get_default_path, do: @default_path
+  def get_default_vcr_path, do: @default_vcr_path
+  def get_default_custom_path, do: @default_custom_path
 end

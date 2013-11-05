@@ -14,8 +14,18 @@ defmodule Mix.Tasks.Vcr do
   @switches [:dir]
   def run(args) do
     { options, _, _ } = OptionParser.parse(args, switches: @switches)
-    dir = options[:dir] || ExVCR.Setting.get_default_path
-    TaskRunner.show_cassettes(dir)
+    dir = options[:dir] || ExVCR.Setting.get_default_vcr_path
+    TaskRunner.show_vcr_cassettes(dir)
+  end
+
+  defmodule Custom do
+    use Mix.Task
+
+    def run(args) do
+      { options, _, _ } = OptionParser.parse(args, switches: @switches)
+      dir = options[:dir] || ExVCR.Setting.get_default_custom_path
+      TaskRunner.show_custom_cassettes(dir)
+    end
   end
 
   defmodule Delete do

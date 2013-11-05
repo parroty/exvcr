@@ -7,10 +7,14 @@ defmodule ExVCR.TaskRunner do
   @json_file_pattern %r/\.json$/
 
   @doc """
-  Use specified path to show the list of cassettes.
+  Use specified path to show the list of vcr cassettes.
   """
-  def show_cassettes(path) do
-    read_cassettes(path) |> print_cassettes
+  def show_vcr_cassettes(path) do
+    read_cassettes(path) |> print_cassettes(path)
+  end
+
+  def show_custom_cassettes(path) do
+    read_cassettes(path) |> print_cassettes(path)
   end
 
   @doc """
@@ -49,13 +53,13 @@ defmodule ExVCR.TaskRunner do
   defp extract_dates(json) do
     headers = Enum.first(json)[:response].headers
     case Enum.find(headers, fn(x) -> elem(x, 0) == "Date" end) do
-      nil  -> nil
+      nil  -> ""
       item -> elem(item, 1)
     end
   end
 
-  defp print_cassettes(items) do
-    IO.puts "Showing list of cassettes"
+  defp print_cassettes(items, path) do
+    IO.puts "Showing list of cassettes in [#{path}]"
     printf(@print_format, ["[File Name]", "[Last Update]"])
     Enum.each(items, fn({name, date}) -> printf(@print_format, [name, date]) end)
   end

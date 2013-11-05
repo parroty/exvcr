@@ -3,16 +3,22 @@ defmodule ExVCR.TaskRunnerTest do
   import ExUnit.CaptureIO
 
   @show_cassettes_result "" <>
-  "Showing list of cassettes\n" <>
+  "Showing list of cassettes in [test/cassettes]\n" <>
   "  [File Name]                              [Last Update]                 \n" <>
   "  test1.json                               Mon, 1 Jan 2013 00:00:00 GMT  \n" <>
   "  test2.json                               Mon, 2 Jan 2013 00:00:00 GMT  \n"
 
   @deletes_path "test/cassettes/for_deletes/"
 
-  test "show cassettes task prints json file information" do
+  test "show vcr cassettes task prints json file summary" do
     assert capture_io(fn ->
-      ExVCR.TaskRunner.show_cassettes("test/cassettes")
+      ExVCR.TaskRunner.show_vcr_cassettes("test/cassettes")
+    end) == @show_cassettes_result
+  end
+
+  test "show custom cassettes task prints json file summary" do
+    assert capture_io(fn ->
+      ExVCR.TaskRunner.show_custom_cassettes("test/cassettes")
     end) == @show_cassettes_result
   end
 
