@@ -124,5 +124,7 @@ delete example_ibrowse_multiple.json? y
 Deleted example_ibrowse_multiple.json.
 ```
 
+If -a (--all) option is specified, all the cassetes in the specified folder becomes the target for delete.
+
 ##### Notes
 If the cassette save directory is changed from the default, [--dir] option can be used to specify the directory.
