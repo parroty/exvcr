@@ -4,8 +4,9 @@ defmodule Mix.Tasks.VcrTest do
   use ExUnit.Case, async: false
   import ExUnit.CaptureIO
 
-  @dummy_path "tmp/vcr_tmp/"
-  @dummy_file "dummy.json"
+  @dummy_path  "tmp/vcr_tmp/"
+  @dummy_file  "dummy.json"
+  @dummy_file2 "dummy2.json"
 
   setup_all do
     File.mkdir_p!(@dummy_path)
@@ -38,6 +39,18 @@ defmodule Mix.Tasks.VcrTest do
       Mix.Tasks.Vcr.Delete.run(["-i", "--dir", @dummy_path, @dummy_file])
     end) =~ %r/delete dummy.json?/
     assert(File.exists?(@dummy_path <> @dummy_file) == false)
+  end
+
+  test "mix vcr.delete with --all option" do
+    File.touch!(@dummy_path <> @dummy_file)
+    File.touch!(@dummy_path <> @dummy_file2)
+
+    assert capture_io("y\n", fn ->
+      Mix.Tasks.Vcr.Delete.run(["-a", "--dir", @dummy_path, @dummy_file])
+    end) =~ %r/Deleted dummy.json./
+
+    assert(File.exists?(@dummy_path <> @dummy_file) == false)
+    assert(File.exists?(@dummy_path <> @dummy_file2) == false)
   end
 
   test "mix vcr.delete with invalid file" do

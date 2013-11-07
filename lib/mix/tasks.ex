@@ -30,16 +30,23 @@ defmodule Mix.Tasks.Vcr do
 
     def run(args) do
       {options, files, _} =
-        OptionParser.parse(args, switches: [i: :boolean], aliases: [d: :dir, i: :interactive])
+        OptionParser.parse(args,
+                           switches: [i: :boolean, a: :boolean],
+                           aliases: [d: :dir, i: :interactive, a: :all])
 
-      if Enum.count(files) == 1 do
+      pattern = cond do
+        options[:all]          -> %r/.*/
+        Enum.count(files) == 1 -> Enum.first(files)
+        true                   -> nil
+      end
+
+      if pattern do
         TaskRunner.delete_cassettes(
           options[:dir] || ExVCR.Setting.get_default_vcr_path,
-          Enum.first(files), options[:interactive] || false)
+          pattern, options[:interactive] || false)
       else
         IO.puts "invalid parameter is specified for - mix vcr.delete [pattern]"
       end
     end
   end
 end
-
