@@ -86,24 +86,24 @@ The [mix vcr] task shows the list of the recorded cassettes.
 $ mix vcr
 Showing list of cassettes in [fixture/vcr_cassettes]
   [File Name]                              [Last Update]
-  example_httpotion.json                   Mon, 14 Oct 2013 03:51:28 GMT
-  example_ibrowse.json                     Tue, 29 Oct 2013 15:36:51 GMT
-  example_ibrowse_multiple.json            Tue, 29 Oct 2013 15:36:50 GMT
-  httpotion_delete.json                    Mon, 14 Oct 2013 03:51:26 GMT
-  httpotion_patch.json                     Mon, 14 Oct 2013 03:51:29 GMT
-  httpotion_post.json                      Mon, 14 Oct 2013 03:51:30 GMT
-  httpotion_put.json                       Mon, 14 Oct 2013 03:51:31 GMT
+  example_httpotion.json                   2013/11/07 23:24:49
+  example_ibrowse.json                     2013/11/07 23:24:49
+  example_ibrowse_multiple.json            2013/11/07 23:24:48
+  httpotion_delete.json                    2013/11/07 23:24:47
+  httpotion_patch.json                     2013/11/07 23:24:50
+  httpotion_post.json                      2013/11/07 23:24:51
+  httpotion_put.json                       2013/11/07 23:24:52
 ```
 
 #### [mix vcr.custom] Show custom cassettes
 The [mix vcr.custom] task shows the list of the manually created custom cassettes.
 ```Shell
-$ mix vcr
+$ mix vcr.custom
 Showing list of cassettes in [fixture/custom_cassettes]
   [File Name]                              [Last Update]
-  method_mocking.json
-  response_mocking.json
-  response_mocking_regex.json
+  method_mocking.json                      2013/10/06 22:05:38
+  response_mocking.json                    2013/09/29 17:23:38
+  response_mocking_regex.json              2013/10/06 18:13:45
 ```
 
 

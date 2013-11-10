@@ -37,11 +37,9 @@ defmodule ExVCR.TaskRunner do
   end
 
   defp read_cassettes(path) do
-    file_names     = find_json_files(path)
-    recorded_times = file_names
-                       |> Enum.map(&(read_json(path, &1)))
-                       |> Enum.map(&(extract_dates(&1)))
-    Enum.zip(file_names, recorded_times)
+    file_names = find_json_files(path)
+    date_times = Enum.map(file_names, &(extract_last_modified_time(path, &1)))
+    Enum.zip(file_names, date_times)
   end
 
   defp find_json_files(path) do
@@ -49,17 +47,28 @@ defmodule ExVCR.TaskRunner do
                    |> Enum.sort
   end
 
-  defp read_json(path, file_name) do
-    Path.expand(file_name, path) |> ExVCR.JSON.read_json_file
+  defp extract_last_modified_time(path, file_name) do
+    {{year, month, day}, {hour, min, sec}} = File.stat!(Path.join(path, file_name)).mtime
+    sprintf("%04d/%02d/%02d %02d:%02d:%02d", [year, month, day, hour, min, sec])
   end
 
-  defp extract_dates(json) do
-    headers = Enum.first(json)[:response].headers
-    case Enum.find(headers, fn(x) -> elem(x, 0) == "Date" end) do
-      nil  -> ""
-      item -> elem(item, 1)
-    end
-  end
+  # Temporaily comments out (will be used to extract other json contents later)
+  # defp extract_response_time(file_names) do
+  #   file_names |> Enum.map(&(read_json(path, &1)))
+  #              |> Enum.map(&(extract_dates(&1)))
+  # end
+
+  # defp read_json(path, file_name) do
+  #   Path.expand(file_name, path) |> ExVCR.JSON.read_json_file
+  # end
+
+  # defp extract_dates(json) do
+  #   headers = Enum.first(json)[:response].headers
+  #   case Enum.find(headers, fn(x) -> elem(x, 0) == "Date" end) do
+  #     nil  -> ""
+  #     item -> elem(item, 1)
+  #   end
+  # end
 
   defp print_cassettes(items, path) do
     IO.puts "Showing list of cassettes in [#{path}]"
