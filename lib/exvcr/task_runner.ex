@@ -13,10 +13,6 @@ defmodule ExVCR.TaskRunner do
     read_cassettes(path) |> print_cassettes(path)
   end
 
-  def show_custom_cassettes(path) do
-    read_cassettes(path) |> print_cassettes(path)
-  end
-
   @doc """
   Use specified path to delete cassettes.
   """

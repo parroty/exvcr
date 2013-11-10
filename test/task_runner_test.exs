@@ -16,12 +16,6 @@ defmodule ExVCR.TaskRunnerTest do
     end) == @show_cassettes_result
   end
 
-  test "show custom cassettes task prints json file summary" do
-    assert capture_io(fn ->
-      ExVCR.TaskRunner.show_custom_cassettes("test/cassettes")
-    end) == @show_cassettes_result
-  end
-
   test "delete cassettes task deletes json files" do
     File.mkdir_p!(@deletes_path)
     File.touch(@deletes_path <> "test1.json")
