@@ -12,7 +12,7 @@ defmodule Mix.Tasks.Vcr do
   """
 
   def run(args) do
-    {options, _, _} = OptionParser.parse(args, switches: [:dir])
+    {options, _, _} = OptionParser.parse(args, aliases: [d: :dir])
     TaskRunner.show_vcr_cassettes(options[:dir] || ExVCR.Setting.get_default_vcr_path)
   end
 
@@ -20,7 +20,7 @@ defmodule Mix.Tasks.Vcr do
     use Mix.Task
 
     def run(args) do
-      {options, _, _} = OptionParser.parse(args, switches: [:dir])
+      {options, _, _} = OptionParser.parse(args, aliases: [d: :dir])
       TaskRunner.show_vcr_cassettes(options[:dir] || ExVCR.Setting.get_default_custom_path)
     end
   end
