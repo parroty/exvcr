@@ -26,4 +26,15 @@ defmodule ExVCR.TaskRunnerTest do
     File.rm(@deletes_path <> "test1.json")
     File.rm(@deletes_path <> "test2.json")
   end
+
+  test "check vcr cassettes task prints json file summary" do
+    result = capture_io(fn ->
+      record = ExVCR.Checker.new(dirs: ["test/cassettes"], files: ["test1.json", "test2.json", "test1.json"])
+      ExVCR.TaskRunner.check_cassettes(record)
+    end)
+
+    assert result =~ %r/Showing hit counts of cassettes in/
+    assert result =~ %r/test1.json\s+2\s+\n/
+    assert result =~ %r/test2.json\s+1\s+\n/
+  end
 end

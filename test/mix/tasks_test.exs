@@ -58,4 +58,12 @@ defmodule Mix.Tasks.VcrTest do
       Mix.Tasks.Vcr.Delete.run(["--dir", @dummy_path])
     end) =~ %r/invalid parameter is specified/
   end
+
+  test "mix vcr.custom logics" do
+    assert Mix.Tasks.Vcr.Check.initialize([dir: "test1,test2"]) ==
+       ExVCR.Checker.new(dirs: ["test1", "test2"])
+
+    assert Mix.Tasks.Vcr.Check.initialize([]) ==
+       ExVCR.Checker.new(dirs: ["fixture/vcr_cassettes", "fixture/custom_cassettes"])
+  end
 end
