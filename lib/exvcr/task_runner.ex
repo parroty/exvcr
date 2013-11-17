@@ -26,9 +26,12 @@ defmodule ExVCR.TaskRunner do
   Check and show which cassettes are used by the test execution.
   """
   def check_cassettes(record) do
-    cassettes  = read_cassettes(record.dir)
     count_hash = create_count_hash(record.files)
-    print_check_cassettes(cassettes, record.dir, count_hash)
+    Enum.each(record.dirs, fn(dir) ->
+      cassettes = read_cassettes(dir)
+      print_check_cassettes(cassettes, dir, count_hash)
+      IO.puts ""
+    end)
   end
 
   defp create_count_hash(files) do

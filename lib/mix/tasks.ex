@@ -55,7 +55,12 @@ defmodule Mix.Tasks.Vcr do
 
     def run(args) do
       {options, files, _} = OptionParser.parse(args, aliases: [d: :dir])
-      ExVCR.RecordChecker.start(ExVCR.Checker.new(dir: options[:dir] || ExVCR.Setting.get_default_vcr_path))
+      if options[:dir] do
+        dirs = String.split(options[:dir], ",")
+      else
+        dirs = [ExVCR.Setting.get_default_vcr_path, ExVCR.Setting.get_default_custom_path]
+      end
+      ExVCR.RecordChecker.start(ExVCR.Checker.new(dirs: dirs))
 
       Mix.env(:test)
       Code.load_file(Path.join([Path.dirname(__FILE__), "mix_file.exs"]))

@@ -1,4 +1,4 @@
-defrecord ExVCR.Checker, dir: nil, files: []
+defrecord ExVCR.Checker, dirs: nil, files: []
 
 defmodule ExVCR.RecordChecker do
   use ExActor, export: :singleton
