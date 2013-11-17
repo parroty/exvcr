@@ -22,6 +22,35 @@ defmodule ExVCR.TaskRunner do
          |> Enum.each(&(delete_and_print_name(path, &1, is_interactive)))
   end
 
+  @doc """
+  Check and show which cassettes are used by the test execution.
+  """
+  def check_cassettes(record) do
+    cassettes  = read_cassettes(record.dir)
+    count_hash = create_count_hash(record.files)
+    print_check_cassettes(cassettes, record.dir, count_hash)
+  end
+
+  defp create_count_hash(files) do
+    do_create_count_hash(files, HashDict.new)
+  end
+
+  defp do_create_count_hash([], acc), do: acc
+  defp do_create_count_hash([head|tail], acc) do
+    file = Path.basename(head)
+    count = HashDict.get(acc, file, 0)
+    hash  = HashDict.put(acc, file, count + 1)
+    do_create_count_hash(tail, hash)
+  end
+
+  defp print_check_cassettes(items, path, counts_hash) do
+    IO.puts "Showing hit counts of cassettes in [#{path}]"
+    printf(@print_format, ["[File Name]", "[Hit Counts]"])
+    Enum.each(items, fn({name, _date}) ->
+      printf("  %-40s %-30d\n", [name, HashDict.get(counts_hash, name, 0)])
+    end)
+  end
+
   defp delete_and_print_name(path, file_name, true) do
     line = IO.gets("delete #{file_name}? ")
     if String.upcase(line) == "Y\n" do

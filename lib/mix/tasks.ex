@@ -49,4 +49,17 @@ defmodule Mix.Tasks.Vcr do
       end
     end
   end
+
+  defmodule Check do
+    use Mix.Task
+
+    def run(args) do
+      {options, files, _} = OptionParser.parse(args, aliases: [d: :dir])
+      ExVCR.RecordChecker.start(ExVCR.Checker.new(dir: options[:dir] || ExVCR.Setting.get_default_vcr_path))
+
+      Mix.env(:test)
+      Code.load_file(Path.join([Path.dirname(__FILE__), "mix_file.exs"]))
+      Mix.Task.run("test", files ++ ["--cover"])
+    end
+  end
 end
