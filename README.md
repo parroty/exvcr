@@ -79,6 +79,7 @@ ExVCR uses url parameter to match request and cassettes. The "url" parameter in 
 - [mix vcr](#mix-vcr-show-cassettes)
 - [mix vcr.custom](#mix-vcr-show-cassettes)
 - [mix vcr.delete](#mix-vcrdelete-delete-cassettes)
+- [mix vcr.check](#mix-vcrcheck-check-cassettes)
 
 #### [mix vcr] Show cassettes
 The [mix vcr] task shows the list of the recorded cassettes.
@@ -125,6 +126,42 @@ Deleted example_ibrowse_multiple.json.
 ```
 
 If -a (--all) option is specified, all the cassetes in the specified folder becomes the target for delete.
+
+#### [mix vcr.check] Check cassettes
+The [mix vcr.check] shows how many times each cassette is applied while executing [mix test] tasks. It is intended for verifying the cassettes are properly used.
+
+```Shell
+$ mix vcr.check
+...............................
+31 tests, 0 failures
+Showing hit counts of cassettes in [fixture/vcr_cassettes]
+  [File Name]                              [Hit Counts]
+  example_httpotion.json                   1
+  example_ibrowse.json                     1
+  example_ibrowse_multiple.json            2
+  httpotion_delete.json                    1
+  httpotion_patch.json                     1
+  httpotion_post.json                      1
+  httpotion_put.json                       1
+
+Showing hit counts of cassettes in [fixture/custom_cassettes]
+  [File Name]                              [Hit Counts]
+  method_mocking.json                      1
+  response_mocking.json                    1
+  response_mocking_regex.json              1
+```
+
+The target test file can be limited by specifying test files, as similar as [mix test] tasks.
+
+```Shell
+$ mix vcr.check test/exvcr_test.exs
+.............
+13 tests, 0 failures
+Showing hit counts of cassettes in [fixture/vcr_cassettes]
+  [File Name]                              [Hit Counts]
+  example_httpotion.json                   1
+...
+```
 
 ##### Notes
 If the cassette save directory is changed from the default, [--dir] option can be used to specify the directory.
