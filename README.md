@@ -82,6 +82,7 @@ ExVCR uses url parameter to match request and cassettes. The "url" parameter in 
 - [mix vcr.check](#mix-vcrcheck-check-cassettes)
 
 #### [mix vcr] Show cassettes
+```Shell
 Showing list of cassettes in [fixture/vcr_cassettes]
   [File Name]                              [Last Update]
   example_httpotion.json                   2013/11/07 23:24:49
