@@ -8,13 +8,15 @@ defmodule Mix.Tasks.Vcr do
 
   ## Command line options
   * `--dir` - specifies the vcr cassette directory.
+  * `--custom` - specifies the custom cassette directory.
   * `-i (--interactive) - ask for confirmation for each file operation.
   """
 
   @doc "Entry point for [mix vcr] task"
   def run(args) do
-    {options, _, _} = OptionParser.parse(args, aliases: [d: :dir])
-    TaskRunner.show_vcr_cassettes(options[:dir] || ExVCR.Setting.get_default_vcr_path)
+    {options, _, _} = OptionParser.parse(args, aliases: ExVCR.TaskUtil.base_aliases)
+    IO.inspect options
+    ExVCR.TaskUtil.parse_basic_options(options) |> TaskRunner.show_vcr_cassettes
   end
 
   defmodule Custom do
@@ -22,8 +24,8 @@ defmodule Mix.Tasks.Vcr do
 
     @doc "Entry point for [mix vcr.custom] task"
     def run(args) do
-      {options, _, _} = OptionParser.parse(args, aliases: [d: :dir])
-      TaskRunner.show_vcr_cassettes(options[:dir] || ExVCR.Setting.get_default_custom_path)
+      {options, _, _} = OptionParser.parse(args, aliases: ExVCR.TaskUtil.base_aliases)
+      TaskRunner.show_vcr_cassettes([options[:dir] || ExVCR.Setting.get_default_custom_path])
     end
   end
 
@@ -58,21 +60,13 @@ defmodule Mix.Tasks.Vcr do
 
     @doc "Entry point for [mix vcr.check] task"
     def run(args) do
-      {options, files, _} = OptionParser.parse(args, aliases: [d: :dir])
-      ExVCR.RecordChecker.start(initialize(options))
+      {options, files, _} = OptionParser.parse(args, aliases: ExVCR.TaskUtil.base_aliases)
+      dirs = ExVCR.TaskUtil.parse_basic_options(options)
+      ExVCR.RecordChecker.start(ExVCR.Checker.new(dirs: dirs))
 
       Mix.env(:test)
       Code.load_file(Path.join([Path.dirname(__FILE__), "mix_file.exs"]))
       Mix.Task.run("test", files ++ ["--cover"])
-    end
-
-    def initialize(options) do
-      if options[:dir] do
-        dirs = String.split(options[:dir], ",")
-      else
-        dirs = [ExVCR.Setting.get_default_vcr_path, ExVCR.Setting.get_default_custom_path]
-      end
-      ExVCR.Checker.new(dirs: dirs)
     end
   end
 end

@@ -6,7 +6,7 @@ defmodule ExVCR.TaskRunnerTest do
 
   test "show vcr cassettes task prints json file summary" do
     result = capture_io(fn ->
-      ExVCR.TaskRunner.show_vcr_cassettes("test/cassettes")
+      ExVCR.TaskRunner.show_vcr_cassettes(["test/cassettes"])
     end)
 
     assert result =~ %r/[File Name]/

@@ -11,8 +11,11 @@ defmodule ExVCR.TaskRunner do
   @doc """
   Use specified path to show the list of vcr cassettes.
   """
-  def show_vcr_cassettes(path) do
-    read_cassettes(path) |> print_cassettes(path)
+  def show_vcr_cassettes(path_list) do
+    Enum.each(path_list, fn(path) ->
+      read_cassettes(path) |> print_cassettes(path)
+      IO.puts ""
+    end)
   end
 
   defp read_cassettes(path) do

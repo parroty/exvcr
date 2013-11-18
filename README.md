@@ -77,14 +77,11 @@ ExVCR uses url parameter to match request and cassettes. The "url" parameter in 
 
 ### Mix Tasks
 - [mix vcr](#mix-vcr-show-cassettes)
-- [mix vcr.custom](#mix-vcr-show-cassettes)
+- <del>[mix vcr.custom](#mix-vcr-show-cassettes)</del>
 - [mix vcr.delete](#mix-vcrdelete-delete-cassettes)
 - [mix vcr.check](#mix-vcrcheck-check-cassettes)
 
 #### [mix vcr] Show cassettes
-The [mix vcr] task shows the list of the recorded cassettes.
-```Shell
-$ mix vcr
 Showing list of cassettes in [fixture/vcr_cassettes]
   [File Name]                              [Last Update]
   example_httpotion.json                   2013/11/07 23:24:49
@@ -94,9 +91,17 @@ Showing list of cassettes in [fixture/vcr_cassettes]
   httpotion_patch.json                     2013/11/07 23:24:50
   httpotion_post.json                      2013/11/07 23:24:51
   httpotion_put.json                       2013/11/07 23:24:52
+
+Showing list of cassettes in [fixture/custom_cassettes]
+  [File Name]                              [Last Update]
+  method_mocking.json                      2013/10/06 22:05:38
+  response_mocking.json                    2013/09/29 17:23:38
+  response_mocking_regex.json              2013/10/06 18:13:45
 ```
 
-#### [mix vcr.custom] Show custom cassettes
+#### <del>[mix vcr.custom] Show custom cassettes</del>
+DEPRECATED: To be removed.
+
 The [mix vcr.custom] task shows the list of the manually created custom cassettes.
 ```Shell
 $ mix vcr.custom
@@ -106,7 +111,6 @@ Showing list of cassettes in [fixture/custom_cassettes]
   response_mocking.json                    2013/09/29 17:23:38
   response_mocking_regex.json              2013/10/06 18:13:45
 ```
-
 
 #### [mix vcr.delete] Delete cassettes
 The [mix vcr.delete] task deletes the cassettes that contains the specified pattern in the file name.
@@ -164,4 +168,4 @@ Showing hit counts of cassettes in [fixture/vcr_cassettes]
 ```
 
 ##### Notes
-If the cassette save directory is changed from the default, [--dir] option can be used to specify the directory.
+If the cassette save directory is changed from the default, [-d, --dir] option (for vcr cassettes) and [-c, --custom] option (for custom cassettes) can be used to specify the directory.
