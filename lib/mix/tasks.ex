@@ -15,7 +15,6 @@ defmodule Mix.Tasks.Vcr do
   @doc "Entry point for [mix vcr] task"
   def run(args) do
     {options, _, _} = OptionParser.parse(args, aliases: ExVCR.TaskUtil.base_aliases)
-    IO.inspect options
     ExVCR.TaskUtil.parse_basic_options(options) |> TaskRunner.show_vcr_cassettes
   end
 
