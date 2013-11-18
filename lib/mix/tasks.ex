@@ -11,6 +11,7 @@ defmodule Mix.Tasks.Vcr do
   * `-i (--interactive) - ask for confirmation for each file operation.
   """
 
+  @doc "Entry point for [mix vcr] task"
   def run(args) do
     {options, _, _} = OptionParser.parse(args, aliases: [d: :dir])
     TaskRunner.show_vcr_cassettes(options[:dir] || ExVCR.Setting.get_default_vcr_path)
@@ -19,6 +20,7 @@ defmodule Mix.Tasks.Vcr do
   defmodule Custom do
     use Mix.Task
 
+    @doc "Entry point for [mix vcr.custom] task"
     def run(args) do
       {options, _, _} = OptionParser.parse(args, aliases: [d: :dir])
       TaskRunner.show_vcr_cassettes(options[:dir] || ExVCR.Setting.get_default_custom_path)
@@ -28,6 +30,7 @@ defmodule Mix.Tasks.Vcr do
   defmodule Delete do
     use Mix.Task
 
+    @doc "Entry point for [mix vcr.delete] task"
     def run(args) do
       {options, files, _} =
         OptionParser.parse(args,
@@ -53,6 +56,7 @@ defmodule Mix.Tasks.Vcr do
   defmodule Check do
     use Mix.Task
 
+    @doc "Entry point for [mix vcr.check] task"
     def run(args) do
       {options, files, _} = OptionParser.parse(args, aliases: [d: :dir])
       ExVCR.RecordChecker.start(initialize(options))
