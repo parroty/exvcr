@@ -1,4 +1,8 @@
-defmodule ExVCR.TaskUtil do
+defmodule ExVCR.Task.Util do
+  @moduledoc """
+  Provides task related utilities
+  """
+
   def parse_basic_options(options) do
     [ options[:dir] || ExVCR.Setting.get_default_vcr_path,
       options[:custom] || ExVCR.Setting.get_default_custom_path ]

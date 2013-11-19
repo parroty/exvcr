@@ -22,7 +22,7 @@ defmodule ExVCR do
   end
 
   defp check do
-    ExVCR.TaskRunner.check_cassettes(ExVCR.RecordChecker.get)
+    ExVCR.Task.Runner.check_cassettes(ExVCR.RecordChecker.get)
   end
 end
 

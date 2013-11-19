@@ -1,4 +1,4 @@
-defmodule ExVCR.TaskRunner do
+defmodule ExVCR.Task.Runner do
   @moduledoc """
   Provides task processing logics, which will be invoked by custom mix tasks.
   """

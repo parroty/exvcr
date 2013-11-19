@@ -6,7 +6,7 @@ defmodule ExVCR.TaskRunnerTest do
 
   test "show vcr cassettes task prints json file summary" do
     result = capture_io(fn ->
-      ExVCR.TaskRunner.show_vcr_cassettes(["test/cassettes"])
+      ExVCR.Task.Runner.show_vcr_cassettes(["test/cassettes"])
     end)
 
     assert result =~ %r/[File Name]/
@@ -20,7 +20,7 @@ defmodule ExVCR.TaskRunnerTest do
     File.touch(@deletes_path <> "test2.json")
 
     assert capture_io(fn ->
-      ExVCR.TaskRunner.delete_cassettes(@deletes_path, "test1")
+      ExVCR.Task.Runner.delete_cassettes(@deletes_path, "test1")
     end) == "Deleted test1.json.\n"
 
     File.rm(@deletes_path <> "test1.json")
@@ -30,7 +30,7 @@ defmodule ExVCR.TaskRunnerTest do
   test "check vcr cassettes task prints json file summary" do
     result = capture_io(fn ->
       record = ExVCR.Checker.new(dirs: ["test/cassettes"], files: ["test1.json", "test2.json", "test1.json"])
-      ExVCR.TaskRunner.check_cassettes(record)
+      ExVCR.Task.Runner.check_cassettes(record)
     end)
 
     assert result =~ %r/Showing hit counts of cassettes in/

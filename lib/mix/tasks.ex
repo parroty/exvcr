@@ -1,6 +1,6 @@
 defmodule Mix.Tasks.Vcr do
   use Mix.Task
-  alias ExVCR.TaskRunner
+
   @shortdoc "Operate exvcr cassettes"
 
   @moduledoc """
@@ -14,8 +14,8 @@ defmodule Mix.Tasks.Vcr do
 
   @doc "Entry point for [mix vcr] task"
   def run(args) do
-    {options, _, _} = OptionParser.parse(args, aliases: ExVCR.TaskUtil.base_aliases)
-    ExVCR.TaskUtil.parse_basic_options(options) |> TaskRunner.show_vcr_cassettes
+    {options, _, _} = OptionParser.parse(args, aliases: ExVCR.Task.Util.base_aliases)
+    ExVCR.Task.Util.parse_basic_options(options) |> ExVCR.Task.Runner.show_vcr_cassettes
   end
 
   defmodule Custom do
@@ -23,8 +23,8 @@ defmodule Mix.Tasks.Vcr do
 
     @doc "Entry point for [mix vcr.custom] task"
     def run(args) do
-      {options, _, _} = OptionParser.parse(args, aliases: ExVCR.TaskUtil.base_aliases)
-      TaskRunner.show_vcr_cassettes([options[:dir] || ExVCR.Setting.get_default_custom_path])
+      {options, _, _} = OptionParser.parse(args, aliases: ExVCR.Task.Util.base_aliases)
+      ExVCR.Task.Runner.show_vcr_cassettes([options[:dir] || ExVCR.Setting.get_default_custom_path])
     end
   end
 
@@ -45,7 +45,7 @@ defmodule Mix.Tasks.Vcr do
       end
 
       if pattern do
-        TaskRunner.delete_cassettes(
+        ExVCR.Task.Runner.delete_cassettes(
           options[:dir] || ExVCR.Setting.get_default_vcr_path,
           pattern, options[:interactive] || false)
       else
@@ -59,8 +59,8 @@ defmodule Mix.Tasks.Vcr do
 
     @doc "Entry point for [mix vcr.check] task"
     def run(args) do
-      {options, files, _} = OptionParser.parse(args, aliases: ExVCR.TaskUtil.base_aliases)
-      dirs = ExVCR.TaskUtil.parse_basic_options(options)
+      {options, files, _} = OptionParser.parse(args, aliases: ExVCR.Task.Util.base_aliases)
+      dirs = ExVCR.Task.Util.parse_basic_options(options)
       ExVCR.RecordChecker.start(ExVCR.Checker.new(dirs: dirs))
 
       Mix.env(:test)
