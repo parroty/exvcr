@@ -9,7 +9,8 @@ defmodule ExVCR.Setting do
   def setup do
     if :ets.info(@ets_table) == :undefined do
       :ets.new(@ets_table, [:set, :public, :named_table])
-      :ets.insert(@ets_table, {:cassette_library_dir, @default_path})
+      :ets.insert(@ets_table, {:cassette_library_dir, @default_vcr_path})
+      :ets.insert(@ets_table, {:custom_library_dir, @default_custom_path})
     end
   end
 
