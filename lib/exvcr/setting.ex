@@ -11,6 +11,7 @@ defmodule ExVCR.Setting do
       :ets.new(@ets_table, [:set, :public, :named_table])
       :ets.insert(@ets_table, {:cassette_library_dir, @default_vcr_path})
       :ets.insert(@ets_table, {:custom_library_dir, @default_custom_path})
+      :ets.insert(@ets_table, {:filter_sensitive_data, []})
     end
   end
 
@@ -22,6 +23,10 @@ defmodule ExVCR.Setting do
   def set(key, value) do
     setup
     :ets.insert(@ets_table, {key, value})
+  end
+
+  def append(key, value) do
+    set(key, [value | get(key)])
   end
 
   def get_default_vcr_path, do: @default_vcr_path

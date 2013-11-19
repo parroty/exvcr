@@ -75,6 +75,18 @@ ExVCR uses url parameter to match request and cassettes. The "url" parameter in 
 ]
 ```
 
+#### Removing Sensitive Data
+ExVCR.Config.filter_sensitive_data method can be used to remove sensitive data
+
+```elixir
+test "replace sensitive data" do
+  ExVCR.Config.filter_sensitive_data("<PASSWORD>.+</PASSWORD>", "PLACEHOLDER")
+  use_cassette "sensitive_data" do
+    assert HTTPotion.get("http://something.example.com", []).body =~ %r/PLACEHOLDER/
+  end
+end
+```
+
 ### Mix Tasks
 - [mix vcr](#mix-vcr-show-cassettes)
 - <del>[mix vcr.custom](#mix-vcr-show-cassettes)</del>

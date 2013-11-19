@@ -40,4 +40,13 @@ defmodule ExVCR.RecorderTest do
       assert HTTPotion.get("http://localhost:4000/server", []).body =~ %r/test_response/
     end
   end
+
+  test "replace sensitive data" do
+    ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
+    ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
+    use_cassette "sensitive_data" do
+      assert HTTPotion.get("http://localhost:4000/server", []).body =~ %r/PLACEHOLDER/
+    end
+    ExVCR.Config.filter_sensitive_data(nil)
+  end
 end

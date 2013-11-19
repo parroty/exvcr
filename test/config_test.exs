@@ -21,6 +21,16 @@ defmodule ExVCR.ConfigTest do
     assert ExVCR.Setting.get(:custom_library_dir)   == @dummy_custom_dir
   end
 
+  test "add filter sensitive data" do
+    ExVCR.Config.filter_sensitive_data("test_before1", "test_after1")
+    ExVCR.Config.filter_sensitive_data("test_before2", "test_after2")
+    assert ExVCR.Setting.get(:filter_sensitive_data) ==
+      [{"test_before2","test_after2"},{"test_before1","test_after1"}]
+
+    ExVCR.Config.filter_sensitive_data(nil)
+    assert ExVCR.Setting.get(:filter_sensitive_data) == []
+  end
+
   teardown do
     File.rm_rf!(@dummy_cassette_dir)
     :ok

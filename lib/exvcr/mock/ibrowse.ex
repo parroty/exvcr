@@ -53,4 +53,13 @@ defmodule ExVCR.Mock.IBrowse do
   defp do_parse_headers([{key,value}|tail], acc) do
     do_parse_headers(tail, [{iolist_to_binary(key), iolist_to_binary(value)}|acc])
   end
+
+  def replace_response_body({:ok, status_code, headers, body}, filter) do
+    {:ok, status_code, headers, body |> iolist_to_binary |> replace_sensitive_data(filter)}
+  end
+
+  defp replace_sensitive_data(body, []), do: body
+  defp replace_sensitive_data(body, [{pattern, placeholder}|tail]) do
+    replace_sensitive_data(String.replace(body, %r/#{pattern}/, placeholder), tail)
+  end
 end

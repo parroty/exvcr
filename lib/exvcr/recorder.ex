@@ -61,7 +61,7 @@ defmodule ExVCR.Recorder do
 
   @doc "get response from server, then record them"
   def get_response_from_server(request, recorder) do
-    response = :meck.passthrough(request)
+    response = :meck.passthrough(request) |> Handler.remove_sensitive_data
     Handler.append(recorder, ExVCR.JSON.to_string(request, response))
     response
   end

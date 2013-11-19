@@ -24,6 +24,13 @@ defmodule ExVCR.Handler do
     end
   end
 
+  @doc """
+  Filter out senstive data from response
+  """
+  def remove_sensitive_data(response) do
+    ExVCR.Mock.IBrowse.replace_response_body(response, ExVCR.Setting.get(:filter_sensitive_data))
+  end
+
   defp do_find_response([], _params, _custom_mode), do: nil
   defp do_find_response([head|tail], params, custom_mode) do
     case match(head, params, custom_mode) do
