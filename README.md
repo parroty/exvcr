@@ -89,7 +89,6 @@ end
 
 ### Mix Tasks
 - [mix vcr](#mix-vcr-show-cassettes)
-- <del>[mix vcr.custom](#mix-vcr-show-cassettes)</del>
 - [mix vcr.delete](#mix-vcrdelete-delete-cassettes)
 - [mix vcr.check](#mix-vcrcheck-check-cassettes)
 
@@ -105,19 +104,6 @@ Showing list of cassettes in [fixture/vcr_cassettes]
   httpotion_post.json                      2013/11/07 23:24:51
   httpotion_put.json                       2013/11/07 23:24:52
 
-Showing list of cassettes in [fixture/custom_cassettes]
-  [File Name]                              [Last Update]
-  method_mocking.json                      2013/10/06 22:05:38
-  response_mocking.json                    2013/09/29 17:23:38
-  response_mocking_regex.json              2013/10/06 18:13:45
-```
-
-#### <del>[mix vcr.custom] Show custom cassettes</del>
-DEPRECATED: To be removed.
-
-The [mix vcr.custom] task shows the list of the manually created custom cassettes.
-```Shell
-$ mix vcr.custom
 Showing list of cassettes in [fixture/custom_cassettes]
   [File Name]                              [Last Update]
   method_mocking.json                      2013/10/06 22:05:38
