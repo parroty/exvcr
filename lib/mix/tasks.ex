@@ -25,7 +25,7 @@ defmodule Mix.Tasks.Vcr do
     def run(args) do
       {options, files, _} =
         OptionParser.parse(args,
-                           switches: [i: :boolean, a: :boolean],
+                           switches: [interactive: :boolean, all: :boolean],
                            aliases: [d: :dir, i: :interactive, a: :all])
 
       pattern = cond do
