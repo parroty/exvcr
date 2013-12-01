@@ -25,12 +25,6 @@ defmodule Mix.Tasks.VcrTest do
     end
   end
 
-  test "mix vcr.custom" do
-    assert capture_io(fn ->
-      Mix.Tasks.Vcr.Custom.run([])
-    end) =~ %r/Showing list of cassettes/
-  end
-
   test "mix vcr.delete" do
     File.touch!(@dummy_path <> @dummy_file)
     assert capture_io(fn ->
