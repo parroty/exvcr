@@ -10,8 +10,4 @@ defmodule ExVCR.TaskUtilTest do
     option = ExVCR.Task.Util.parse_basic_options([dir: "test1", custom: "test2"])
     assert option == ["test1", "test2"]
   end
-
-  test "base_alias" do
-    assert ExVCR.Task.Util.base_aliases == [d: :dir, c: :custom]
-  end
 end

@@ -14,8 +14,12 @@ defmodule Mix.Tasks.Vcr do
 
   @doc "Entry point for [mix vcr] task"
   def run(args) do
-    {options, _, _} = OptionParser.parse(args, aliases: ExVCR.Task.Util.base_aliases)
-    ExVCR.Task.Util.parse_basic_options(options) |> ExVCR.Task.Runner.show_vcr_cassettes
+    {options, _, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom, h: :help])
+    if options[:help] do
+      ExVCR.Task.Util.print_help_message
+    else
+      ExVCR.Task.Util.parse_basic_options(options) |> ExVCR.Task.Runner.show_vcr_cassettes
+    end
   end
 
   defmodule Delete do
@@ -49,7 +53,7 @@ defmodule Mix.Tasks.Vcr do
 
     @doc "Entry point for [mix vcr.check] task"
     def run(args) do
-      {options, files, _} = OptionParser.parse(args, aliases: ExVCR.Task.Util.base_aliases)
+      {options, files, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom])
       dirs = ExVCR.Task.Util.parse_basic_options(options)
       ExVCR.RecordChecker.start(ExVCR.Checker.new(dirs: dirs))
 

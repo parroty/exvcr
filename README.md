@@ -88,9 +88,12 @@ end
 ```
 
 ### Mix Tasks
+The following tasks are added by including exvcr package.
 - [mix vcr](#mix-vcr-show-cassettes)
 - [mix vcr.delete](#mix-vcrdelete-delete-cassettes)
 - [mix vcr.check](#mix-vcrcheck-check-cassettes)
+
+Also, [mix vcr -h] can be used to see the available options.
 
 #### [mix vcr] Show cassettes
 ```Shell

@@ -19,6 +19,13 @@ defmodule Mix.Tasks.VcrTest do
     end) =~ %r/Showing list of cassettes/
   end
 
+  test "mix vcr -h" do
+    assert capture_io(fn ->
+      Mix.Tasks.Vcr.run(["-h"])
+    end) =~ "Usage: mix vcr [options]"
+  end
+
+
   test "mix vcr with invalid path raises error" do
     assert_raise ExVCR.PathNotFoundError, fn ->
       Mix.Tasks.Vcr.run(["--dir", "invalidpath"])
