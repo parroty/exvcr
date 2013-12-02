@@ -25,7 +25,7 @@ defmodule ExVCR.Handler do
   end
 
   @doc """
-  Filter out senstive data from response
+  Filter out senstive data from response.
   """
   def remove_sensitive_data(response) do
     ExVCR.Mock.IBrowse.replace_response_body(response, ExVCR.Setting.get(:filter_sensitive_data))
