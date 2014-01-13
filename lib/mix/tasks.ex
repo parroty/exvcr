@@ -58,7 +58,7 @@ defmodule Mix.Tasks.Vcr do
       ExVCR.RecordChecker.start(ExVCR.Checker.new(dirs: dirs))
 
       Mix.env(:test)
-      Code.load_file(Path.join([Path.dirname(__FILE__), "mix_file.exs"]))
+      Code.load_file(Path.join([Path.dirname(__ENV__.file), "mix_file.exs"]))
       Mix.Task.run("test", files ++ ["--cover"])
     end
   end
