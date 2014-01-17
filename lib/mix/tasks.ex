@@ -34,7 +34,7 @@ defmodule Mix.Tasks.Vcr do
 
       pattern = cond do
         options[:all]          -> %r/.*/
-        Enum.count(files) == 1 -> Enum.first(files)
+        Enum.count(files) == 1 -> Enum.at(files, 0)
         true                   -> nil
       end
 
