@@ -1,12 +1,12 @@
 [ "cowboy": {:git, "git://github.com/extend/cowboy.git", "6672ea04155a075e60381413bf9b65b3974b7d57", []},
-  "cowlib": {:git, "git://github.com/extend/cowlib.git", "34a39ef28ca841fb9233ce9df3ec654eb321c5e5", [{:ref, "0.3.0"}]},
+  "cowlib": {:git, "git://github.com/extend/cowlib.git", "34a39ef28ca841fb9233ce9df3ec654eb321c5e5", [ref: "0.3.0"]},
   "exactor": {:git, "git://github.com/sasa1977/exactor.git", "573baa559d074375900e686fc921c86fb60b1ff1", []},
-  "excoveralls": {:git, "git://github.com/parroty/excoveralls.git", "0d9907fd304d364792a0946a524bc607f3e1a6ec", []},
+  "excoveralls": {:git, "git://github.com/parroty/excoveralls.git", "cb860b34721a3fea2c08ca0b267451c3c886c652", []},
   "exprintf": {:git, "git://github.com/parroty/exprintf.git", "ef4d3dc220ba23f6eb3544705c949d49bc24f5bc", []},
   "http_server": {:git, "git://github.com/parroty/http_server.git", "b496c12424f5d459e1961fba02874e51a2ff9181", []},
-  "httpotion": {:git, "git://github.com/parroty/httpotion.git", "07d7048981e5c604628ea5e9bf732ef784d7cbdf", [{:branch, "version"}]},
-  "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "866b0ff5aca229f1ef53653eabc8ed1720c13cd6", [{:ref, "866b0ff5aca229f1ef53653eabc8ed1720c13cd6"}]},
+  "httpotion": {:git, "git://github.com/parroty/httpotion.git", "07d7048981e5c604628ea5e9bf732ef784d7cbdf", [branch: "version"]},
+  "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "866b0ff5aca229f1ef53653eabc8ed1720c13cd6", [ref: "866b0ff5aca229f1ef53653eabc8ed1720c13cd6"]},
   "jsex": {:git, "git://github.com/talentdeficit/jsex.git", "c9df36f07b2089a73ab6b32074c01728f1e5a2e1", []},
-  "jsx": {:git, "git://github.com/talentdeficit/jsx.git", "e50af6e109cb03bd26acf715cbc77de746507d1d", [{:tag, "v1.4.3"}]},
+  "jsx": {:git, "git://github.com/talentdeficit/jsx.git", "e50af6e109cb03bd26acf715cbc77de746507d1d", [tag: "v1.4.3"]},
   "meck": {:git, "git://github.com/eproxus/meck.git", "1286aba1cb6bbd6c9fc3f817740758b224843ee7", []},
-  "ranch": {:git, "git://github.com/extend/ranch.git", "41705752ffc7e3ecb96eef8374015ead4ca7f699", [{:ref, "0.8.5"}]} ]
+  "ranch": {:git, "git://github.com/extend/ranch.git", "41705752ffc7e3ecb96eef8374015ead4ca7f699", [ref: "0.8.5"]} ]
