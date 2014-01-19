@@ -11,17 +11,15 @@ It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide 
         - <a href="https://github.com/myfreeweb/httpotion" target="_blank">HTTPotion</a>
     - <a href="https://github.com/benoitc/hackney" target="_blank">hackney</a>-based libraries.
         - <a href="https://github.com/edgurgel/httpoison" target="_blank">HTTPoison</a>
-        - hackney support is very limited yet, and tested with sync request of HTTPoison
+        - hackney support is very limited, and tested only with sync request of HTTPoison yet.
 - HTTP interactions are recorded as JSON file.
     - The JSON file can be recorded automatically (vcr_cassettes) or manually updated (custom_cassettes)
 
 ### Notes for v0.1.0 or later
-Please specify **[use ExVCR.Mock]** instead of [import use ExVCR.Mock]. Otherwise, "(CompileError) ***: function adapter/0 undefined" might be displayed.
+Please specify `use ExVCR.Mock` instead of `import ExVCR.Mock`. Otherwise, `(CompileError) ***: function adapter/0 undefined` might be displayed.
 
 ### Usage
-#### Code
-
-Add "use ExVCR.Mock" to the test module. This mocks ibrowse library by dfault. For using hackney, specify "adapter: ExVCR.Adapter.Hackney" options as follows.
+Add "use ExVCR.Mock" to the test module. This mocks ibrowse by dfault. For using hackney, specify `adapter: ExVCR.Adapter.Hackney` options as follows.
 
 ##### Example with ibrowse
 ```Elixir
