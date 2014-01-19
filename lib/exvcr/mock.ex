@@ -5,20 +5,39 @@ defmodule ExVCR.Mock do
   """
   alias ExVCR.Recorder
 
-  defmacro use_cassette(fixture, options // [], test) do
-    Application.Behaviour.start(:ibrowse)
+  defmacro __using__(opts) do
+    adapter = opts[:adapter] || ExVCR.Adapter.IBrowse
+
     quote do
-      :meck.new(:ibrowse, [:passthrough])
-      recorder = Recorder.start(unquote(fixture), unquote(options))
-      ExVCR.Mock.IBrowse.mock_methods(recorder)
+      import ExVCR.Mock
+      Application.Behaviour.start(unquote(adapter).module_name)
+      use unquote(adapter)
+
+      def adapter do
+        unquote(adapter)
+      end
+    end
+  end
+
+  defmacro use_cassette(fixture, options // [], test) do
+    quote do
+      recorder = Recorder.start(unquote(options) ++ [fixture: unquote(fixture), adapter: adapter])
+
+      target_methods = adapter.target_methods(recorder)
+      module_name    = adapter.module_name
+
+      :meck.new(module_name, [:passthrough])
+      Enum.each(target_methods, fn({function, callback}) ->
+        :meck.expect(module_name, function, callback)
+      end)
 
       try do
         unquote(test)
         if Mix.env == :test do
-          if :meck.validate(:ibrowse) == false, do: raise ":meck.validate failed"
+          if :meck.validate(module_name) == false, do: raise ":meck.validate failed"
         end
       after
-        :meck.unload(:ibrowse)
+        :meck.unload(module_name)
         Recorder.save(recorder)
       end
     end

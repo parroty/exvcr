@@ -1,6 +1,6 @@
-defmodule ExVCR.MockTest do
+defmodule ExVCR.Adapter.IBrowseTest do
   use ExUnit.Case, async: false
-  import ExVCR.Mock
+  use ExVCR.Mock
 
   setup_all do
     ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes", "fixture/custom_cassettes")
@@ -85,7 +85,6 @@ defmodule ExVCR.MockTest do
         HTTPotion.get("http://example.com", [])
       end
     end
-    :meck.unload(:ibrowse)  # temporary fix
   end
 
   test "match method succeeds" do

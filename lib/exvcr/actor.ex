@@ -3,6 +3,10 @@ defmodule ExVCR.Actor do
   Provides data store for values used by ExVCR.Recorder
   """
   defmodule Responses do
+    @moduledoc """
+    Stores request/response for the recorder.
+    """
+
     use ExActor
 
     defcast append(x), state: state, do: new_state([x|state])
@@ -19,14 +23,11 @@ defmodule ExVCR.Actor do
     end
   end
 
-  defmodule Fixture do
-    use ExActor
-
-    defcast set(x), do: new_state(x)
-    defcall get, state: state, do: state
-  end
-
   defmodule Options do
+    @moduledoc """
+    Stores option parameters for the recorder.
+    """
+
     use ExActor
 
     defcast set(x), do: new_state(x)

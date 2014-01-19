@@ -1,19 +1,7 @@
-defmodule ExVCR.Mock.IBrowse do
+defmodule ExVCR.Adapter.IBrowse.Converter do
   @moduledoc """
   Provides helpers to mock :ibrowse methods
   """
-  alias ExVCR.Recorder
-
-  def mock_methods(recorder) do
-    do_mock_methods(&Recorder.respond(recorder, [&1,&2,&3]))
-    do_mock_methods(&Recorder.respond(recorder, [&1,&2,&3,&4]))
-    do_mock_methods(&Recorder.respond(recorder, [&1,&2,&3,&4,&5]))
-    do_mock_methods(&Recorder.respond(recorder, [&1,&2,&3,&4,&5,&6]))
-  end
-
-  def do_mock_methods(callback) do
-    :meck.expect(:ibrowse, :send_req, callback)
-  end
 
   def string_to_request(string) do
     Enum.map(string, fn({x,y}) -> {binary_to_atom(x),y} end) |> ExVCR.Request.new
@@ -45,21 +33,12 @@ defmodule ExVCR.Mock.IBrowse do
     )
   end
 
-  def parse_headers(headers) do
+  defp parse_headers(headers) do
     do_parse_headers(headers, [])
   end
 
   defp do_parse_headers([], acc), do: Enum.reverse(acc)
   defp do_parse_headers([{key,value}|tail], acc) do
     do_parse_headers(tail, [{iolist_to_binary(key), iolist_to_binary(value)}|acc])
-  end
-
-  def replace_response_body({:ok, status_code, headers, body}, filter) do
-    {:ok, status_code, headers, body |> iolist_to_binary |> replace_sensitive_data(filter)}
-  end
-
-  defp replace_sensitive_data(body, []), do: body
-  defp replace_sensitive_data(body, [{pattern, placeholder}|tail]) do
-    replace_sensitive_data(String.replace(body, %r/#{pattern}/, placeholder), tail)
   end
 end

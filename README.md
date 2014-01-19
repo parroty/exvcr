@@ -4,20 +4,30 @@
 Record and replay HTTP interactions library for elixir.
 It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide similar functionalities.
 
-### Notes
+### Basics
 
-- It only supports :ibrowse based HTTP interaction at the moment.
+- The following HTTP libraries can be applied.
+    - <a href="https://github.com/cmullaparthi/ibrowse" target="_blank">ibrowse</a>-based libraries.
+        - <a href="https://github.com/myfreeweb/httpotion" target="_blank">HTTPotion</a>
+    - <a href="https://github.com/benoitc/hackney" target="_blank">hackney</a>-based libraries.
+        - <a href="https://github.com/edgurgel/httpoison" target="_blank">HTTPoison</a>
+        - hackney support is very limited yet, and tested with sync request of HTTPoison
 - HTTP interactions are recorded as JSON file.
     - The JSON file can be recorded automatically (vcr_cassettes) or manually updated (custom_cassettes)
 
+### Notes for v0.1.0 or later
+Please specify **[use ExVCR.Mock]** instead of [import use ExVCR.Mock]. Otherwise, "(CompileError) ***: function adapter/0 undefined" might be displayed.
 
 ### Usage
 #### Code
 
+Add "use ExVCR.Mock" to the test module. This mocks ibrowse library by dfault. For using hackney, specify "adapter: ExVCR.Adapter.Hackney" options as follows.
+
+##### Example with ibrowse
 ```Elixir
-defmodule ExVCR.MockTest do
+defmodule ExVCR.Adapter.IBrowseTest do
   use ExUnit.Case
-  import ExVCR.Mock
+  use ExVCR.Mock
 
   setup_all do
     ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes")
@@ -36,6 +46,24 @@ defmodule ExVCR.MockTest do
   test "httpotion" do
     use_cassette "example_httpotion" do
       assert HTTPotion.get("http://example.com", []).body =~ %r/Example Domain/
+    end
+  end
+end
+```
+
+##### Example with hackney
+```Elixir
+defmodule ExVCR.Adapter.HackneyTest do
+  use ExUnit.Case, async: false
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
+
+  setup_all do
+    HTTPoison.start
+  end
+
+  test "get request" do
+    use_cassette "httpoison_get" do
+      assert HTTPoison.get("http://example.com").body =~ %r/Example Domain/
     end
   end
 end
@@ -171,3 +199,6 @@ Showing hit counts of cassettes in [fixture/vcr_cassettes]
 
 ##### Notes
 If the cassette save directory is changed from the default, [-d, --dir] option (for vcr cassettes) and [-c, --custom] option (for custom cassettes) can be used to specify the directory.
+
+### TODO
+- Improve performance, as it's very slow.

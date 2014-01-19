@@ -29,7 +29,7 @@ defmodule ExVCR.TaskRunnerTest do
 
   test "check vcr cassettes task prints json file summary" do
     result = capture_io(fn ->
-      record = ExVCR.Checker.new(dirs: ["test/cassettes"], files: ["test1.json", "test2.json", "test1.json"])
+      record = ExVCR.Checker.Results.new(dirs: ["test/cassettes"], files: ["test1.json", "test2.json", "test1.json"])
       ExVCR.Task.Runner.check_cassettes(record)
     end)
 

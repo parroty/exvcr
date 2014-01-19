@@ -1,58 +1,58 @@
 defmodule ExVCR.Handler do
   @moduledoc """
-  Provide operations for recorded responses.
+  Provide operations for request/response.
   """
-  alias ExVCR.Actor.Responses
+  alias ExVCR.Recorder
   alias ExVCR.Actor.Options
 
   @doc """
-  Find a response from the recorded lists which matches the request parameter.
+  get response from either server or cache.
   """
-  def find_response(request, recorder) do
-    custom_mode = Options.get(recorder.options)[:custom]
-    url    = Enum.fetch!(request, 0)
-    method = Enum.fetch!(request, 2)
-    params = [url: url, method: method]
-    do_find_response(get(recorder), params, custom_mode) |> verify_response(params, custom_mode)
+  def get_response(recorder, request) do
+    get_response_from_cache(request, recorder) || get_response_from_server(request, recorder)
   end
 
-  defp verify_response(response, params, custom_mode) do
-    if response == nil and custom_mode == true do
-      raise ExVCR.InvalidRequestError.new(message: "response for [URL:#{params[:url]}, METHOD:#{params[:method]}] was not found in the custom cassette")
-    else
-      response
+  def get_response_from_cache(request, recorder) do
+    custom_mode = Options.get(recorder.options)[:custom] || false
+    adapter     = ExVCR.Recorder.options(recorder)[:adapter]
+
+    params = adapter.generate_keys_for_request(request)
+    response = find_response(Recorder.get(recorder), params, custom_mode)
+    response = adapter.hook_response_from_cache(response)
+
+    case { response, custom_mode } do
+      { nil, true } ->
+        raise ExVCR.InvalidRequestError.new(message:
+                "response for [URL:#{params[:url]}, METHOD:#{params[:method]}] was not found in the custom cassette")
+      { nil, false } ->
+        nil
+      { response, _ } ->
+        { :ok, response.status_code, response.headers, response.body }
     end
   end
 
-  @doc """
-  Filter out senstive data from response.
-  """
-  def remove_sensitive_data(response) do
-    ExVCR.Mock.IBrowse.replace_response_body(response, ExVCR.Setting.get(:filter_sensitive_data))
-  end
-
-  defp do_find_response([], _params, _custom_mode), do: nil
-  defp do_find_response([head|tail], params, custom_mode) do
-    case match(head, params, custom_mode) do
-      true  -> head[:response]
-      false -> do_find_response(tail, params, custom_mode)
+  defp find_response([], _keys, _custom_mode), do: nil
+  defp find_response([response|tail], keys, custom_mode) do
+    case match_response(response, keys, custom_mode) do
+      true  -> response[:response]
+      false -> find_response(tail, keys, custom_mode)
     end
   end
 
-  defp match(head, params, custom_mode) do
-    match_url(head, params, custom_mode) and match_method(head, params)
+  defp match_response(response, keys, custom_mode) do
+    match_by_url(response, keys, custom_mode) and match_by_method(response, keys)
   end
 
-  defp match_url(head, params, custom_mode) do
+  defp match_by_url(response, keys, custom_mode) do
     if custom_mode do
-      pattern = Regex.compile!("^#{head[:request].url}$")
-      Regex.match?(pattern, params[:url])
+      pattern = Regex.compile!("^#{response[:request].url}$")
+      Regex.match?(pattern, keys[:url])
     else
-      head[:request].url == iolist_to_binary(params[:url])
+      response[:request].url == iolist_to_binary(keys[:url])
     end
   end
 
-  defp match_method(head, params) do
+  defp match_by_method(head, params) do
     if params[:method] == nil || head[:request].method == nil do
       true
     else
@@ -60,8 +60,11 @@ defmodule ExVCR.Handler do
     end
   end
 
-  def get(recorder),            do: Responses.get(recorder.responses)
-  def set(responses, recorder), do: Responses.set(recorder.responses, responses)
-  def append(recorder, x),      do: Responses.append(recorder.responses, x)
-  def pop(recorder),            do: Responses.pop(recorder.responses)
+  defp get_response_from_server(request, recorder) do
+    adapter = ExVCR.Recorder.options(recorder)[:adapter]
+    response = :meck.passthrough(request)
+                 |> adapter.hook_response_from_server
+    Recorder.append(recorder, adapter.to_string(request, response))
+    response
+  end
 end

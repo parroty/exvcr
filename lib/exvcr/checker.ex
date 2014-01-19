@@ -1,6 +1,4 @@
-defrecord ExVCR.Checker, dirs: nil, files: []
-
-defmodule ExVCR.RecordChecker do
+defmodule ExVCR.Checker do
   @moduledoc """
   Provides data store for checking which cassette files are used.
   It's for [mix vcr.check] task.
