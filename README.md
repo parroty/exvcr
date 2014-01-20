@@ -19,7 +19,7 @@ It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide 
 Please specify `use ExVCR.Mock` instead of `import ExVCR.Mock`. Otherwise, `(CompileError) ***: function adapter/0 undefined` might be displayed.
 
 ### Usage
-Add "use ExVCR.Mock" to the test module. This mocks ibrowse by dfault. For using hackney, specify `adapter: ExVCR.Adapter.Hackney` options as follows.
+Add `use ExVCR.Mock` to the test module. This mocks ibrowse by default. For using hackney, specify `adapter: ExVCR.Adapter.Hackney` options as follows.
 
 ##### Example with ibrowse
 ```Elixir
@@ -43,6 +43,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "httpotion" do
     use_cassette "example_httpotion" do
+      HTTPotion.start
       assert HTTPotion.get("http://example.com", []).body =~ %r/Example Domain/
     end
   end
@@ -68,7 +69,10 @@ end
 ```
 
 #### Custom Cassettes
-Custom cassette can be defined in json format, by adding 2nd parameter of ExVCR.Config.cassette_library_dir method.
+You can manually define custom cassette json file for more flexible response control rather than just recoding the actual server response.
+- Optional 2nd parameter of `ExVCR.Config.cassette_library_dir` method specifies the custom cassette directory. The directory is separated from vcr cassette one for avoiding mistakenly overwriting.
+- Adding `custom: true` option to `use_cassette` macro indicates to use the custom cassette, and it just returns the pre-defined json response, instead of requesting to server.
+
 
 ```Elixir
 defmodule ExVCR.MockTest do
@@ -79,9 +83,15 @@ defmodule ExVCR.MockTest do
     ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes", "fixture/custom_cassettes")
     :ok
   end
+
+  test "custom with valid response" do
+    use_cassette "response_mocking", custom: true do
+      assert HTTPotion.get("http://example.com", []).body =~ %r/Custom Response/
+    end
+  end
 ```
 
-ExVCR uses url parameter to match request and cassettes. The "url" parameter in the json file is taken as regexp string.
+The custom json file format is the same as vcr cassettes.
 
 **fixture/custom_cassettes/response_mocking.json**
 ```javascript
@@ -101,8 +111,12 @@ ExVCR uses url parameter to match request and cassettes. The "url" parameter in 
 ]
 ```
 
+### Recording VCR Cassettes
+#### Matching
+ExVCR uses url parameter to match request and cassettes. The "url" parameter in the json file is taken as regexp string.
+
 #### Removing Sensitive Data
-ExVCR.Config.filter_sensitive_data method can be used to remove sensitive data
+`ExVCR.Config.filter_sensitive_data(pattern, placeholder)` method can be used to remove sensitive data. It searches for string matches with `pattern` and replaces with `placeholder`.
 
 ```elixir
 test "replace sensitive data" do
@@ -118,8 +132,7 @@ The following tasks are added by including exvcr package.
 - [mix vcr](#mix-vcr-show-cassettes)
 - [mix vcr.delete](#mix-vcrdelete-delete-cassettes)
 - [mix vcr.check](#mix-vcrcheck-check-cassettes)
-
-Also, [mix vcr -h] can be used to see the available options.
+- [mix vcr --help](#mix-vcr-help-help)
 
 #### [mix vcr] Show cassettes
 ```Shell
@@ -194,6 +207,32 @@ Showing hit counts of cassettes in [fixture/vcr_cassettes]
   example_httpotion.json                   1
 ...
 ```
+
+#### [mix vcr --help] Help
+```Shell
+$ mix vcr --help
+Usage: mix vcr [options]
+  Used to display the list of cassettes
+
+  -h (--help)         Show helps for vcr mix tasks
+  -d (--dir)          Specify vcr cassettes directory
+  -c (--custom)       Specify custom cassettes directory
+
+Usage: mix vcr.delete [options] [cassete-file-names]
+  Used to delete cassettes
+
+  -d (--dir)          Specify vcr cassettes directory
+  -c (--custom)       Specify custom cassettes directory
+  -i (--interactive)  Request confirmation before attempting to delete
+  -a (--all)          Delete all the files by ignoring specified [filenames]
+
+Usage: mix vcr.check [options] [test-files]
+  Used to check cassette use on test execution
+
+  -d (--dir)          Specify vcr cassettes directory
+  -c (--custom)       Specify custom cassettes directory
+```
+
 
 ##### Notes
 If the cassette save directory is changed from the default, [-d, --dir] option (for vcr cassettes) and [-c, --custom] option (for custom cassettes) can be used to specify the directory.

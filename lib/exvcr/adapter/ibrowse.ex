@@ -1,11 +1,16 @@
 defmodule ExVCR.Adapter.IBrowse do
   @moduledoc """
-  Provides callback information for ibrowse.
+  Provides adapter methods to mock :ibrowse methods.
   """
-  alias ExVCR.Adapter.IBrowse.Converter
-
   defmacro __using__(_opts) do
     # do nothing
+  end
+
+  @doc """
+  Returns the name of the mock target module.
+  """
+  def module_name do
+    :ibrowse
   end
 
   @doc """
@@ -19,14 +24,7 @@ defmodule ExVCR.Adapter.IBrowse do
   end
 
   @doc """
-  Returns the name of the mock target module.
-  """
-  def module_name do
-    :ibrowse
-  end
-
-  @doc """
-  Generate key for searching response
+  Generate key for searching response.
   """
   def generate_keys_for_request(request) do
     url    = Enum.fetch!(request, 0)
@@ -34,10 +32,21 @@ defmodule ExVCR.Adapter.IBrowse do
     [url: url, method: method]
   end
 
+  @doc """
+  Callback from ExVCR.Handler when response is retrieved from the HTTP server.
+  """
   def hook_response_from_server(response) do
-    response |> ExVCR.Filter.replace_sensitive_data
+    filter_sensitive_data(response)
   end
 
+  defp filter_sensitive_data({:ok, status_code, headers, body}) do
+    replaced_body = body |> iolist_to_binary |> ExVCR.Filter.filter_sensitive_data
+    {:ok, status_code, headers, replaced_body}
+  end
+
+  @doc """
+  Callback from ExVCR.Handler when response is retrieved from the json file cache.
+  """
   def hook_response_from_cache(response) do
     response
   end
@@ -46,15 +55,15 @@ defmodule ExVCR.Adapter.IBrowse do
   Parse string fromat into original request / response format
   """
   def from_string([{"request", request}, {"response", response}]) do
-    [ request:  Converter.string_to_request(request),
-      response: Converter.string_to_response(response) ]
+    [ request:  ExVCR.Adapter.IBrowse.Converter.string_to_request(request),
+      response: ExVCR.Adapter.IBrowse.Converter.string_to_response(response) ]
   end
 
   @doc """
   Parse request and response parameters into string format.
   """
   def to_string(request, response) do
-    [ request:  Converter.request_to_string(request),
-      response: Converter.response_to_string(response) ]
+    [ request:  ExVCR.Adapter.IBrowse.Converter.request_to_string(request),
+      response: ExVCR.Adapter.IBrowse.Converter.response_to_string(response) ]
   end
 end

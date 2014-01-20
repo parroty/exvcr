@@ -1,14 +1,20 @@
 defmodule ExVCR.Adapter.Hackney do
   @moduledoc """
-  Provides helpers to mock :hackney methods
+  Provides adapter methods to mock :hackney methods.
   """
-  alias ExVCR.Adapter.Hackney.Converter
   alias ExVCR.Adapter.Hackney.Store
 
   defmacro __using__(_opts) do
     quote do
       Store.start
     end
+  end
+
+  @doc """
+  Returns the name of the mock target module.
+  """
+  def module_name do
+    :hackney
   end
 
   @doc """
@@ -20,14 +26,7 @@ defmodule ExVCR.Adapter.Hackney do
   end
 
   @doc """
-  Returns the name of the mock target module.
-  """
-  def module_name do
-    :hackney
-  end
-
-  @doc """
-  Generate key for searching response
+  Generate key for searching response.
   """
   def generate_keys_for_request(request) do
     url    = Enum.fetch!(request, 1)
@@ -35,11 +34,16 @@ defmodule ExVCR.Adapter.Hackney do
     [url: url, method: method]
   end
 
-  # TODO : apply ExVCR.Filter.replace_sensitive_data
+  @doc """
+  Callback from ExVCR.Handler when response is retrieved from the HTTP server.
+  """
   def hook_response_from_server(response = {:ok, _status_code, _headers, _client}) do
     response
   end
 
+  @doc """
+  Callback from ExVCR.Handler when response is retrieved from the json file cache.
+  """
   def hook_response_from_cache(nil), do: nil
   def hook_response_from_cache(ExVCR.Response[body: body] = response) do
     client = make_ref
@@ -51,11 +55,13 @@ defmodule ExVCR.Adapter.Hackney do
     if body = Store.get(client) do
       {:ok, body}
     else
-      client_in_string = inspect(client)
       {:ok, body} = :meck.passthrough([client])
+      body = ExVCR.Filter.filter_sensitive_data(body)
+
+      client_key_in_string = inspect(client)
       ExVCR.Recorder.update(recorder,
         fn([request: _request, response: response]) ->
-          response.body == client_in_string
+          response.body == client_key_in_string
         end,
         fn([request: request, response: response]) ->
           [request: request, response: response.body(body)]
@@ -69,16 +75,16 @@ defmodule ExVCR.Adapter.Hackney do
   Parse string fromat into original request / response format
   """
   def from_string([{"request", request}, {"response", response}]) do
-    [ request:  Converter.string_to_request(request),
-      response: Converter.string_to_response(response) ]
+    [ request:  ExVCR.Adapter.Hackney.Converter.string_to_request(request),
+      response: ExVCR.Adapter.Hackney.Converter.string_to_response(response) ]
   end
 
   @doc """
   Parse request and response parameters into string format.
   """
   def to_string(request, response) do
-    [ request:  Converter.request_to_string(request),
-      response: Converter.response_to_string(response) ]
+    [ request:  ExVCR.Adapter.Hackney.Converter.request_to_string(request),
+      response: ExVCR.Adapter.Hackney.Converter.response_to_string(response) ]
   end
 
 end

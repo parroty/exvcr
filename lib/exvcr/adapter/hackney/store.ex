@@ -1,19 +1,36 @@
 defmodule ExVCR.Adapter.Hackney.Store do
+  @moduledoc """
+  Provides a datastore for temporary saving client key (Reference) and body relationship.
+  """
+
+  @doc """
+  Initialize the datastore.
+  """
   def start do
-    if :ets.info(:exvcr_hackney) == :undefined do
-      :ets.new(:exvcr_hackney, [:set, :public, :named_table])
+    if :ets.info(table) == :undefined do
+      :ets.new(table, [:set, :public, :named_table])
     end
     :ok
   end
 
+  @doc """
+  Returns value (body) from the key (client key).
+  """
   def get(key) do
     start
-    :ets.lookup(:exvcr_hackney, key)[key]
+    :ets.lookup(table, key)[key]
   end
 
+  @doc """
+  Set value (body) with the key (client key).
+  """
   def set(key, value) do
     start
-    :ets.insert(:exvcr_hackney, {key, value})
+    :ets.insert(table, {key, value})
     value
+  end
+
+  defp table do
+    "exvcr_hackney#{inspect self}" |> binary_to_atom
   end
 end

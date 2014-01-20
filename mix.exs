@@ -26,7 +26,7 @@ defmodule ExVCR.Mixfile do
       [
         {:ibrowse, github: "cmullaparthi/ibrowse", ref: "866b0ff5aca229f1ef53653eabc8ed1720c13cd6", override: true},
         {:httpotion, github: "myfreeweb/httpotion"},
-        {:httpoison, github: "parroty/httpoison", ref: "fix"},
+        {:httpoison, github: "edgurgel/httpoison"},
         {:excoveralls, github: "parroty/excoveralls"},
         {:http_server, github: "parroty/http_server"}
       ]

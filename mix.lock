@@ -6,7 +6,7 @@
   "hackney": {:git, "git://github.com/benoitc/hackney.git", "7f2a0b5996313d930277786e7ff5d538e9346547", [tag: "0.10.1"]},
   "hackney_lib": {:git, "https://github.com/benoitc/hackney_lib.git", "eecdb481f1d38bfb194896bffdf9bdcdd967ae96", [tag: "0.2.2"]},
   "http_server": {:git, "git://github.com/parroty/http_server.git", "b496c12424f5d459e1961fba02874e51a2ff9181", []},
-  "httpoison": {:git, "git://github.com/parroty/httpoison.git", "6deed5f705a1aa5871e25fbe7d68864cfd32da4e", [ref: "fix"]},
+  "httpoison": {:git, "git://github.com/edgurgel/httpoison.git", "f8be9bdde0d6dd5a956b405c265dadbfc636184a", []},
   "httpotion": {:git, "git://github.com/myfreeweb/httpotion.git", "3f97f62bbf40e7b941e3b52dd130cf95b6b3fb6e", []},
   "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "866b0ff5aca229f1ef53653eabc8ed1720c13cd6", [ref: "866b0ff5aca229f1ef53653eabc8ed1720c13cd6"]},
   "jsex": {:git, "git://github.com/talentdeficit/jsex.git", "c9df36f07b2089a73ab6b32074c01728f1e5a2e1", []},

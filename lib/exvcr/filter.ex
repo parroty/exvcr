@@ -6,12 +6,8 @@ defmodule ExVCR.Filter do
   @doc """
   Filter out senstive data from the response.
   """
-  def replace_sensitive_data(response) do
-    replace_response(response, ExVCR.Setting.get(:filter_sensitive_data))
-  end
-
-  defp replace_response({:ok, status_code, headers, body}, filters) do
-    {:ok, status_code, headers, body |> iolist_to_binary |> replace(filters)}
+  def filter_sensitive_data(body) do
+    replace(body, ExVCR.Setting.get(:filter_sensitive_data))
   end
 
   defp replace(body, []), do: body

@@ -4,12 +4,15 @@ defmodule ExVCR.RecorderIBrowseTest do
   alias ExVCR.Recorder
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_ibrowse"
-  @dummy_custom_dir   "tmp/vcr_tmp/vcr_custom_ibrowse"
 
   setup_all do
     :ibrowse.start
     HttpServer.start(path: "/server", port: 34000, response: "test_response")
     :ok
+  end
+
+  setup do
+    File.rm_rf(@dummy_cassette_dir)
   end
 
   test "initializes recorder" do
@@ -19,18 +22,14 @@ defmodule ExVCR.RecorderIBrowseTest do
   end
 
   test "forcefully getting response from server by removing json in advance" do
-    File.rm(@dummy_cassette_dir <> "/server.json")
     ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
-
     use_cassette "server" do
       assert HTTPotion.get("http://localhost:34000/server", []).body =~ %r/test_response/
     end
   end
 
   test "forcefully getting response from server, then loading from cache by recording twice" do
-    File.rm(@dummy_cassette_dir <> "/server.json")
     ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
-
     use_cassette "server" do
       assert HTTPotion.get("http://localhost:34000/server", []).body =~ %r/test_response/
     end
@@ -49,9 +48,7 @@ defmodule ExVCR.RecorderIBrowseTest do
     ExVCR.Config.filter_sensitive_data(nil)
   end
 
-  test "test append/pop" do
-    record = Recorder.start([test: true, fixture: "fixture/tmp"])
-    Recorder.append(record, "test")
-    assert Recorder.pop(record) == "test"
+  teardown_all do
+    File.rm_rf(@dummy_cassette_dir)
   end
 end

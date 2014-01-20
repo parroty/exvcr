@@ -31,6 +31,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "httpotion" do
     use_cassette "example_httpotion" do
+      HTTPotion.start
       assert HTTPotion.get("http://example.com", []).body =~ %r/Example Domain/
     end
   end
