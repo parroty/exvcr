@@ -19,9 +19,13 @@ defmodule ExVCR.Mock do
     end
   end
 
+  @doc """
+  Provides macro to trigger recording/replaying http interactions.
+  """
   defmacro use_cassette(fixture, options // [], test) do
     quote do
-      recorder = Recorder.start(unquote(options) ++ [fixture: unquote(fixture), adapter: adapter])
+      recorder = Recorder.start(
+        unquote(options) ++ [fixture: normalize_fixture(unquote(fixture)), adapter: adapter])
 
       target_methods = adapter.target_methods(recorder)
       module_name    = adapter.module_name
@@ -41,5 +45,12 @@ defmodule ExVCR.Mock do
         Recorder.save(recorder)
       end
     end
+  end
+
+  @doc """
+  Normalize fixture name for using as json file names, which removes whitespaces and align case.
+  """
+  def normalize_fixture(fixture) do
+    fixture |> String.replace(%r/\s/, "_") |> String.downcase
   end
 end
