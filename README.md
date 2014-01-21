@@ -19,12 +19,13 @@ It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide 
 Please specify `use ExVCR.Mock` instead of `import ExVCR.Mock`. Otherwise, `(CompileError) ***: function adapter/0 undefined` might be displayed.
 
 ### Usage
-Add `use ExVCR.Mock` to the test module. This mocks ibrowse by default. For using hackney, specify `adapter: ExVCR.Adapter.Hackney` options as follows.
+- Add `use ExVCR.Mock` to the test module. This mocks ibrowse by default. For using hackney, specify `adapter: ExVCR.Adapter.Hackney` options as follows.
+- Specify `async: false` option for `use ExUnit.Case`.
 
 ##### Example with ibrowse
 ```Elixir
 defmodule ExVCR.Adapter.IBrowseTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   use ExVCR.Mock
 
   setup_all do
