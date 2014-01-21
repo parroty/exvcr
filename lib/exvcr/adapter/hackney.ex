@@ -74,17 +74,14 @@ defmodule ExVCR.Adapter.Hackney do
   @doc """
   Parse string fromat into original request / response format
   """
-  def from_string([{"request", request}, {"response", response}]) do
-    [ request:  ExVCR.Adapter.Hackney.Converter.string_to_request(request),
-      response: ExVCR.Adapter.Hackney.Converter.string_to_response(response) ]
+  def convert_from_string([{"request", request}, {"response", response}]) do
+    ExVCR.Adapter.Hackney.Converter.convert_from_string(request, response)
   end
 
   @doc """
   Parse request and response parameters into string format.
   """
-  def to_string(request, response) do
-    [ request:  ExVCR.Adapter.Hackney.Converter.request_to_string(request),
-      response: ExVCR.Adapter.Hackney.Converter.response_to_string(response) ]
+  def convert_to_string(request, response) do
+    ExVCR.Adapter.Hackney.Converter.convert_to_string(request, response)
   end
-
 end

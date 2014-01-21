@@ -54,16 +54,14 @@ defmodule ExVCR.Adapter.IBrowse do
   @doc """
   Parse string fromat into original request / response format
   """
-  def from_string([{"request", request}, {"response", response}]) do
-    [ request:  ExVCR.Adapter.IBrowse.Converter.string_to_request(request),
-      response: ExVCR.Adapter.IBrowse.Converter.string_to_response(response) ]
+  def convert_from_string([{"request", request}, {"response", response}]) do
+    ExVCR.Adapter.IBrowse.Converter.convert_from_string(request, response)
   end
 
   @doc """
   Parse request and response parameters into string format.
   """
-  def to_string(request, response) do
-    [ request:  ExVCR.Adapter.IBrowse.Converter.request_to_string(request),
-      response: ExVCR.Adapter.IBrowse.Converter.response_to_string(response) ]
+  def convert_to_string(request, response) do
+    ExVCR.Adapter.IBrowse.Converter.convert_to_string(request, response)
   end
 end

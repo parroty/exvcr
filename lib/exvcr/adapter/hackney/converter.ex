@@ -3,15 +3,29 @@ defmodule ExVCR.Adapter.Hackney.Converter do
   Provides helpers to mock :hackney methods
   """
 
-  def string_to_request(string) do
+  @doc """
+  Parse string fromat into original request / response format
+  """
+  def convert_from_string(request, response) do
+    [ request:  string_to_request(request), response: string_to_response(response) ]
+  end
+
+  @doc """
+  Parse request and response parameters into string format.
+  """
+  def convert_to_string(request, response) do
+    [ request:  request_to_string(request), response: response_to_string(response) ]
+  end
+
+  defp string_to_request(string) do
     Enum.map(string, fn({x,y}) -> {binary_to_atom(x),y} end) |> ExVCR.Request.new
   end
 
-  def string_to_response(string) do
+  defp string_to_response(string) do
     Enum.map(string, fn({x, y}) -> {binary_to_atom(x), y} end) |> ExVCR.Response.new
   end
 
-  def request_to_string([method, url, headers, body, options]) do
+  defp request_to_string([method, url, headers, body, options]) do
     ExVCR.Request.new(
       url: iolist_to_binary(url),
       headers: parse_headers(headers),
@@ -22,7 +36,7 @@ defmodule ExVCR.Adapter.Hackney.Converter do
   end
 
   # Client is already replaced by body through ExVCR.Adapter.Hackney adapter.
-  def response_to_string({:ok, status_code, headers, client}) do
+  defp response_to_string({:ok, status_code, headers, client}) do
     ExVCR.Response.new(
       status_code: status_code,
       headers: parse_headers(headers),

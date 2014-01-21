@@ -64,7 +64,7 @@ defmodule ExVCR.Handler do
     adapter = ExVCR.Recorder.options(recorder)[:adapter]
     response = :meck.passthrough(request)
                  |> adapter.hook_response_from_server
-    Recorder.append(recorder, adapter.to_string(request, response))
+    Recorder.append(recorder, adapter.convert_to_string(request, response))
     response
   end
 end

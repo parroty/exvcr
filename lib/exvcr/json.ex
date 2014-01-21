@@ -29,6 +29,6 @@ defmodule ExVCR.JSON do
   Reads and parse the json file located at the specified file_name.
   """
   def read_json_file(file_name, adapter) do
-    File.read!(file_name) |> JSEX.decode! |> Enum.map(&adapter.from_string/1)
+    File.read!(file_name) |> JSEX.decode! |> Enum.map(&adapter.convert_from_string/1)
   end
 end
