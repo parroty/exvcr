@@ -20,12 +20,11 @@ Please specify `use ExVCR.Mock` instead of `import ExVCR.Mock`. Otherwise, `(Com
 
 ### Usage
 - Add `use ExVCR.Mock` to the test module. This mocks ibrowse by default. For using hackney, specify `adapter: ExVCR.Adapter.Hackney` options as follows.
-- Specify `async: false` option for `use ExUnit.Case`.
 
 ##### Example with ibrowse
 ```Elixir
 defmodule ExVCR.Adapter.IBrowseTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case
   use ExVCR.Mock
 
   setup_all do
@@ -54,7 +53,7 @@ end
 ##### Example with hackney
 ```Elixir
 defmodule ExVCR.Adapter.HackneyTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   setup_all do

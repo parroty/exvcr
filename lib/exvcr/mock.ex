@@ -16,6 +16,16 @@ defmodule ExVCR.Mock do
       def adapter do
         unquote(adapter)
       end
+
+      def setup_all do
+        :meck.new(adapter.module_name, [:passthrough])
+        :ok
+      end
+
+      def teardown_all do
+        :meck.unload(adapter.module_name)
+        :ok
+      end
     end
   end
 
@@ -30,18 +40,13 @@ defmodule ExVCR.Mock do
       target_methods = adapter.target_methods(recorder)
       module_name    = adapter.module_name
 
-      :meck.new(module_name, [:passthrough])
       Enum.each(target_methods, fn({function, callback}) ->
         :meck.expect(module_name, function, callback)
       end)
 
       try do
         unquote(test)
-        if Mix.env == :test do
-          if :meck.validate(module_name) == false, do: raise ":meck.validate failed"
-        end
       after
-        :meck.unload(module_name)
         Recorder.save(recorder)
       end
     end

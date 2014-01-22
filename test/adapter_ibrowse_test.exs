@@ -1,5 +1,5 @@
 defmodule ExVCR.Adapter.IBrowseTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case
   use ExVCR.Mock
 
   setup_all do
