@@ -7,33 +7,27 @@ defmodule ExVCR.RecorderHackneyTest do
   setup_all do
     HTTPoison.start
     HttpServer.start(path: "/server", port: 35000, response: "test_response")
+    ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
     :ok
   end
 
-  setup do
-    File.rm_rf(@dummy_cassette_dir)
-  end
-
   test "forcefully getting response from server by removing json in advance" do
-    ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
-    use_cassette "server" do
+    use_cassette "server1" do
       assert HTTPoison.get("http://localhost:35000/server", []).body =~ %r/test_response/
     end
   end
 
   test "forcefully getting response from server, then loading from cache by recording twice" do
-    ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
-    use_cassette "server" do
+    use_cassette "server2" do
       assert HTTPoison.get("http://localhost:35000/server", []).body =~ %r/test_response/
     end
 
-    use_cassette "server" do
+    use_cassette "server2" do
       assert HTTPoison.get("http://localhost:35000/server", []).body =~ %r/test_response/
     end
   end
 
   test "replace sensitive data" do
-    ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
     use_cassette "sensitive_data" do
       assert HTTPoison.get("http://localhost:35000/server", []).body =~ %r/PLACEHOLDER/
@@ -43,5 +37,6 @@ defmodule ExVCR.RecorderHackneyTest do
 
   teardown_all do
     File.rm_rf(@dummy_cassette_dir)
+    :ok
   end
 end
