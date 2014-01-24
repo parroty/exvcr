@@ -27,6 +27,7 @@ defmodule ExVCR.Handler do
       { nil, false } ->
         nil
       { response, _ } ->
+        ExVCR.Checker.add_cache_count(recorder)
         { :ok, response.status_code, response.headers, response.body }
     end
   end
@@ -65,6 +66,7 @@ defmodule ExVCR.Handler do
     response = :meck.passthrough(request)
                  |> adapter.hook_response_from_server
     Recorder.append(recorder, adapter.convert_to_string(request, response))
+    ExVCR.Checker.add_server_count(recorder)
     response
   end
 end

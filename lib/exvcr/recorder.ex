@@ -23,11 +23,7 @@ defmodule ExVCR.Recorder do
   If response is not found in the cache, access to the server.
   """
   def request(recorder, request) do
-    response = Handler.get_response(recorder, request)
-    if Mix.Project.config[:test_coverage][:tool] == ExVCR do
-      ExVCR.Checker.append(get_file_path(recorder))
-    end
-    response
+    Handler.get_response(recorder, request)
   end
 
   @doc """

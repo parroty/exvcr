@@ -3,8 +3,9 @@ defmodule ExVCR.Task.Runner do
   Provides task processing logics, which will be invoked by custom mix tasks.
   """
   import ExPrintf
-  @header_format "  %-40s %-30s\n"
-  @count_format  "  %-40s %-30d\n"
+  @print_header_format   "  %-40s %-30s\n"
+  @check_header_format   "  %-40s %-20s %-20s\n"
+  @check_content_format  "  %-40s %-20d %-20d\n"
   @date_format   "%04d/%02d/%02d %02d:%02d:%02d"
   @json_file_pattern %r/\.json$/
 
@@ -41,8 +42,8 @@ defmodule ExVCR.Task.Runner do
 
   defp print_cassettes(items, path) do
     IO.puts "Showing list of cassettes in [#{path}]"
-    printf(@header_format, ["[File Name]", "[Last Update]"])
-    Enum.each(items, fn({name, date}) -> printf(@header_format, [name, date]) end)
+    printf(@print_header_format, ["[File Name]", "[Last Update]"])
+    Enum.each(items, fn({name, date}) -> printf(@print_header_format, [name, date]) end)
   end
 
 
@@ -83,18 +84,22 @@ defmodule ExVCR.Task.Runner do
   end
 
   defp create_count_hash([], acc), do: acc
-  defp create_count_hash([head|tail], acc) do
-    file = Path.basename(head)
-    count = HashDict.get(acc, file, 0)
-    hash  = HashDict.put(acc, file, count + 1)
+  defp create_count_hash([{type, path}|tail], acc) do
+    file = Path.basename(path)
+    counts = HashDict.get(acc, file, ExVCR.Checker.Counts.new)
+    hash = case type do
+      :cache  -> HashDict.put(acc, file, counts.update(cache: counts.cache + 1))
+      :server -> HashDict.put(acc, file, counts.update(server: counts.server + 1))
+    end
     create_count_hash(tail, hash)
   end
 
   defp print_check_cassettes(items, path, counts_hash) do
     IO.puts "Showing hit counts of cassettes in [#{path}]"
-    printf(@header_format, ["[File Name]", "[Hit Counts]"])
+    printf(@check_header_format, ["[File Name]", "[Cassette Counts]", "[Server Counts]"])
     Enum.each(items, fn({name, _date}) ->
-      printf(@count_format, [name, HashDict.get(counts_hash, name, 0)])
+      counts = HashDict.get(counts_hash, name, ExVCR.Checker.Counts.new)
+      printf(@check_content_format, [name, counts.cache, counts.server])
     end)
   end
 end

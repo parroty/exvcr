@@ -173,27 +173,30 @@ Deleted example_ibrowse_multiple.json.
 If -a (--all) option is specified, all the cassetes in the specified folder becomes the target for delete.
 
 #### [mix vcr.check] Check cassettes
-The [mix vcr.check] shows how many times each cassette is applied while executing [mix test] tasks. It is intended for verifying the cassettes are properly used.
+The [mix vcr.check] shows how many times each cassette is applied while executing [mix test] tasks. It is intended for verifying  the cassettes are properly used. `[Cassette Counts]` indicates the count that the pre-recorded json cassettes are applied. `[Server Counts]` indicates the count that server access is performed.
 
 ```Shell
 $ mix vcr.check
 ...............................
 31 tests, 0 failures
 Showing hit counts of cassettes in [fixture/vcr_cassettes]
-  [File Name]                              [Hit Counts]
-  example_httpotion.json                   1
-  example_ibrowse.json                     1
-  example_ibrowse_multiple.json            2
-  httpotion_delete.json                    1
-  httpotion_patch.json                     1
-  httpotion_post.json                      1
-  httpotion_put.json                       1
+  [File Name]                              [Cassette Counts]    [Server Counts]
+  example_httpotion.json                   1                    0
+  example_ibrowse.json                     1                    0
+  example_ibrowse_multiple.json            2                    0
+  httpotion_delete.json                    1                    0
+  httpotion_patch.json                     1                    0
+  httpotion_post.json                      1                    0
+  httpotion_put.json                       1                    0
+  sensitive_data.json                      0                    2
+  server1.json                             0                    2
+  server2.json                             2                    2
 
 Showing hit counts of cassettes in [fixture/custom_cassettes]
-  [File Name]                              [Hit Counts]
-  method_mocking.json                      1
-  response_mocking.json                    1
-  response_mocking_regex.json              1
+  [File Name]                              [Cassette Counts]    [Server Counts]
+  method_mocking.json                      1                    0
+  response_mocking.json                    1                    0
+  response_mocking_regex.json              1                    0
 ```
 
 The target test file can be limited by specifying test files, as similar as [mix test] tasks.
@@ -203,8 +206,9 @@ $ mix vcr.check test/exvcr_test.exs
 .............
 13 tests, 0 failures
 Showing hit counts of cassettes in [fixture/vcr_cassettes]
-  [File Name]                              [Hit Counts]
-  example_httpotion.json                   1
+  [File Name]                              [Cassette Counts]    [Server Counts]
+  example_httpotion.json                   1                    0
+...
 ...
 ```
 
