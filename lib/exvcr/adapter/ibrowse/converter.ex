@@ -23,9 +23,17 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
 
   defp string_to_response(string) do
     response = Enum.map(string, fn({x, y}) -> {binary_to_atom(x), y} end) |> ExVCR.Response.new
+
     if response.status_code do
-      response.update(status_code: integer_to_list(response.status_code))
+      response = response.update(status_code: integer_to_list(response.status_code))
     end
+
+    if response.type == "error" do
+      [reason, details] = response.body
+      response = response.update(body: { binary_to_atom(reason), binary_to_tuple(details) } )
+    end
+
+    response
   end
 
   defp request_to_string([url, headers, method]), do: request_to_string([url, headers, method, [], []])
@@ -59,12 +67,14 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
 
   defp tuple_to_binary(tuple) do
     Enum.map(tuple_to_list(tuple), fn(x) ->
-      if is_atom(x) do
-        atom_to_binary(x)
-      else
-        x
-      end
+      if is_atom(x), do: atom_to_binary(x), else: x
     end)
+  end
+
+  defp binary_to_tuple(list) do
+    Enum.map(list, fn(x) ->
+      if is_binary(x), do: binary_to_atom(x), else: x
+    end) |> list_to_tuple
   end
 
   defp parse_headers(headers) do
