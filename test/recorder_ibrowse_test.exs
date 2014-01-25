@@ -34,9 +34,17 @@ defmodule ExVCR.RecorderIBrowseTest do
     end
   end
 
+  test "forcefully getting response from server with error" do
+    use_cassette "server_error" do
+      assert_raise HTTPotion.HTTPError, fn ->
+        HTTPotion.get("http://invalid_url", [])
+      end
+    end
+  end
+
   test "replace sensitive data" do
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
-    use_cassette "sensitive_data" do
+    use_cassette "server_sensitive_data" do
       assert HTTPotion.get("http://localhost:34000/server", []).body =~ %r/PLACEHOLDER/
     end
     ExVCR.Config.filter_sensitive_data(nil)

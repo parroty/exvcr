@@ -21,9 +21,16 @@ defmodule ExVCR.RecorderHackneyTest do
     use_cassette "server2" do
       assert HTTPoison.get("http://localhost:35000/server", []).body =~ %r/test_response/
     end
-
     use_cassette "server2" do
       assert HTTPoison.get("http://localhost:35000/server", []).body =~ %r/test_response/
+    end
+  end
+
+  test "forcefully getting response from server with error" do
+    use_cassette "server_error" do
+      assert_raise HTTPoison.HTTPError, fn ->
+        HTTPoison.get("http://invalid_url", [])
+      end
     end
   end
 

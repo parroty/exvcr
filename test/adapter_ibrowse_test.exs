@@ -44,6 +44,14 @@ defmodule ExVCR.Adapter.IBrowseTest do
     end
   end
 
+  test "httpotion error" do
+    use_cassette "httpotion_get_error" do
+      assert_raise HTTPotion.HTTPError, fn ->
+        HTTPotion.get("http://invalid_url", [])
+      end
+    end
+  end
+
   test "post method" do
     use_cassette "httpotion_post" do
       assert_response HTTPotion.post("http://httpbin.org/post", "test")

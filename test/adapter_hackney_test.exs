@@ -29,6 +29,14 @@ defmodule ExVCR.Adapter.HackneyTest do
     end
   end
 
+  test "get with error" do
+    use_cassette "httpoison_get_error" do
+      assert_raise HTTPoison.HTTPError, fn ->
+        HTTPoison.get("http://invalid_url", [])
+      end
+    end
+  end
+
   test "post method" do
     use_cassette "httpoison_post" do
       assert_response HTTPoison.post("http://httpbin.org/post", "test")
