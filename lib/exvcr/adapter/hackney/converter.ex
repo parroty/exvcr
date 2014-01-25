@@ -38,9 +38,17 @@ defmodule ExVCR.Adapter.Hackney.Converter do
   # Client is already replaced by body through ExVCR.Adapter.Hackney adapter.
   defp response_to_string({:ok, status_code, headers, client}) do
     ExVCR.Response.new(
+      type: "ok",
       status_code: status_code,
       headers: parse_headers(headers),
       body: inspect client
+    )
+  end
+
+  defp response_to_string({:error, reason}) do
+    ExVCR.Response.new(
+      type: "error",
+      body: atom_to_binary(reason)
     )
   end
 

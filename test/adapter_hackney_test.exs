@@ -15,6 +15,14 @@ defmodule ExVCR.Adapter.HackneyTest do
     end
   end
 
+  test "single request with error" do
+    use_cassette "error_hackney" do
+      :hackney.start
+      {type, body} = :hackney.request(:get, "http://invalid_url", [], [], [])
+      assert type == :error
+    end
+  end
+
   test "get request" do
     use_cassette "httpoison_get" do
       assert HTTPoison.get("http://example.com").body =~ %r/Example Domain/

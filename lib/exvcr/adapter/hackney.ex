@@ -37,7 +37,7 @@ defmodule ExVCR.Adapter.Hackney do
   @doc """
   Callback from ExVCR.Handler when response is retrieved from the HTTP server.
   """
-  def hook_response_from_server(response = {:ok, _status_code, _headers, _client}) do
+  def hook_response_from_server(response) do
     response
   end
 
@@ -45,6 +45,7 @@ defmodule ExVCR.Adapter.Hackney do
   Callback from ExVCR.Handler when response is retrieved from the json file cache.
   """
   def hook_response_from_cache(nil), do: nil
+  def hook_response_from_cache(ExVCR.Response[type: "error"] = response), do: response
   def hook_response_from_cache(ExVCR.Response[body: body] = response) do
     client = make_ref
     Store.set(client, body)

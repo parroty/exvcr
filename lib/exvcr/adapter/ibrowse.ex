@@ -44,6 +44,10 @@ defmodule ExVCR.Adapter.IBrowse do
     {:ok, status_code, headers, replaced_body}
   end
 
+  defp filter_sensitive_data({:error, {reason, details}}) do
+    {:error, {reason, details}}
+  end
+
   @doc """
   Callback from ExVCR.Handler when response is retrieved from the json file cache.
   """

@@ -29,6 +29,14 @@ defmodule ExVCR.Adapter.IBrowseTest do
     end
   end
 
+  test "single request with error" do
+    use_cassette "error_ibrowse" do
+      :ibrowse.start
+      response = :ibrowse.send_req('http://invalid_url', [], :get)
+      assert response == {:error, {:conn_failed, {:error, :nxdomain}}}
+    end
+  end
+
   test "httpotion" do
     use_cassette "example_httpotion" do
       HTTPotion.start

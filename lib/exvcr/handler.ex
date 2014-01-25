@@ -28,7 +28,11 @@ defmodule ExVCR.Handler do
         nil
       { response, _ } ->
         ExVCR.Checker.add_cache_count(recorder)
-        { :ok, response.status_code, response.headers, response.body }
+        if response.type == "error" do
+          { :error, response.body }
+        else
+          { :ok, response.status_code, response.headers, response.body }
+        end
     end
   end
 
