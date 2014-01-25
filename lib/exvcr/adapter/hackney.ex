@@ -54,21 +54,25 @@ defmodule ExVCR.Adapter.Hackney do
 
   defp handle_body_request(recorder, [client]) do
     if body = Store.get(client) do
+      Store.delete(client)
       {:ok, body}
     else
-      {:ok, body} = :meck.passthrough([client])
-      body = ExVCR.Filter.filter_sensitive_data(body)
+      {ret, body} = :meck.passthrough([client])
+      if ret == :ok do
+        body = ExVCR.Filter.filter_sensitive_data(body)
 
-      client_key_in_string = inspect(client)
-      ExVCR.Recorder.update(recorder,
-        fn([request: _request, response: response]) ->
-          response.body == client_key_in_string
-        end,
-        fn([request: request, response: response]) ->
-          [request: request, response: response.body(body)]
-        end
-      )
-      {:ok, body}
+        client_key_in_string = inspect(client)
+        ExVCR.Recorder.update(recorder,
+          fn([request: _request, response: response]) ->
+            response.body == client_key_in_string
+          end,
+          fn([request: request, response: response]) ->
+            [request: request, response: response.body(body)]
+          end
+        )
+      end
+
+      {ret, body}
     end
   end
 

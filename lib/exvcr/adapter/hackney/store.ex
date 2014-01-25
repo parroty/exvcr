@@ -30,6 +30,14 @@ defmodule ExVCR.Adapter.Hackney.Store do
     value
   end
 
+  @doc """
+  Set key (client key).
+  """
+  def delete(key) do
+    start
+    :ets.delete(table, key)
+  end
+
   defp table do
     "exvcr_hackney#{inspect self}" |> binary_to_atom
   end
