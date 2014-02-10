@@ -8,7 +8,7 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   test "hackney request" do
     use_cassette "hackney_get" do
-      {:ok, status_code, headers, client} = :hackney.request(:get, "http://www.example.com", [], [], [])
+      {:ok, _status_code, _headers, client} = :hackney.request(:get, "http://www.example.com", [], [], [])
       {:ok, body} = :hackney.body(client)
       assert body =~ %r/Example Domain/
     end
@@ -16,16 +16,16 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   test "hackney request with error" do
     use_cassette "error_hackney" do
-      {type, body} = :hackney.request(:get, "http://invalid_url", [], [], [])
+      {type, _body} = :hackney.request(:get, "http://invalid_url", [], [], [])
       assert type == :error
     end
   end
 
   test "hackney body request with invalid reference" do
     use_cassette "hackney_invalid_client" do
-      {:ok, status_code, headers, client} = :hackney.request(:get, "http://www.example.com", [], [], [])
+      {:ok, _status_code, _headers, client} = :hackney.request(:get, "http://www.example.com", [], [], [])
       :hackney.body(client)
-      {ret, body} = :hackney.body(client)
+      {ret, _body} = :hackney.body(client)
       assert ret == :error
     end
   end
