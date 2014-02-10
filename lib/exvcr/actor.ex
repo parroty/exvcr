@@ -7,11 +7,11 @@ defmodule ExVCR.Actor do
     Stores request/response for the recorder.
     """
 
-    use ExActor
+    use ExActor.GenServer
 
     defcast append(x), state: state, do: new_state([x|state])
     defcast set(x), do: new_state(x)
-    defcall get, state: state, do: state
+    defcall get, state: state, do: reply(state)
 
     def pop(x) do
       case get(x) do
@@ -28,9 +28,9 @@ defmodule ExVCR.Actor do
     Stores option parameters for the recorder.
     """
 
-    use ExActor
+    use ExActor.GenServer
 
     defcast set(x), do: new_state(x)
-    defcall get, state: state, do: state
+    defcall get, state: state, do: reply(state)
   end
 end
