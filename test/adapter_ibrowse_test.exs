@@ -60,7 +60,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "put method" do
     use_cassette "httpotion_put" do
-      assert_response HTTPotion.put("http://httpbin.org/put", "test")
+      assert_response HTTPotion.put("http://httpbin.org/put", "test", [timeout: 10000])
     end
   end
 
@@ -72,7 +72,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "delete method" do
     use_cassette "httpotion_delete" do
-      assert_response HTTPotion.delete("http://httpbin.org/delete")
+      assert_response HTTPotion.delete("http://httpbin.org/delete", [], [timeout: 10000])
     end
   end
 
@@ -114,6 +114,14 @@ defmodule ExVCR.Adapter.IBrowseTest do
     assert_raise ExVCR.InvalidRequestError, fn ->
       use_cassette "method_mocking", custom: true do
         HTTPotion.put("http://example.com", "").body =~ %r/Custom Response/
+      end
+    end
+  end
+
+  test "get fails with timeout" do
+    assert_raise HTTPotion.HTTPError, fn ->
+      use_cassette "httpotion_get_timeout" do
+        assert HTTPotion.get("http://example.com", [], [timeout: 1])
       end
     end
   end

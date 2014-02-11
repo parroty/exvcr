@@ -29,12 +29,14 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
     end
 
     if response.type == "error" do
-      [reason, details] = response.body
-      response = response.update(body: { binary_to_atom(reason), binary_to_tuple(details) } )
+      response = response.update(string_to_error_reason(response.body))
     end
 
     response
   end
+
+  defp string_to_error_reason([reason, details]), do: [body: { binary_to_atom(reason), binary_to_tuple(details) }]
+  defp string_to_error_reason([reason]), do: [body: binary_to_atom(reason)]
 
   defp request_to_string([url, headers, method]), do: request_to_string([url, headers, method, [], []])
   defp request_to_string([url, headers, method, body]), do: request_to_string([url, headers, method, body, []])
@@ -58,12 +60,15 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
     )
   end
 
-  defp response_to_string({:error, {reason, details}}) do
+  defp response_to_string({:error, reason}) do
     ExVCR.Response.new(
       type: "error",
-      body: [atom_to_binary(reason), tuple_to_binary(details)]
+      body: error_reason_to_string(reason)
     )
   end
+
+  defp error_reason_to_string({reason, details}), do: [atom_to_binary(reason), tuple_to_binary(details)]
+  defp error_reason_to_string(reason), do: [atom_to_binary(reason)]
 
   defp tuple_to_binary(tuple) do
     Enum.map(tuple_to_list(tuple), fn(x) ->

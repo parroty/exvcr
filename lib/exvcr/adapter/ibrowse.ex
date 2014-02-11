@@ -44,8 +44,8 @@ defmodule ExVCR.Adapter.IBrowse do
     {:ok, status_code, headers, replaced_body}
   end
 
-  defp filter_sensitive_data({:error, {reason, details}}) do
-    {:error, {reason, details}}
+  defp filter_sensitive_data({:error, reason}) do
+    {:error, reason}
   end
 
   @doc """
