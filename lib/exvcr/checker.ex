@@ -4,9 +4,9 @@ defmodule ExVCR.Checker do
   It's for [mix vcr.check] task.
   """
 
-  use ExActor, export: :singleton
+  use ExActor.GenServer, export: :singleton
 
-  defcall get, state: state, do: state
+  defcall get, state: state, do: reply(state)
   defcast set(x), do: new_state(x)
   defcast append(x), state: state, do: new_state(state.files([x|state.files]))
 
