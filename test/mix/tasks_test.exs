@@ -10,6 +10,7 @@ defmodule Mix.Tasks.VcrTest do
 
   setup_all do
     File.mkdir_p!(@dummy_path)
+    ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes", "fixture/custom_cassettes")
     :ok
   end
 
