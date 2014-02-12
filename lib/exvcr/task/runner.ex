@@ -50,7 +50,7 @@ defmodule ExVCR.Task.Runner do
   @doc """
   Use specified path to delete cassettes.
   """
-  def delete_cassettes(path, file_patterns, is_interactive // false) do
+  def delete_cassettes(path, file_patterns, is_interactive \\ false) do
     path |> find_json_files
          |> Enum.filter(&(&1 =~ file_patterns))
          |> Enum.each(&(delete_and_print_name(path, &1, is_interactive)))

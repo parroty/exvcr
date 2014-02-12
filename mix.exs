@@ -4,7 +4,7 @@ defmodule ExVCR.Mixfile do
   def project do
     [ app: :exvcr,
       version: "0.1.0",
-      elixir: ">= 0.10.3-dev",
+      elixir: ">= 0.12.4",
       deps: deps(Mix.env),
       test_coverage: [tool: ExCoveralls]
     ]
