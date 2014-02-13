@@ -32,7 +32,7 @@ defmodule ExVCR.Mock do
   @doc """
   Provides macro to trigger recording/replaying http interactions.
   """
-  defmacro use_cassette(fixture, options // [], test) do
+  defmacro use_cassette(fixture, options \\ [], test) do
     quote do
       recorder = Recorder.start(
         unquote(options) ++ [fixture: normalize_fixture(unquote(fixture)), adapter: adapter])

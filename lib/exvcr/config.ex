@@ -9,7 +9,7 @@ defmodule ExVCR.Config do
     - vcr_dir: directory for storing recorded json file
     - custom_dir: directory for placing custom json file
   """
-  def cassette_library_dir(vcr_dir, custom_dir // nil) do
+  def cassette_library_dir(vcr_dir, custom_dir \\ nil) do
     Setting.set(:cassette_library_dir, vcr_dir)
     File.mkdir_p!(vcr_dir)
 
