@@ -11,7 +11,11 @@ It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide 
         - <a href="https://github.com/myfreeweb/httpotion" target="_blank">HTTPotion</a>
     - <a href="https://github.com/benoitc/hackney" target="_blank">hackney</a>-based libraries.
         - <a href="https://github.com/edgurgel/httpoison" target="_blank">HTTPoison</a>
-        - hackney support is very limited, and tested only with sync request of HTTPoison yet.
+        - support is very limited, and tested only with sync request of HTTPoison yet.
+    - <a href="http://erlang.org/doc/man/httpc.html" target="_blank">httpc</a>-based libraries.
+        - <a href="https://github.com/tim/erlang-oauth/" target="_blank">erlang-oauth</a>
+        - support is very limited, and tested only with :httpc.request/1 and :httpc.request/4
+
 - HTTP interactions are recorded as JSON file.
     - The JSON file can be recorded automatically (vcr_cassettes) or manually updated (custom_cassettes)
 
@@ -66,6 +70,24 @@ defmodule ExVCR.Adapter.HackneyTest do
     end
   end
 end
+```
+
+##### Example with httpc
+```Elixir
+defmodule ExVCR.Adapter.HttpcTest do
+  use ExUnit.Case
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
+
+  setup_all do
+    :inets.start
+  end
+
+  test "get request" do
+    use_cassette "example_httpc_request" do
+      {:ok, {{_http_version, status_code = 200, _reason_phrase}, headers, body}} = :httpc.request('http://example.com')
+      assert iolist_to_binary(body) =~ %r/Example Domain/
+    end
+  end
 ```
 
 #### Custom Cassettes
