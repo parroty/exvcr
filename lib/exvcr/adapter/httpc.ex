@@ -1,6 +1,6 @@
-defmodule ExVCR.Adapter.IBrowse do
+defmodule ExVCR.Adapter.Httpc do
   @moduledoc """
-  Provides adapter methods to mock :ibrowse methods.
+  Provides adapter methods to mock :httpc methods.
   """
   defmacro __using__(_opts) do
     # do nothing
@@ -10,26 +10,31 @@ defmodule ExVCR.Adapter.IBrowse do
   Returns the name of the mock target module.
   """
   def module_name do
-    :ibrowse
+    :httpc
   end
 
   @doc """
   Returns list of the mock target methods with function name and callback
   """
   def target_methods(recorder) do
-    [ {:send_req, &ExVCR.Recorder.request(recorder, [&1,&2,&3])},
-      {:send_req, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4])},
-      {:send_req, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])},
-      {:send_req, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5,&6])} ]
+    [ {:request, &ExVCR.Recorder.request(recorder, [&1])},
+      {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4])} ]
+      # TODO
+      # {:request, &ExVCR.Recorder.request(recorder, [&1,&2])}
+      # {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])}
   end
 
   @doc """
   Generate key for searching response.
   """
   def generate_keys_for_request(request) do
-    url    = Enum.fetch!(request, 0)
-    method = Enum.fetch!(request, 2)
-    [url: url, method: method]
+    if Enum.count(request) <= 2 do
+      [url: Enum.fetch!(request, 0), method: :get]
+    else
+      url = Enum.fetch!(request, 1) |> elem(0)
+      method = Enum.fetch!(request, 0)
+      [url: url, method: method]
+    end
   end
 
   @doc """
@@ -39,9 +44,9 @@ defmodule ExVCR.Adapter.IBrowse do
     filter_sensitive_data(response)
   end
 
-  defp filter_sensitive_data({:ok, status_code, headers, body}) do
+  defp filter_sensitive_data({:ok, {status_code, headers, body}}) do
     replaced_body = body |> iolist_to_binary |> ExVCR.Filter.filter_sensitive_data
-    {:ok, status_code, headers, replaced_body}
+    {:ok, {status_code, headers, replaced_body}}
   end
 
   defp filter_sensitive_data({:error, reason}) do
@@ -62,21 +67,22 @@ defmodule ExVCR.Adapter.IBrowse do
     if response.type == "error" do
       {:error, response.body}
     else
-      {:ok, response.status_code, response.headers, response.body}
+      {:ok, {response.status_code, response.headers, response.body}}
     end
   end
+
 
   @doc """
   Parse string fromat into original request / response format
   """
   def convert_from_string([{"request", request}, {"response", response}]) do
-    ExVCR.Adapter.IBrowse.Converter.convert_from_string(request, response)
+    ExVCR.Adapter.Httpc.Converter.convert_from_string(request, response)
   end
 
   @doc """
   Parse request and response parameters into string format.
   """
   def convert_to_string(request, response) do
-    ExVCR.Adapter.IBrowse.Converter.convert_to_string(request, response)
+    ExVCR.Adapter.Httpc.Converter.convert_to_string(request, response)
   end
 end

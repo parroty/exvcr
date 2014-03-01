@@ -77,6 +77,17 @@ defmodule ExVCR.Adapter.Hackney do
   end
 
   @doc """
+  Returns the response from the ExVCR.Reponse record
+  """
+  def get_response_value_from_cache(response) do
+    if response.type == "error" do
+      {:error, response.body}
+    else
+      {:ok, response.status_code, response.headers, response.body}
+    end
+  end
+
+  @doc """
   Parse string fromat into original request / response format
   """
   def convert_from_string([{"request", request}, {"response", response}]) do
