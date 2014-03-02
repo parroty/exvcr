@@ -10,6 +10,9 @@ defmodule ExVCR.Adapter.Hackney do
     end
   end
 
+  defdelegate convert_from_string(string), to: ExVCR.Adapter.Hackney.Converter
+  defdelegate convert_to_string(request, response), to: ExVCR.Adapter.Hackney.Converter
+
   @doc """
   Returns the name of the mock target module.
   """
@@ -85,19 +88,5 @@ defmodule ExVCR.Adapter.Hackney do
     else
       {:ok, response.status_code, response.headers, response.body}
     end
-  end
-
-  @doc """
-  Parse string fromat into original request / response format.
-  """
-  def convert_from_string([{"request", request}, {"response", response}]) do
-    ExVCR.Adapter.Hackney.Converter.convert_from_string(request, response)
-  end
-
-  @doc """
-  Parse request and response parameters into string format.
-  """
-  def convert_to_string(request, response) do
-    ExVCR.Adapter.Hackney.Converter.convert_to_string(request, response)
   end
 end

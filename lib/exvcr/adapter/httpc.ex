@@ -6,6 +6,9 @@ defmodule ExVCR.Adapter.Httpc do
     # do nothing
   end
 
+  defdelegate convert_from_string(string), to: ExVCR.Adapter.Httpc.Converter
+  defdelegate convert_to_string(request, response), to: ExVCR.Adapter.Httpc.Converter
+
   @doc """
   Returns the name of the mock target module.
   """
@@ -15,13 +18,13 @@ defmodule ExVCR.Adapter.Httpc do
 
   @doc """
   Returns list of the mock target methods with function name and callback.
+    TODO:
+      {:request, &ExVCR.Recorder.request(recorder, [&1,&2])}
+      {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])}
   """
   def target_methods(recorder) do
     [ {:request, &ExVCR.Recorder.request(recorder, [&1])},
       {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4])} ]
-      # TODO
-      # {:request, &ExVCR.Recorder.request(recorder, [&1,&2])}
-      # {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])}
   end
 
   @doc """
@@ -69,20 +72,5 @@ defmodule ExVCR.Adapter.Httpc do
     else
       {:ok, {response.status_code, response.headers, response.body}}
     end
-  end
-
-
-  @doc """
-  Parse string fromat into original request / response format.
-  """
-  def convert_from_string([{"request", request}, {"response", response}]) do
-    ExVCR.Adapter.Httpc.Converter.convert_from_string(request, response)
-  end
-
-  @doc """
-  Parse request and response parameters into string format.
-  """
-  def convert_to_string(request, response) do
-    ExVCR.Adapter.Httpc.Converter.convert_to_string(request, response)
   end
 end

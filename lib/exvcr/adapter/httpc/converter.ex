@@ -6,7 +6,7 @@ defmodule ExVCR.Adapter.Httpc.Converter do
   @doc """
   Parse string fromat into original request / response format.
   """
-  def convert_from_string(request, response) do
+  def convert_from_string([{"request", request}, {"response", response}]) do
     [ request:  string_to_request(request), response: string_to_response(response) ]
   end
 
