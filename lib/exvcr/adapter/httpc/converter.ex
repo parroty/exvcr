@@ -1,10 +1,10 @@
 defmodule ExVCR.Adapter.Httpc.Converter do
   @moduledoc """
-  Provides helpers to mock :httpc methods
+  Provides helpers to mock :httpc methods.
   """
 
   @doc """
-  Parse string fromat into original request / response format
+  Parse string fromat into original request / response format.
   """
   def convert_from_string(request, response) do
     [ request:  string_to_request(request), response: string_to_response(response) ]

@@ -18,7 +18,7 @@ defmodule ExVCR.Adapter.Hackney do
   end
 
   @doc """
-  Returns list of the mock target methods with function name and callback
+  Returns list of the mock target methods with function name and callback.
   """
   def target_methods(recorder) do
     [ {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])},
@@ -77,7 +77,7 @@ defmodule ExVCR.Adapter.Hackney do
   end
 
   @doc """
-  Returns the response from the ExVCR.Reponse record
+  Returns the response from the ExVCR.Reponse record.
   """
   def get_response_value_from_cache(response) do
     if response.type == "error" do
@@ -88,7 +88,7 @@ defmodule ExVCR.Adapter.Hackney do
   end
 
   @doc """
-  Parse string fromat into original request / response format
+  Parse string fromat into original request / response format.
   """
   def convert_from_string([{"request", request}, {"response", response}]) do
     ExVCR.Adapter.Hackney.Converter.convert_from_string(request, response)

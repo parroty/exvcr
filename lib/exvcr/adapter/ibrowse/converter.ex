@@ -1,10 +1,10 @@
 defmodule ExVCR.Adapter.IBrowse.Converter do
   @moduledoc """
-  Provides helpers to mock :ibrowse methods
+  Provides helpers to mock :ibrowse methods.
   """
 
   @doc """
-  Parse string fromat into original request / response format
+  Parse string fromat into original request / response format.
   """
   def convert_from_string(request, response) do
     [ request:  string_to_request(request), response: string_to_response(response) ]

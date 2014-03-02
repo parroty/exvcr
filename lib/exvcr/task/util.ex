@@ -1,6 +1,6 @@
 defmodule ExVCR.Task.Util do
   @moduledoc """
-  Provides task related utilities
+  Provides task related utilities.
   """
 
   def parse_basic_options(options) do

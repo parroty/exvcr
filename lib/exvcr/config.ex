@@ -1,6 +1,6 @@
 defmodule ExVCR.Config do
   @moduledoc """
-  Store configurations for libraries
+  Store configurations for libraries.
   """
   alias ExVCR.Setting
 
@@ -26,7 +26,7 @@ defmodule ExVCR.Config do
   end
 
   @doc """
-  Clear the previously specified filter_sensitive_data lists
+  Clear the previously specified filter_sensitive_data lists.
   """
   def filter_sensitive_data(nil) do
     Setting.set(:filter_sensitive_data, [])

@@ -1,6 +1,6 @@
 defmodule ExVCR.Actor do
   @moduledoc """
-  Provides data store for values used by ExVCR.Recorder
+  Provides data store for values used by ExVCR.Recorder.
   """
   defmodule Responses do
     @moduledoc """
