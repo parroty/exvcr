@@ -1,7 +1,7 @@
 [ "cowboy": {:git, "git://github.com/extend/cowboy.git", "6672ea04155a075e60381413bf9b65b3974b7d57", [tag: "0.9.0"]},
   "cowlib": {:git, "git://github.com/extend/cowlib.git", "34a39ef28ca841fb9233ce9df3ec654eb321c5e5", [ref: "0.3.0"]},
   "exactor": {:git, "git://github.com/sasa1977/exactor.git", "f7f6bae7fead5e0e5525581d44311f803169fa4e", []},
-  "excoveralls": {:git, "git://github.com/parroty/excoveralls.git", "59d7f199d501da7af47a01b693639dc718eb3285", []},
+  "excoveralls": {:git, "git://github.com/parroty/excoveralls.git", "33fad212e96c9f3f0a768b9bc3b31a7901261f07", []},
   "exprintf": {:git, "git://github.com/parroty/exprintf.git", "586c8e07c65805cf8e53d5855bbb7fd1472b777a", []},
   "hackney": {:git, "git://github.com/benoitc/hackney.git", "7f2a0b5996313d930277786e7ff5d538e9346547", [tag: "0.10.1"]},
   "hackney_lib": {:git, "https://github.com/benoitc/hackney_lib.git", "eecdb481f1d38bfb194896bffdf9bdcdd967ae96", [tag: "0.2.2"]},

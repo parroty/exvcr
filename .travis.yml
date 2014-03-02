@@ -7,4 +7,4 @@ before_install:
   - export PATH="$PATH:$PWD/vendor/elixir/bin"
 script: "MIX_ENV=test mix do deps.get, test"
 after_success:
-  - "mix coveralls.travis"
+  - "mix compile && mix coveralls.travis"
