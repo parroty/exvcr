@@ -49,7 +49,7 @@ defmodule ExVCR.Handler do
       pattern = Regex.compile!("^#{response[:request].url}$")
       Regex.match?(pattern, to_string(keys[:url]))
     else
-      response[:request].url == iolist_to_binary(keys[:url])
+      response[:request].url == to_string(keys[:url])
     end
   end
 

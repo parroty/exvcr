@@ -41,7 +41,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
       :ibrowse.start
       {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com', [], :get)
       assert status_code == '200'
-      assert iolist_to_binary(body) =~ %r/Example Domain/
+      assert to_string(body) =~ %r/Example Domain/
     end
   end
 

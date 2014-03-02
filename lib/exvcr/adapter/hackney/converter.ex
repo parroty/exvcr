@@ -27,10 +27,10 @@ defmodule ExVCR.Adapter.Hackney.Converter do
 
   defp request_to_string([method, url, headers, body, options]) do
     ExVCR.Request.new(
-      url: iolist_to_binary(url),
+      url: to_string(url),
       headers: parse_headers(headers),
-      method: atom_to_binary(method),
-      body: iolist_to_binary(body),
+      method: to_string(method),
+      body: to_string(body),
       options: options
     )
   end
@@ -58,6 +58,6 @@ defmodule ExVCR.Adapter.Hackney.Converter do
 
   defp do_parse_headers([], acc), do: Enum.reverse(acc)
   defp do_parse_headers([{key,value}|tail], acc) do
-    do_parse_headers(tail, [{iolist_to_binary(key), iolist_to_binary(value)}|acc])
+    do_parse_headers(tail, [{to_string(key), to_string(value)}|acc])
   end
 end

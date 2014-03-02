@@ -9,14 +9,14 @@ defmodule ExVCR.Adapter.HttpcTest do
   test "example httpc request/1" do
     use_cassette "example_httpc_request_1" do
       {:ok, {{_http_version, status_code = 200, _reason_phrase}, headers, body}} = :httpc.request('http://example.com')
-      assert iolist_to_binary(body) =~ %r/Example Domain/
+      assert to_string(body) =~ %r/Example Domain/
     end
   end
 
   test "example httpc request/4" do
     use_cassette "example_httpc_request_4" do
       {:ok, {{_, 200, _reason_phrase}, _headers, body}} = :httpc.request(:get, {'http://example.com', ''}, '', '')
-      assert iolist_to_binary(body) =~ %r/Example Domain/
+      assert to_string(body) =~ %r/Example Domain/
     end
   end
 

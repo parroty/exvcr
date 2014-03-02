@@ -45,7 +45,7 @@ defmodule ExVCR.Adapter.Httpc do
   end
 
   defp filter_sensitive_data({:ok, {status_code, headers, body}}) do
-    replaced_body = body |> iolist_to_binary |> ExVCR.Filter.filter_sensitive_data
+    replaced_body = to_string(body) |> ExVCR.Filter.filter_sensitive_data
     {:ok, {status_code, headers, replaced_body}}
   end
 

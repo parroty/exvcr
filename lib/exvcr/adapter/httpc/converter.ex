@@ -42,23 +42,23 @@ defmodule ExVCR.Adapter.Httpc.Converter do
     request_to_string([method, {url, headers, [], []}, http_options, options])
   end
 
-  # TODO: handle content_type
+  # TODO: need to handle content_type
   defp request_to_string([method, {url, headers, _content_type, body}, http_options, options]) do
     ExVCR.Request.new(
-      url: iolist_to_binary(url),
+      url: to_string(url),
       headers: parse_headers(headers),
-      method: atom_to_binary(method),
-      body: iolist_to_binary(body),
-      options: [options: options, http_options: http_options]
+      method: to_string(method),
+      body: to_string(body),
+      options: [httpc_options: options, http_options: http_options]
     )
   end
 
   defp response_to_string({:ok, {{http_version, status_code, reason_phrase}, headers, body}}) do
     ExVCR.Response.new(
       type: "ok",
-      status_code: [iolist_to_binary(http_version), status_code, iolist_to_binary(reason_phrase)],
+      status_code: [to_string(http_version), status_code, to_string(reason_phrase)],
       headers: parse_headers(headers),
-      body: iolist_to_binary(body)
+      body: to_string(body)
     )
   end
 
@@ -75,6 +75,6 @@ defmodule ExVCR.Adapter.Httpc.Converter do
 
   defp do_parse_headers([], acc), do: Enum.reverse(acc)
   defp do_parse_headers([{key,value}|tail], acc) do
-    do_parse_headers(tail, [{iolist_to_binary(key), iolist_to_binary(value)}|acc])
+    do_parse_headers(tail, [{to_string(key), to_string(value)}|acc])
   end
 end

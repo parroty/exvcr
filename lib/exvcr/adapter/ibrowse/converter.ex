@@ -56,7 +56,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
       type: "ok",
       status_code: list_to_integer(status_code),
       headers: parse_headers(headers),
-      body: iolist_to_binary(body)
+      body: to_string(body)
     )
   end
 
@@ -88,6 +88,6 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
 
   defp do_parse_headers([], acc), do: Enum.reverse(acc)
   defp do_parse_headers([{key,value}|tail], acc) do
-    do_parse_headers(tail, [{iolist_to_binary(key), iolist_to_binary(value)}|acc])
+    do_parse_headers(tail, [{to_string(key), to_string(value)}|acc])
   end
 end
