@@ -4,6 +4,7 @@ defmodule ExVCR.Adapter.HttpcTest do
 
   setup_all do
     :inets.start
+    :ok
   end
 
   test "example httpc request/1" do

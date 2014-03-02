@@ -1,7 +1,6 @@
 defmodule ExVCR.RecorderIBrowseTest do
   use ExUnit.Case
   use ExVCR.Mock
-  alias ExVCR.Recorder
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_ibrowse"
 
@@ -10,12 +9,6 @@ defmodule ExVCR.RecorderIBrowseTest do
     HttpServer.start(path: "/server", port: 34000, response: "test_response")
     ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
     :ok
-  end
-
-  test "initializes recorder" do
-    record = Recorder.start([test: true, fixture: "fixture/tmp"])
-    assert ExVCR.Actor.Options.get(record.options)     == [test: true, fixture: "fixture/tmp"]
-    assert ExVCR.Actor.Responses.get(record.responses) == []
   end
 
   test "forcefully getting response from server by removing json in advance" do
