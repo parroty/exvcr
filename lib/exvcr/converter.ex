@@ -33,7 +33,8 @@ defmodule ExVCR.Converter do
 
       defp do_parse_headers([], acc), do: Enum.reverse(acc)
       defp do_parse_headers([{key,value}|tail], acc) do
-        do_parse_headers(tail, [{to_string(key), to_string(value)}|acc])
+        replaced_value = to_string(value) |> ExVCR.Filter.filter_sensitive_data
+        do_parse_headers(tail, [{to_string(key), replaced_value}|acc])
       end
       defoverridable [do_parse_headers: 2]
     end
