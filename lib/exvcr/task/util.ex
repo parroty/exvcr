@@ -3,11 +3,17 @@ defmodule ExVCR.Task.Util do
   Provides task related utilities.
   """
 
+  @doc """
+  Parse basic option parameters, which are commonly used by multiple mix tasks.
+  """
   def parse_basic_options(options) do
-    [ options[:dir] || ExVCR.Setting.get_default_vcr_path,
+    [ options[:dir]    || ExVCR.Setting.get_default_vcr_path,
       options[:custom] || ExVCR.Setting.get_default_custom_path ]
   end
 
+  @doc """
+  Method for priting help message.
+  """
   def print_help_message do
     IO.puts """
 Usage: mix vcr [options]

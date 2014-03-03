@@ -14,8 +14,7 @@ defmodule ExVCR.JSON do
 
   @doc """
   Loads the JSON files based on the fixture name and options.
-  For options, this method just refers to the :custom attribute
-  is set or not.
+  For options, this method just refers to the :custom attribute is set or not.
   """
   def load(file_name, custom_mode, adapter) do
     case { File.exists?(file_name), custom_mode } do

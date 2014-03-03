@@ -2,16 +2,20 @@ defmodule ExVCR.Handler do
   @moduledoc """
   Provide operations for request/response.
   """
+
   alias ExVCR.Recorder
   alias ExVCR.Actor.Options
 
   @doc """
-  get response from either server or cache.
+  Get response from either server or cache.
   """
   def get_response(recorder, request) do
     get_response_from_cache(request, recorder) || get_response_from_server(request, recorder)
   end
 
+  @doc """
+  Get response from the cache (pre-recorded cassettes).
+  """
   def get_response_from_cache(request, recorder) do
     custom_mode = Options.get(recorder.options)[:custom] || false
     adapter     = ExVCR.Recorder.options(recorder)[:adapter]

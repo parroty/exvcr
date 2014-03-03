@@ -2,6 +2,7 @@ defmodule ExVCR.Task.Runner do
   @moduledoc """
   Provides task processing logics, which will be invoked by custom mix tasks.
   """
+
   import ExPrintf
   @print_header_format   "  %-40s %-30s\n"
   @check_header_format   "  %-40s %-20s %-20s\n"
@@ -69,7 +70,6 @@ defmodule ExVCR.Task.Runner do
       :error -> IO.puts "Failed to delete #{file_name}"
     end
   end
-
 
   @doc """
   Check and show which cassettes are used by the test execution.

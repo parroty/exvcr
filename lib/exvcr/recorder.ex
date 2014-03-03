@@ -2,6 +2,7 @@ defmodule ExVCR.Recorder do
   @moduledoc """
   Provides data saving/loading capability for HTTP interactions.
   """
+
   alias ExVCR.Handler
   alias ExVCR.Actor.Responses
   alias ExVCR.Actor.Options

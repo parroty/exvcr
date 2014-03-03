@@ -2,6 +2,7 @@ defmodule ExVCR.Setting do
   @moduledoc """
   An module to store the configuration settings.
   """
+
   @ets_table :exvcr_setting
   @default_vcr_path    "fixture/vcr_cassettes"
   @default_custom_path "fixture/custom_cassettes"

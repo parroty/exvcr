@@ -2,12 +2,13 @@ defmodule ExVCR.Config do
   @moduledoc """
   Store configurations for libraries.
   """
+
   alias ExVCR.Setting
 
   @doc """
   Initializes library dir to store cassette json files.
-    - vcr_dir: directory for storing recorded json file
-    - custom_dir: directory for placing custom json file
+    - vcr_dir: directory for storing recorded json file.
+    - custom_dir: directory for placing custom json file.
   """
   def cassette_library_dir(vcr_dir, custom_dir \\ nil) do
     Setting.set(:cassette_library_dir, vcr_dir)

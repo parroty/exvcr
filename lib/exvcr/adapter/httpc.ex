@@ -2,6 +2,7 @@ defmodule ExVCR.Adapter.Httpc do
   @moduledoc """
   Provides adapter methods to mock :httpc methods.
   """
+
   defmacro __using__(_opts) do
     # do nothing
   end

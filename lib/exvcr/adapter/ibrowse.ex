@@ -2,6 +2,7 @@ defmodule ExVCR.Adapter.IBrowse do
   @moduledoc """
   Provides adapter methods to mock :ibrowse methods.
   """
+
   defmacro __using__(_opts) do
     # do nothing
   end

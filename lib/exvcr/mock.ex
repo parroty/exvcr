@@ -1,8 +1,8 @@
 defmodule ExVCR.Mock do
   @moduledoc """
   Provides macro to record HTTP request/response.
-  It only supports :ibrowse HTTP library at the moment.
   """
+
   alias ExVCR.Recorder
 
   defmacro __using__(opts) do

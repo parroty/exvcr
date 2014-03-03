@@ -2,6 +2,7 @@ defmodule ExVCR.Actor do
   @moduledoc """
   Provides data store for values used by ExVCR.Recorder.
   """
+
   defmodule Responses do
     @moduledoc """
     Stores request/response for the recorder.
