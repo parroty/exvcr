@@ -3,23 +3,7 @@ defmodule ExVCR.Adapter.Hackney.Converter do
   Provides helpers to mock :hackney methods.
   """
 
-  @doc """
-  Parse string fromat into original request / response format.
-  """
-  def convert_from_string([{"request", request}, {"response", response}]) do
-    [ request:  string_to_request(request), response: string_to_response(response) ]
-  end
-
-  @doc """
-  Parse request and response parameters into string format.
-  """
-  def convert_to_string(request, response) do
-    [ request:  request_to_string(request), response: response_to_string(response) ]
-  end
-
-  defp string_to_request(string) do
-    Enum.map(string, fn({x,y}) -> {binary_to_atom(x),y} end) |> ExVCR.Request.new
-  end
+  use ExVCR.Converter
 
   defp string_to_response(string) do
     Enum.map(string, fn({x, y}) -> {binary_to_atom(x), y} end) |> ExVCR.Response.new
@@ -50,14 +34,5 @@ defmodule ExVCR.Adapter.Hackney.Converter do
       type: "error",
       body: atom_to_binary(reason)
     )
-  end
-
-  defp parse_headers(headers) do
-    do_parse_headers(headers, [])
-  end
-
-  defp do_parse_headers([], acc), do: Enum.reverse(acc)
-  defp do_parse_headers([{key,value}|tail], acc) do
-    do_parse_headers(tail, [{to_string(key), to_string(value)}|acc])
   end
 end
