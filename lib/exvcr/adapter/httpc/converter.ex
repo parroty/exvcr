@@ -29,7 +29,7 @@ defmodule ExVCR.Adapter.Httpc.Converter do
   # TODO: need to handle content_type
   defp request_to_string([method, {url, headers, _content_type, body}, http_options, options]) do
     ExVCR.Request.new(
-      url: to_string(url),
+      url: parse_url(url),
       headers: parse_headers(headers),
       method: to_string(method),
       body: to_string(body),

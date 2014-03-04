@@ -27,7 +27,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
   defp request_to_string([url, headers, method, body, options]), do: request_to_string([url, headers, method, body, options, 5000])
   defp request_to_string([url, headers, method, body, options, _timeout]) do
     ExVCR.Request.new(
-      url: iolist_to_binary(url),
+      url: parse_url(url),
       headers: parse_headers(headers),
       method: atom_to_binary(method),
       body: iolist_to_binary(body),

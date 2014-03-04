@@ -53,12 +53,11 @@ defmodule ExVCR.Handler do
       pattern = Regex.compile!("^#{response[:request].url}$")
       Regex.match?(pattern, to_string(keys[:url]))
     else
-      strip_query_params(response[:request].url) == strip_query_params(keys[:url])
-    end
-  end
+      request_url = response[:request].url |> to_string |> ExVCR.Filter.strip_query_params
+      key_url = keys[:url] |> to_string |> ExVCR.Filter.strip_query_params
 
-  defp strip_query_params(url) do
-    to_string(url) |> String.replace(%r/\?.+$/, "")
+      request_url == key_url
+    end
   end
 
   defp match_by_method(head, params) do

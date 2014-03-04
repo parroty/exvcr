@@ -43,6 +43,17 @@ defmodule ExVCR.RecorderIBrowseTest do
     ExVCR.Config.filter_sensitive_data(nil)
   end
 
+
+  test "filter url param flag removes url params when recording cassettes" do
+    ExVCR.Config.filter_url_params(true)
+    use_cassette "example_ignore_url_params" do
+      assert HTTPotion.get("http://localhost:34000/server?should_not_be_contained", []).body =~ %r/test_response/
+    end
+    json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
+    refute String.contains?(json, "should_not_be_contained")
+    ExVCR.Config.filter_url_params(false)
+  end
+
   teardown_all do
     File.rm_rf(@dummy_cassette_dir)
     :ok

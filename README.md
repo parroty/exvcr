@@ -149,6 +149,19 @@ test "replace sensitive data" do
 end
 ```
 
+#### Ignoring query params in url
+If `ExVCR.Config.filter_url_params(true)` is specified, query params in url will be ignored when recording cassettes.
+
+```elixir
+test "filter url param flag removes url params when recording cassettes" do
+  ExVCR.Config.filter_url_params(true)
+  use_cassette "example_ignore_url_params" do
+    assert HTTPotion.get("http://localhost:34000/server?should_not_be_contained", []).body =~ %r/test_response/
+  end
+  json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
+  refute String.contains?(json, "should_not_be_contained")
+```
+
 ### Mix Tasks
 The following tasks are added by including exvcr package.
 - [mix vcr](#mix-vcr-show-cassettes)

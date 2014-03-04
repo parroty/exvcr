@@ -33,9 +33,21 @@ defmodule ExVCR.RecorderHttpcTest do
   test "replace sensitive data" do
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
     use_cassette "server_sensitive_data" do
-      assert HTTPotion.get("http://localhost:36000/server", []).body =~ %r/PLACEHOLDER/
+      {:ok, {_, _, body}} = :httpc.request('http://localhost:36000/server')
+      assert body =~ %r/PLACEHOLDER/
     end
     ExVCR.Config.filter_sensitive_data(nil)
+  end
+
+  test "filter url param flag removes url params when recording cassettes" do
+    ExVCR.Config.filter_url_params(true)
+    use_cassette "example_ignore_url_params" do
+      {:ok, {_, _, body}} = :httpc.request('http://localhost:36000/server?should_not_be_contained')
+      assert body =~ %r/test_response/
+    end
+    json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
+    refute String.contains?(json, "should_not_be_contained")
+    ExVCR.Config.filter_url_params(false)
   end
 
   teardown_all do

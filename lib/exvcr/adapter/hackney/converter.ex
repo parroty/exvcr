@@ -11,7 +11,7 @@ defmodule ExVCR.Adapter.Hackney.Converter do
 
   defp request_to_string([method, url, headers, body, options]) do
     ExVCR.Request.new(
-      url: to_string(url),
+      url: parse_url(url),
       headers: parse_headers(headers),
       method: to_string(method),
       body: to_string(body),

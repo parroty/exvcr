@@ -37,7 +37,11 @@ defmodule ExVCR.Converter do
         do_parse_headers(tail, [{to_string(key), replaced_value}|acc])
       end
       defoverridable [do_parse_headers: 2]
-    end
 
+      defp parse_url(url) do
+        to_string(url) |> ExVCR.Filter.filter_url_params
+      end
+      defoverridable [parse_url: 1]
+    end
   end
 end

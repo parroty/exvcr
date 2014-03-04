@@ -32,4 +32,12 @@ defmodule ExVCR.Config do
   def filter_sensitive_data(nil) do
     Setting.set(:filter_sensitive_data, [])
   end
+
+  @doc """
+  Set the flag whether to filter-out url params when recording to cassettes.
+  (ex. if flag is true, "param=val" is removed from "http://example.com?param=val").
+  """
+  def filter_url_params(flag) do
+    Setting.set(:filter_url_params, flag)
+  end
 end
