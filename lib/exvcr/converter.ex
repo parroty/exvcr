@@ -42,6 +42,11 @@ defmodule ExVCR.Converter do
         to_string(url) |> ExVCR.Filter.filter_url_params
       end
       defoverridable [parse_url: 1]
+
+      defp parse_request_body(body) do
+        to_string(body) |> ExVCR.Filter.filter_sensitive_data
+      end
+      defoverridable [parse_request_body: 1]
     end
   end
 end

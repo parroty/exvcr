@@ -30,7 +30,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
       url: parse_url(url),
       headers: parse_headers(headers),
       method: atom_to_binary(method),
-      body: iolist_to_binary(body),
+      body: parse_request_body(body),
       options: options
     )
   end
