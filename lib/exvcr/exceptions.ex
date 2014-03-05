@@ -1,3 +1,4 @@
-defexception ExVCR.InvalidRequestError, message: "error"
-defexception ExVCR.FileNotFoundError, message: "error"
-defexception ExVCR.PathNotFoundError, message: "error"
+defexception ExVCR.InvalidRequestError, [:message]
+defexception ExVCR.FileNotFoundError, [:message]
+defexception ExVCR.PathNotFoundError, [:message]
+defexception ExVCR.ImplementationMissingError, [:message]

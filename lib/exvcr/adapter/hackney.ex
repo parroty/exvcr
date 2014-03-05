@@ -2,6 +2,8 @@ defmodule ExVCR.Adapter.Hackney do
   @moduledoc """
   Provides adapter methods to mock :hackney methods.
   """
+
+  use ExVCR.Adapter
   alias ExVCR.Adapter.Hackney.Store
 
   defmacro __using__(_opts) do
@@ -38,13 +40,6 @@ defmodule ExVCR.Adapter.Hackney do
   end
 
   @doc """
-  Callback from ExVCR.Handler when response is retrieved from the HTTP server.
-  """
-  def hook_response_from_server(response) do
-    response
-  end
-
-  @doc """
   Callback from ExVCR.Handler when response is retrieved from the json file cache.
   """
   def hook_response_from_cache(nil), do: nil
@@ -76,17 +71,6 @@ defmodule ExVCR.Adapter.Hackney do
       end
 
       {ret, body}
-    end
-  end
-
-  @doc """
-  Returns the response from the ExVCR.Reponse record.
-  """
-  def get_response_value_from_cache(response) do
-    if response.type == "error" do
-      {:error, response.body}
-    else
-      {:ok, response.status_code, response.headers, response.body}
     end
   end
 end

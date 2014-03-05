@@ -1,6 +1,6 @@
 defmodule ExVCR.Converter do
   @moduledoc """
-  Provides helpers for adapter converters
+  Provides helpers for adapter converters.
   """
 
   defmacro __using__(_) do

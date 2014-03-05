@@ -3,6 +3,8 @@ defmodule ExVCR.Adapter.Httpc do
   Provides adapter methods to mock :httpc methods.
   """
 
+  use ExVCR.Adapter
+
   defmacro __using__(_opts) do
     # do nothing
   end
@@ -55,13 +57,6 @@ defmodule ExVCR.Adapter.Httpc do
 
   defp filter_sensitive_data({:error, reason}) do
     {:error, reason}
-  end
-
-  @doc """
-  Callback from ExVCR.Handler when response is retrieved from the json file cache.
-  """
-  def hook_response_from_cache(response) do
-    response
   end
 
   @doc """

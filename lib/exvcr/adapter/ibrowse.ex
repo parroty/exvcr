@@ -3,6 +3,8 @@ defmodule ExVCR.Adapter.IBrowse do
   Provides adapter methods to mock :ibrowse methods.
   """
 
+  use ExVCR.Adapter
+
   defmacro __using__(_opts) do
     # do nothing
   end
@@ -50,23 +52,5 @@ defmodule ExVCR.Adapter.IBrowse do
 
   defp filter_sensitive_data({:error, reason}) do
     {:error, reason}
-  end
-
-  @doc """
-  Callback from ExVCR.Handler when response is retrieved from the json file cache.
-  """
-  def hook_response_from_cache(response) do
-    response
-  end
-
-  @doc """
-  Returns the response from the ExVCR.Reponse record.
-  """
-  def get_response_value_from_cache(response) do
-    if response.type == "error" do
-      {:error, response.body}
-    else
-      {:ok, response.status_code, response.headers, response.body}
-    end
   end
 end
