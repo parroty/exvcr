@@ -91,7 +91,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
   test "custom without valid response throws error" do
     assert_raise ExVCR.InvalidRequestError, fn ->
       use_cassette "response_mocking", custom: true do
-        HTTPotion.get("http://example.com/invalid", [])
+        HTTPotion.get("http://invalidurl.example.com/invalid", [])
       end
     end
   end
