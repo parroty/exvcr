@@ -50,7 +50,7 @@ defmodule ExVCR.Handler do
 
   defp match_by_url(response, keys, custom_mode) do
     if custom_mode do
-      pattern = Regex.compile!("^#{response[:request].url}$")
+      pattern = Regex.compile!("^#{response[:request].url}.*$")
       Regex.match?(pattern, to_string(keys[:url]))
     else
       request_url = response[:request].url |> to_string |> ExVCR.Filter.strip_query_params
