@@ -23,7 +23,7 @@ defmodule ExVCR.Adapter.HttpcTest do
 
   test "example httpc request error" do
     use_cassette "example_httpc_request_error" do
-      {:error, {reason, detail}} = :httpc.request('http://invalidurl')
+      {:error, {reason, _detail}} = :httpc.request('http://invalidurl')
       assert reason == :failed_connect
     end
   end
