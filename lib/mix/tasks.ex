@@ -33,7 +33,7 @@ defmodule Mix.Tasks.Vcr do
                            aliases: [d: :dir, i: :interactive, a: :all])
 
       pattern = cond do
-        options[:all]          -> %r/.*/
+        options[:all]          -> ~r/.*/
         Enum.count(files) == 1 -> Enum.at(files, 0)
         true                   -> nil
       end

@@ -8,7 +8,7 @@ defmodule ExVCR.Task.Runner do
   @check_header_format   "  %-40s %-20s %-20s\n"
   @check_content_format  "  %-40s %-20d %-20d\n"
   @date_format   "%04d/%02d/%02d %02d:%02d:%02d"
-  @json_file_pattern %r/\.json$/
+  @json_file_pattern ~r/\.json$/
 
   @doc """
   Use specified path to show the list of vcr cassettes.

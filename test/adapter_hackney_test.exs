@@ -10,7 +10,7 @@ defmodule ExVCR.Adapter.HackneyTest do
     use_cassette "hackney_get" do
       {:ok, _status_code, _headers, client} = :hackney.request(:get, "http://www.example.com", [], [], [])
       {:ok, body} = :hackney.body(client)
-      assert body =~ %r/Example Domain/
+      assert body =~ ~r/Example Domain/
     end
   end
 
@@ -32,7 +32,7 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   test "get request" do
     use_cassette "httpoison_get" do
-      assert HTTPoison.get("http://example.com").body =~ %r/Example Domain/
+      assert HTTPoison.get("http://example.com").body =~ ~r/Example Domain/
     end
   end
 

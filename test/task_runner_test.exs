@@ -9,9 +9,9 @@ defmodule ExVCR.TaskRunnerTest do
       ExVCR.Task.Runner.show_vcr_cassettes(["test/cassettes"])
     end)
 
-    assert result =~ %r/[File Name]/
-    assert result =~ %r/test1.json/
-    assert result =~ %r/test2.json/
+    assert result =~ ~r/[File Name]/
+    assert result =~ ~r/test1.json/
+    assert result =~ ~r/test2.json/
   end
 
   test "delete cassettes task deletes json files" do
@@ -35,8 +35,8 @@ defmodule ExVCR.TaskRunnerTest do
       ExVCR.Task.Runner.check_cassettes(record)
     end)
 
-    assert result =~ %r/Showing hit counts of cassettes in/
-    assert result =~ %r/test1.json\s+1\s+2\s+\n/
-    assert result =~ %r/test2.json\s+1\s+0\s+\n/
+    assert result =~ ~r/Showing hit counts of cassettes in/
+    assert result =~ ~r/test1.json\s+1\s+2\s+\n/
+    assert result =~ ~r/test2.json\s+1\s+0\s+\n/
   end
 end

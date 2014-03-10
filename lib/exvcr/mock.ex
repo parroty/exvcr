@@ -56,6 +56,6 @@ defmodule ExVCR.Mock do
   Normalize fixture name for using as json file names, which removes whitespaces and align case.
   """
   def normalize_fixture(fixture) do
-    fixture |> String.replace(%r/\s/, "_") |> String.downcase
+    fixture |> String.replace(~r/\s/, "_") |> String.downcase
   end
 end

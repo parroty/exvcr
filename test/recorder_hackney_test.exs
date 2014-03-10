@@ -13,16 +13,16 @@ defmodule ExVCR.RecorderHackneyTest do
 
   test "forcefully getting response from server by removing json in advance" do
     use_cassette "server1" do
-      assert HTTPoison.get("http://localhost:35000/server", []).body =~ %r/test_response/
+      assert HTTPoison.get("http://localhost:35000/server", []).body =~ ~r/test_response/
     end
   end
 
   test "forcefully getting response from server, then loading from cache by recording twice" do
     use_cassette "server2" do
-      assert HTTPoison.get("http://localhost:35000/server", []).body =~ %r/test_response/
+      assert HTTPoison.get("http://localhost:35000/server", []).body =~ ~r/test_response/
     end
     use_cassette "server2" do
-      assert HTTPoison.get("http://localhost:35000/server", []).body =~ %r/test_response/
+      assert HTTPoison.get("http://localhost:35000/server", []).body =~ ~r/test_response/
     end
   end
 
@@ -37,7 +37,7 @@ defmodule ExVCR.RecorderHackneyTest do
   test "replace sensitive data" do
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
     use_cassette "sensitive_data" do
-      assert HTTPoison.get("http://localhost:35000/server", []).body =~ %r/PLACEHOLDER/
+      assert HTTPoison.get("http://localhost:35000/server", []).body =~ ~r/PLACEHOLDER/
     end
     ExVCR.Config.filter_sensitive_data(nil)
   end
@@ -45,7 +45,7 @@ defmodule ExVCR.RecorderHackneyTest do
   test "filter url param flag removes url params when recording cassettes" do
     ExVCR.Config.filter_url_params(true)
     use_cassette "example_ignore_url_params" do
-      assert HTTPoison.get("http://localhost:35000/server?should_not_be_contained", []).body =~ %r/test_response/
+      assert HTTPoison.get("http://localhost:35000/server?should_not_be_contained", []).body =~ ~r/test_response/
     end
     json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
     refute String.contains?(json, "should_not_be_contained")

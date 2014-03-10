@@ -14,19 +14,19 @@ defmodule ExVCR.RecorderHttpcTest do
   test "forcefully getting response from server by removing json in advance" do
     use_cassette "server1" do
       {:ok, {_, _, body}} = :httpc.request('http://localhost:36000/server')
-      assert body =~ %r/test_response/
+      assert body =~ ~r/test_response/
     end
   end
 
   test "forcefully getting response from server, then loading from cache by recording twice" do
     use_cassette "server2" do
       {:ok, {_, _, body}} = :httpc.request('http://localhost:36000/server')
-      assert body =~ %r/test_response/
+      assert body =~ ~r/test_response/
     end
 
     use_cassette "server2" do
       {:ok, {_, _, body}} = :httpc.request('http://localhost:36000/server')
-      assert body =~ %r/test_response/
+      assert body =~ ~r/test_response/
     end
   end
 
@@ -34,7 +34,7 @@ defmodule ExVCR.RecorderHttpcTest do
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
     use_cassette "server_sensitive_data" do
       {:ok, {_, _, body}} = :httpc.request('http://localhost:36000/server')
-      assert body =~ %r/PLACEHOLDER/
+      assert body =~ ~r/PLACEHOLDER/
     end
     ExVCR.Config.filter_sensitive_data(nil)
   end
@@ -43,7 +43,7 @@ defmodule ExVCR.RecorderHttpcTest do
     ExVCR.Config.filter_url_params(true)
     use_cassette "example_ignore_url_params" do
       {:ok, {_, _, body}} = :httpc.request('http://localhost:36000/server?should_not_be_contained')
-      assert body =~ %r/test_response/
+      assert body =~ ~r/test_response/
     end
     json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
     refute String.contains?(json, "should_not_be_contained")

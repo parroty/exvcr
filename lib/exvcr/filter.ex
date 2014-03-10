@@ -12,7 +12,7 @@ defmodule ExVCR.Filter do
 
   defp replace(body, []), do: body
   defp replace(body, [{pattern, placeholder}|tail]) do
-    replace(String.replace(body, %r/#{pattern}/, placeholder), tail)
+    replace(String.replace(body, ~r/#{pattern}/, placeholder), tail)
   end
 
   @doc """
@@ -30,6 +30,6 @@ defmodule ExVCR.Filter do
   Remove query params from the specified url.
   """
   def strip_query_params(url) do
-    url |> String.replace(%r/\?.+$/, "")
+    url |> String.replace(~r/\?.+$/, "")
   end
 end
