@@ -40,7 +40,6 @@ Usage: mix vcr.check [options] [test-files]
 Usage: mix vcr.show [cassete-file-names]
   Used to show cassette contents
 
-  -j (--json)         Parse response body as json to display
 """
   end
 end

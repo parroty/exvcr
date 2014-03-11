@@ -74,8 +74,8 @@ defmodule Mix.Tasks.Vcr do
 
     @doc "Entry point for [mix vcr.show] task."
     def run(args) do
-      {options, files, _} = OptionParser.parse(args, aliases: [j: :json])
-      ExVCR.Task.Show.run(files, options)
+      {_options, files, _} = OptionParser.parse(args, aliases: [])
+      ExVCR.Task.Show.run(files)
     end
   end
 end
