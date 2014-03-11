@@ -167,10 +167,12 @@ The following tasks are added by including exvcr package.
 - [mix vcr](#mix-vcr-show-cassettes)
 - [mix vcr.delete](#mix-vcrdelete-delete-cassettes)
 - [mix vcr.check](#mix-vcrcheck-check-cassettes)
+- [mix vcr.show](#mix-vcrshow-show-cassettes)
 - [mix vcr --help](#mix-vcr-help-help)
 
 #### [mix vcr] Show cassettes
 ```Shell
+$ mix vcr
 Showing list of cassettes in [fixture/vcr_cassettes]
   [File Name]                              [Last Update]
   example_httpotion.json                   2013/11/07 23:24:49
@@ -189,7 +191,7 @@ Showing list of cassettes in [fixture/custom_cassettes]
 ```
 
 #### [mix vcr.delete] Delete cassettes
-The [mix vcr.delete] task deletes the cassettes that contains the specified pattern in the file name.
+The `mix vcr.delete` task deletes the cassettes that contains the specified pattern in the file name.
 ```Shell
 $ mix vcr.delete ibrowse
 Deleted example_ibrowse.json.
@@ -208,7 +210,7 @@ Deleted example_ibrowse_multiple.json.
 If -a (--all) option is specified, all the cassetes in the specified folder becomes the target for delete.
 
 #### [mix vcr.check] Check cassettes
-The [mix vcr.check] shows how many times each cassette is applied while executing [mix test] tasks. It is intended for verifying  the cassettes are properly used. `[Cassette Counts]` indicates the count that the pre-recorded json cassettes are applied. `[Server Counts]` indicates the count that server access is performed.
+The `mix vcr.check` shows how many times each cassette is applied while executing `mix test` tasks. It is intended for verifying  the cassettes are properly used. `[Cassette Counts]` indicates the count that the pre-recorded json cassettes are applied. `[Server Counts]` indicates the count that server access is performed.
 
 ```Shell
 $ mix vcr.check
@@ -234,7 +236,7 @@ Showing hit counts of cassettes in [fixture/custom_cassettes]
   response_mocking_regex.json              1                    0
 ```
 
-The target test file can be limited by specifying test files, as similar as [mix test] tasks.
+The target test file can be limited by specifying test files, as similar as `mix test` tasks.
 
 ```Shell
 $ mix vcr.check test/exvcr_test.exs
@@ -244,6 +246,23 @@ Showing hit counts of cassettes in [fixture/vcr_cassettes]
   [File Name]                              [Cassette Counts]    [Server Counts]
   example_httpotion.json                   1                    0
 ...
+...
+```
+
+#### [mix vcr.show] Show cassettes
+The `mix vcr.show` task displays the contents of cassettes json file.
+
+```Shell
+$ mix vcr.show fixture/vcr_cassettes/httpoison_get.json
+[
+  {
+    "request": {
+      "url": "http://example.com",
+      "headers": [],
+      "method": "get",
+      "body": "",
+      "options": []
+    },
 ...
 ```
 
@@ -270,6 +289,11 @@ Usage: mix vcr.check [options] [test-files]
 
   -d (--dir)          Specify vcr cassettes directory
   -c (--custom)       Specify custom cassettes directory
+
+Usage: mix vcr.show [cassete-file-names]
+  Used to show cassette contents
+
+  -j (--json)         Parse response body as json to display
 ```
 
 

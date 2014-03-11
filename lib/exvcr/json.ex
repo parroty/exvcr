@@ -18,7 +18,7 @@ defmodule ExVCR.JSON do
   """
   def load(file_name, custom_mode, adapter) do
     case { File.exists?(file_name), custom_mode } do
-      { true, _ } -> read_json_file(file_name, adapter)
+      { true, _ } -> read_json_file(file_name) |> Enum.map(&adapter.convert_from_string/1)
       { false, true } -> raise ExVCR.FileNotFoundError.new(message: "cassette file \"#{file_name}\" not found")
       { false, _ } -> []
     end
@@ -27,7 +27,7 @@ defmodule ExVCR.JSON do
   @doc """
   Reads and parse the json file located at the specified file_name.
   """
-  def read_json_file(file_name, adapter) do
-    File.read!(file_name) |> JSEX.decode! |> Enum.map(&adapter.convert_from_string/1)
+  def read_json_file(file_name) do
+    File.read!(file_name) |> JSEX.decode!
   end
 end

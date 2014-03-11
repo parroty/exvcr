@@ -49,9 +49,12 @@ defmodule Mix.Tasks.Vcr do
   end
 
   defmodule Check do
+    @moduledoc """
+    Check how the recorded cassettes are used while executing [mix test] task.
+    """
     use Mix.Task
 
-    @doc "Entry point for [mix vcr.check] task"
+    @doc "Entry point for [mix vcr.check] task."
     def run(args) do
       {options, files, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom])
       dirs = ExVCR.Task.Util.parse_basic_options(options)
@@ -60,6 +63,19 @@ defmodule Mix.Tasks.Vcr do
       Mix.env(:test)
       Code.load_file(Path.join([Path.dirname(__ENV__.file), "mix_file.exs"]))
       Mix.Task.run("test", files ++ ["--cover"])
+    end
+  end
+
+  defmodule Show do
+    @moduledoc """
+    Show the contents of the cassettes.
+    """
+    use Mix.Task
+
+    @doc "Entry point for [mix vcr.show] task."
+    def run(args) do
+      {options, files, _} = OptionParser.parse(args, aliases: [j: :json])
+      ExVCR.Task.Show.run(files, options)
     end
   end
 end

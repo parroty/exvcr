@@ -36,6 +36,11 @@ Usage: mix vcr.check [options] [test-files]
 
   -d (--dir)          Specify vcr cassettes directory
   -c (--custom)       Specify custom cassettes directory
+
+Usage: mix vcr.show [cassete-file-names]
+  Used to show cassette contents
+
+  -j (--json)         Parse response body as json to display
 """
   end
 end
