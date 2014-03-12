@@ -6,7 +6,7 @@ defmodule ExVCR.Converter do
   defmacro __using__(_) do
     quote do
       @doc """
-      Parse string fromat into original request / response format.
+      Parse string format into original request / response tuples.
       """
       def convert_from_string([{"request", request}, {"response", response}]) do
         [ request:  string_to_request(request), response: string_to_response(response) ]
@@ -14,7 +14,7 @@ defmodule ExVCR.Converter do
       defoverridable [convert_from_string: 1]
 
       @doc """
-      Parse request and response parameters into string format.
+      Parse request and response tuples into string format.
       """
       def convert_to_string(request, response) do
         [ request:  request_to_string(request), response: response_to_string(response) ]
@@ -25,6 +25,15 @@ defmodule ExVCR.Converter do
         Enum.map(string, fn({x,y}) -> {binary_to_atom(x),y} end) |> ExVCR.Request.new
       end
       defoverridable [string_to_request: 1]
+
+      defp string_to_response(string), do: raise ExVCR.ImplementationMissingError
+      defoverridable [string_to_response: 1]
+
+      defp request_to_string(request), do: raise ExVCR.ImplementationMissingError
+      defoverridable [request_to_string: 1]
+
+      defp response_to_string(response), do: raise ExVCR.ImplementationMissingError
+      defoverridable [response_to_string: 1]
 
       defp parse_headers(headers) do
         do_parse_headers(headers, [])
