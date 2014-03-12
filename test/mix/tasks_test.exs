@@ -4,9 +4,10 @@ defmodule Mix.Tasks.VcrTest do
   use ExUnit.Case, async: false
   import ExUnit.CaptureIO
 
-  @dummy_path  "tmp/vcr_tmp/"
-  @dummy_file  "dummy.json"
+  @dummy_path "tmp/vcr_tmp/"
+  @dummy_file1 "dummy1.json"
   @dummy_file2 "dummy2.json"
+  @dummy_file_show "dummy_show.json"
 
   setup_all do
     File.mkdir_p!(@dummy_path)
@@ -34,30 +35,30 @@ defmodule Mix.Tasks.VcrTest do
   end
 
   test "mix vcr.delete" do
-    File.touch!(@dummy_path <> @dummy_file)
+    File.touch!(@dummy_path <> @dummy_file1)
     assert capture_io(fn ->
-      Mix.Tasks.Vcr.Delete.run(["--dir", @dummy_path, @dummy_file])
-    end) =~ ~r/Deleted dummy.json./
-    assert(File.exists?(@dummy_path <> @dummy_file) == false)
+      Mix.Tasks.Vcr.Delete.run(["--dir", @dummy_path, @dummy_file1])
+    end) =~ ~r/Deleted dummy1.json./
+    assert(File.exists?(@dummy_path <> @dummy_file1) == false)
   end
 
   test "mix vcr.delete with --interactive option" do
-    File.touch!(@dummy_path <> @dummy_file)
+    File.touch!(@dummy_path <> @dummy_file1)
     assert capture_io("y\n", fn ->
-      Mix.Tasks.Vcr.Delete.run(["-i", "--dir", @dummy_path, @dummy_file])
-    end) =~ ~r/delete dummy.json?/
-    assert(File.exists?(@dummy_path <> @dummy_file) == false)
+      Mix.Tasks.Vcr.Delete.run(["-i", "--dir", @dummy_path, @dummy_file1])
+    end) =~ ~r/delete dummy1.json?/
+    assert(File.exists?(@dummy_path <> @dummy_file1) == false)
   end
 
   test "mix vcr.delete with --all option" do
-    File.touch!(@dummy_path <> @dummy_file)
+    File.touch!(@dummy_path <> @dummy_file1)
     File.touch!(@dummy_path <> @dummy_file2)
 
     assert capture_io("y\n", fn ->
-      Mix.Tasks.Vcr.Delete.run(["-a", "--dir", @dummy_path, @dummy_file])
-    end) =~ ~r/Deleted dummy.json./
+      Mix.Tasks.Vcr.Delete.run(["-a", "--dir", @dummy_path, @dummy_file1])
+    end) =~ ~r/Deleted dummy1.json./
 
-    assert(File.exists?(@dummy_path <> @dummy_file) == false)
+    assert(File.exists?(@dummy_path <> @dummy_file1) == false)
     assert(File.exists?(@dummy_path <> @dummy_file2) == false)
   end
 
@@ -65,5 +66,18 @@ defmodule Mix.Tasks.VcrTest do
     assert capture_io(fn ->
       Mix.Tasks.Vcr.Delete.run(["--dir", @dummy_path])
     end) =~ ~r/invalid parameter is specified/
+  end
+
+  test "mix vcr.show displays json content" do
+    File.write(@dummy_path <> @dummy_file_show, "[{\"request\": \"a\"},{\"response\": {\"body\": \"dummy_body\"}}]")
+    assert capture_io(fn ->
+      Mix.Tasks.Vcr.Show.run([@dummy_path <> @dummy_file_show])
+    end) =~ ~r/dummy_body/
+  end
+
+  test "mix vcr.show displays shows error if file is not found" do
+    assert capture_io(fn ->
+      Mix.Tasks.Vcr.Show.run(["invalid_file_name"])
+    end) =~ ~r/\[invalid_file_name\] was not found/
   end
 end
