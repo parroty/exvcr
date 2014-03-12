@@ -250,7 +250,7 @@ Showing hit counts of cassettes in [fixture/vcr_cassettes]
 ```
 
 #### [mix vcr.show] Show cassettes
-The `mix vcr.show` task displays the contents of cassettes json file.
+The `mix vcr.show` task displays the contents of cassettes json file in the prettified format.
 
 ```Shell
 $ mix vcr.show fixture/vcr_cassettes/httpoison_get.json
@@ -267,6 +267,8 @@ $ mix vcr.show fixture/vcr_cassettes/httpoison_get.json
 ```
 
 #### [mix vcr --help] Help
+Displays helps for mix sub-tasks.
+
 ```Shell
 $ mix vcr --help
 Usage: mix vcr [options]
