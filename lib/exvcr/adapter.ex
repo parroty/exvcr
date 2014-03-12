@@ -37,7 +37,7 @@ defmodule ExVCR.Adapter do
       defoverridable [hook_response_from_cache: 1]
 
       @doc """
-      Returns the response from the ExVCR.Reponse record.
+      Callback from ExVCR.Handler to get the response content tuple from the ExVCR.Reponse record.
       """
       def get_response_value_from_cache(response) do
         if response.type == "error" do
