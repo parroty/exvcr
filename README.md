@@ -84,8 +84,9 @@ defmodule ExVCR.Adapter.HttpcTest do
 
   test "get request" do
     use_cassette "example_httpc_request" do
-      {:ok, {{_http_version, status_code = 200, _reason_phrase}, headers, body}} = :httpc.request('http://example.com')
-      assert to_string(body) =~ %r/Example Domain/
+      {:ok, result} = :httpc.request('http://example.com')
+      {{_http_version, _status_code = 200, _reason_phrase}, _headers, body} = result
+      assert to_string(body) =~ ~r/Example Domain/
     end
   end
 ```
@@ -156,7 +157,8 @@ If `ExVCR.Config.filter_url_params(true)` is specified, query params in url will
 test "filter url param flag removes url params when recording cassettes" do
   ExVCR.Config.filter_url_params(true)
   use_cassette "example_ignore_url_params" do
-    assert HTTPotion.get("http://localhost:34000/server?should_not_be_contained", []).body =~ %r/test_response/
+    assert HTTPotion.get(
+      "http://localhost:34000/server?should_not_be_contained", []).body =~ %r/test_response/
   end
   json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
   refute String.contains?(json, "should_not_be_contained")

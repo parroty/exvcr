@@ -9,7 +9,8 @@ defmodule ExVCR.Adapter.HttpcTest do
 
   test "example httpc request/1" do
     use_cassette "example_httpc_request_1" do
-      {:ok, {{_http_version, _status_code = 200, _reason_phrase}, _headers, body}} = :httpc.request('http://example.com')
+      {:ok, result} = :httpc.request('http://example.com')
+      {{_http_version, _status_code = 200, _reason_phrase}, _headers, body} = result
       assert to_string(body) =~ ~r/Example Domain/
     end
   end
