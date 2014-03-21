@@ -16,6 +16,14 @@ defmodule ExVCR.Adapter.IBrowseTest do
     end
   end
 
+  test "using recorded cassete, but requesting with different url should return error" do
+    use_cassette "example_ibrowse" do
+      assert_raise ExVCR.RequestNotMatchError, fn ->
+        :ibrowse.send_req('http://example.com/different_from_original', [], :get)
+      end
+    end
+  end
+
   test "example multiple requests" do
     use_cassette "example_ibrowse_multiple" do
       :ibrowse.start
