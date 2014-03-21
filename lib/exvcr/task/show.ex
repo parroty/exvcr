@@ -27,7 +27,7 @@ defmodule ExVCR.Task.Show do
   defp display_parsed_body(json) do
     case extract_body(json) |> JSEX.prettify do
       {:ok, body_json } ->
-        IO.puts "\n\e[32m[Showing parsed JSON body]\e[m"
+        IO.puts "\n\e[33m[Showing parsed JSON body]\e[m"
         IO.puts body_json
       _ -> nil
     end
