@@ -16,14 +16,6 @@ defmodule ExVCR.Adapter.IBrowseTest do
     end
   end
 
-  test "using recorded cassete, but requesting with different url should return error" do
-    use_cassette "example_ibrowse" do
-      assert_raise ExVCR.RequestNotMatchError, fn ->
-        :ibrowse.send_req('http://example.com/different_from_original', [], :get)
-      end
-    end
-  end
-
   test "example multiple requests" do
     use_cassette "example_ibrowse_multiple" do
       :ibrowse.start
@@ -130,6 +122,21 @@ defmodule ExVCR.Adapter.IBrowseTest do
     assert_raise HTTPotion.HTTPError, fn ->
       use_cassette "httpotion_get_timeout" do
         assert HTTPotion.get("http://example.com", [], [timeout: 1])
+      end
+    end
+  end
+
+  test "using recorded cassete, but requesting with different url should return error" do
+    use_cassette "example_ibrowse_different" do
+      :ibrowse.start
+      {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com', [], :get)
+      assert status_code == '200'
+      assert to_string(body) =~ ~r/Example Domain/
+    end
+
+    use_cassette "example_ibrowse_different" do
+      assert_raise ExVCR.RequestNotMatchError, fn ->
+        :ibrowse.send_req('http://example.com/different_from_original', [], :get)
       end
     end
   end
