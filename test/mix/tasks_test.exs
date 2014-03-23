@@ -65,7 +65,7 @@ defmodule Mix.Tasks.VcrTest do
   test "mix vcr.delete with invalid file" do
     assert capture_io(fn ->
       Mix.Tasks.Vcr.Delete.run(["--dir", @dummy_path])
-    end) =~ ~r/invalid parameter is specified/
+    end) =~ ~r/[Invalid Param]/
   end
 
   test "mix vcr.show displays json content" do
