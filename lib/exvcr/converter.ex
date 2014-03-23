@@ -56,6 +56,11 @@ defmodule ExVCR.Converter do
         to_string(body) |> ExVCR.Filter.filter_sensitive_data
       end
       defoverridable [parse_request_body: 1]
+
+      defp parse_keyword_list(params) do
+        Enum.map(params, fn({k,v}) -> {k,to_string(v)} end)
+      end
+      defoverridable [parse_keyword_list: 1]
     end
   end
 end

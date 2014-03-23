@@ -14,6 +14,7 @@ It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide 
         - support is very limited, and tested only with sync request of HTTPoison yet.
     - <a href="http://erlang.org/doc/man/httpc.html" target="_blank">httpc</a>-based libraries.
         - <a href="https://github.com/tim/erlang-oauth/" target="_blank">erlang-oauth</a>
+        - <a href="https://github.com/roundscope/tirexs/" target="_blank">tirexs</a>
         - support is very limited, and tested only with :httpc.request/1 and :httpc.request/4
 
 - HTTP interactions are recorded as JSON file.

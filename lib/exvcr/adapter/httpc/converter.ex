@@ -33,7 +33,7 @@ defmodule ExVCR.Adapter.Httpc.Converter do
       headers: parse_headers(headers),
       method: to_string(method),
       body: parse_request_body(body),
-      options: [httpc_options: options, http_options: http_options]
+      options: [httpc_options: parse_keyword_list(options), http_options: parse_keyword_list(http_options)]
     )
   end
 
