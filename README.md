@@ -304,5 +304,51 @@ Usage: mix vcr.show [cassete-file-names]
 ##### Notes
 If the cassette save directory is changed from the default, [-d, --dir] option (for vcr cassettes) and [-c, --custom] option (for custom cassettes) can be used to specify the directory.
 
+### IEx Helper
+`ExVCR.IEx` module provides simple helper functions to display the http request/response in json format, instead of recording in the cassette files.
+
+```elixir
+% iex -S mix
+Erlang R16B03 (erts-5.10.4) ...
+Interactive Elixir (0.12.5) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> require ExVCR.IEx
+nil
+iex(2)> ExVCR.IEx.print do
+...(2)>   :ibrowse.send_req('http://example.com', [], :get)
+...(2)> end
+[
+  {
+    "request": {
+      "url": "http://example.com",
+      "headers": [],
+      "method": "get",
+      "body": "",
+      "options": []
+    },
+    "response": {
+      "type": "ok",
+      "status_code": 200,
+...
+```
+
+The adapter option can be specified as `adapter` argument of print function, as follows.
+
+```elixir
+% iex -S mix
+Erlang R16B03 (erts-5.10.4) ...
+
+Interactive Elixir (0.12.5) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> require ExVCR.IEx
+nil
+iex(2)> ExVCR.IEx.print(adapter: ExVCR.Adapter.Hackney) do
+...(2)>   HTTPoison.get("http://example.com").body
+...(2)> end
+[
+  {
+    "request": {
+      "url": "http://example.com",
+...
+```
+
 ### TODO
 - Improve performance, as it's very slow.
