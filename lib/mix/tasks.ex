@@ -43,7 +43,7 @@ defmodule Mix.Tasks.Vcr do
           options[:dir] || ExVCR.Setting.get_default_vcr_path,
           pattern, options[:interactive] || false)
       else
-        IO.puts "invalid parameter is specified for - mix vcr.delete [pattern]"
+        IO.puts "[Invalid Param] Specify substring of cassette file-name to be deleted - `mix vcr.delete [pattern]`, or use `mix vcr.delete --all` for deleting all cassettes."
       end
     end
   end
