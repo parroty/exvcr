@@ -3,29 +3,31 @@ defmodule ExVCR.RecorderHttpcTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_httpc"
+  @port 34001
+  @url 'http://localhost:#{@port}/server'
 
   setup_all do
     :inets.start
-    HttpServer.start(path: "/server", port: 36000, response: "test_response")
+    HttpServer.start(path: "/server", port: @port, response: "test_response")
     ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
     :ok
   end
 
   test "forcefully getting response from server by removing json in advance" do
     use_cassette "server1" do
-      {:ok, {_, _, body}} = :httpc.request('http://localhost:36000/server')
+      {:ok, {_, _, body}} = :httpc.request(@url)
       assert body =~ ~r/test_response/
     end
   end
 
   test "forcefully getting response from server, then loading from cache by recording twice" do
     use_cassette "server2" do
-      {:ok, {_, _, body}} = :httpc.request('http://localhost:36000/server')
+      {:ok, {_, _, body}} = :httpc.request(@url)
       assert body =~ ~r/test_response/
     end
 
     use_cassette "server2" do
-      {:ok, {_, _, body}} = :httpc.request('http://localhost:36000/server')
+      {:ok, {_, _, body}} = :httpc.request(@url)
       assert body =~ ~r/test_response/
     end
   end
@@ -33,7 +35,7 @@ defmodule ExVCR.RecorderHttpcTest do
   test "replace sensitive data" do
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
     use_cassette "server_sensitive_data" do
-      {:ok, {_, _, body}} = :httpc.request('http://localhost:36000/server')
+      {:ok, {_, _, body}} = :httpc.request(@url)
       assert body =~ ~r/PLACEHOLDER/
     end
     ExVCR.Config.filter_sensitive_data(nil)
@@ -42,7 +44,7 @@ defmodule ExVCR.RecorderHttpcTest do
   test "filter url param flag removes url params when recording cassettes" do
     ExVCR.Config.filter_url_params(true)
     use_cassette "example_ignore_url_params" do
-      {:ok, {_, _, body}} = :httpc.request('http://localhost:36000/server?should_not_be_contained')
+      {:ok, {_, _, body}} = :httpc.request('#{@url}?should_not_be_contained')
       assert body =~ ~r/test_response/
     end
     json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
