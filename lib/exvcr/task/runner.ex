@@ -77,8 +77,11 @@ defmodule ExVCR.Task.Runner do
   def check_cassettes(record) do
     count_hash = create_count_hash(record.files, HashDict.new)
     Enum.each(record.dirs, fn(dir) ->
-      cassettes = read_cassettes(dir)
-      print_check_cassettes(cassettes, dir, count_hash)
+      IO.puts "Showing hit counts of cassettes in [#{dir}]"
+      if File.exists?(dir) do
+        cassettes = read_cassettes(dir)
+        print_check_cassettes(cassettes, count_hash)
+      end
       IO.puts ""
     end)
   end
@@ -94,8 +97,7 @@ defmodule ExVCR.Task.Runner do
     create_count_hash(tail, hash)
   end
 
-  defp print_check_cassettes(items, path, counts_hash) do
-    IO.puts "Showing hit counts of cassettes in [#{path}]"
+  defp print_check_cassettes(items, counts_hash) do
     printf(@check_header_format, ["[File Name]", "[Cassette Counts]", "[Server Counts]"])
     Enum.each(items, fn({name, _date}) ->
       counts = HashDict.get(counts_hash, name, ExVCR.Checker.Counts.new)
