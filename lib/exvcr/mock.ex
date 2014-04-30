@@ -10,7 +10,7 @@ defmodule ExVCR.Mock do
 
     quote do
       import ExVCR.Mock
-      Application.Behaviour.start(unquote(adapter).module_name)
+      :application.start(unquote(adapter).module_name)
       use unquote(adapter)
 
       def adapter do

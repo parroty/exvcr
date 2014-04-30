@@ -142,7 +142,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
   end
 
   defp assert_response(response, function \\ nil) do
-    assert response.success?(:extra)
+    assert HTTPotion.Response.success?(response, :extra)
     assert response.headers[:Connection] == "keep-alive"
     assert is_binary(response.body)
     unless function == nil, do: function.(response)

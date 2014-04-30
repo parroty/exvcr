@@ -34,8 +34,8 @@ defmodule ExVCR.Task.Show do
   end
 
   defp extract_body(json) do
-    response = JSEX.decode!(json) |> List.first |> HashDict.new |> fetch_value("response")
-    HashDict.new(response) |> fetch_value("body")
+    response = JSEX.decode!(json) |> List.first |> Enum.into(HashDict.new) |> fetch_value("response")
+    Enum.into(response, HashDict.new) |> fetch_value("body")
   end
 
   defp fetch_value(dict, key) do

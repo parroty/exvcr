@@ -45,24 +45,26 @@ defmodule ExVCR.Adapter.Hackney do
   def hook_response_from_cache(nil), do: nil
   def hook_response_from_cache(ExVCR.Response[type: "error"] = response), do: response
   def hook_response_from_cache(ExVCR.Response[body: body] = response) do
-    client = make_ref
-    Store.set(client, body)
+    client          = make_ref
+    client_key_atom = client |> inspect |> binary_to_atom
+    Store.set(client_key_atom, body)
     response.body(client)
   end
 
   defp handle_body_request(recorder, [client]) do
-    if body = Store.get(client) do
-      Store.delete(client)
+    client_key_atom = client |> inspect |> binary_to_atom
+    if body = Store.get(client_key_atom) do
+      Store.delete(client_key_atom)
       {:ok, body}
     else
       {ret, body} = :meck.passthrough([client])
       if ret == :ok do
         body = ExVCR.Filter.filter_sensitive_data(body)
 
-        client_key_in_string = inspect(client)
+        client_key_string = inspect(client)
         ExVCR.Recorder.update(recorder,
           fn([request: _request, response: response]) ->
-            response.body == client_key_in_string
+            response.body == client_key_string
           end,
           fn([request: request, response: response]) ->
             [request: request, response: response.body(body)]
