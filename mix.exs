@@ -3,7 +3,7 @@ defmodule ExVCR.Mixfile do
 
   def project do
     [ app: :exvcr,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: ">= 0.12.4",
       deps: deps(Mix.env),
       test_coverage: [tool: ExCoveralls]
@@ -35,7 +35,7 @@ defmodule ExVCR.Mixfile do
   def deps(:prod) do
     [
       {:meck, "0.8.1", github: "eproxus/meck"},
-      {:exactor, "0.2.0", github: "sasa1977/exactor"},
+      {:exactor, github: "sasa1977/exactor"},
       {:jsex, github: "talentdeficit/jsex"},
       {:exprintf, github: "parroty/exprintf"}
     ]
