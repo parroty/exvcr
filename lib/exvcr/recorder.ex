@@ -44,7 +44,7 @@ defmodule ExVCR.Recorder do
   def save(recorder) do
     file_path = get_file_path(recorder)
     if File.exists?(file_path) == false do
-      ExVCR.JSON.save(file_path, get(recorder))
+      ExVCR.JSON.save(file_path, ExVCR.Recorder.get(recorder))
     end
   end
 
@@ -67,7 +67,7 @@ defmodule ExVCR.Recorder do
   def pop(recorder),            do: Responses.pop(recorder.responses)
 
   def update(recorder, finder, updator) do
-    responses = Enum.map(get(recorder), fn(response) ->
+    responses = Enum.map(ExVCR.Recorder.get(recorder), fn(response) ->
       if finder.(response) do
         updator.(response)
       else

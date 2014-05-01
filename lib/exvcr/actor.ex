@@ -15,7 +15,7 @@ defmodule ExVCR.Actor do
     defcall get, state: state, do: reply(state)
 
     def pop(x) do
-      case get(x) do
+      case ExVCR.Actor.Responses.get(x) do
         [] -> []
         [head|tail] ->
           set(x, tail)

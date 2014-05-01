@@ -27,7 +27,7 @@ defmodule ExVCR.Setting do
   end
 
   def append(key, value) do
-    set(key, [value | get(key)])
+    set(key, [value | ExVCR.Setting.get(key)])
   end
 
   def get_default_vcr_path, do: @default_vcr_path
