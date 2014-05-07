@@ -10,8 +10,8 @@
   "httpotion": {:git, "git://github.com/myfreeweb/httpotion.git", "467ab1e0e024d7d82423b16e1c4da93b21568ffd", []},
   "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "866b0ff5aca229f1ef53653eabc8ed1720c13cd6", [ref: "866b0ff5aca229f1ef53653eabc8ed1720c13cd6"]},
   "idna": {:git, "git://github.com/benoitc/erlang-idna.git", "21aa158b7f36bf2a000f12fe40d7f21eece9cf65", [tag: "hackney-0.11.2"]},
-  "jsex": {:git, "git://github.com/talentdeficit/jsex.git", "03ad4ff0967331afd01464857d41e5e497ed198c", []},
-  "jsx": {:git, "git://github.com/talentdeficit/jsx.git", "507fa4c41db33c81e925ab53f4d789d234aaff2f", [tag: "v2.0.1"]},
+  "jsex": {:package, "2.0.0"},
+  "jsx": {:package, "2.0.2"},
   "meck": {:git, "git://github.com/eproxus/meck.git", "9987eea73dab37ce014dbd4fa715a31cc07d351e", []},
   "mimetypes": {:git, "git://github.com/spawngrid/mimetypes.git", "47d37a977a7d633199822bf6b08353007483d00f", [ref: "master"]},
   "ranch": {:git, "git://github.com/extend/ranch.git", "41705752ffc7e3ecb96eef8374015ead4ca7f699", [ref: "0.8.5"]}}
