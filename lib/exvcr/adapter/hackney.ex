@@ -43,12 +43,12 @@ defmodule ExVCR.Adapter.Hackney do
   Callback from ExVCR.Handler when response is retrieved from the json file cache.
   """
   def hook_response_from_cache(nil), do: nil
-  def hook_response_from_cache(ExVCR.Response[type: "error"] = response), do: response
-  def hook_response_from_cache(ExVCR.Response[body: body] = response) do
+  def hook_response_from_cache(%ExVCR.Response{type: "error"} = response), do: response
+  def hook_response_from_cache(%ExVCR.Response{body: body} = response) do
     client          = make_ref
     client_key_atom = client |> inspect |> binary_to_atom
     Store.set(client_key_atom, body)
-    response.body(client)
+    %{response | body: client}
   end
 
   defp handle_body_request(recorder, [client]) do
@@ -63,11 +63,11 @@ defmodule ExVCR.Adapter.Hackney do
 
         client_key_string = inspect(client)
         ExVCR.Recorder.update(recorder,
-          fn([request: _request, response: response]) ->
+          fn(%{request: _request, response: response}) ->
             response.body == client_key_string
           end,
-          fn([request: request, response: response]) ->
-            [request: request, response: response.body(body)]
+          fn(%{request: request, response: response}) ->
+            %{request: request, response: %{response | body: body}}
           end
         )
       end

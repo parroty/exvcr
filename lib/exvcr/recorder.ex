@@ -14,7 +14,7 @@ defmodule ExVCR.Recorder do
    {:ok, act_responses} = Responses.start([])
    {:ok, act_options}   = Options.start(options)
 
-   recorder = ExVCR.Record.new(options: act_options, responses: act_responses)
+   recorder = %ExVCR.Record{options: act_options, responses: act_responses}
    load(recorder)
    recorder
   end
