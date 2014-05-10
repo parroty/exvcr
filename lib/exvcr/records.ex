@@ -1,5 +1,18 @@
-defrecord ExVCR.Record, options: nil, responses: nil
-defrecord ExVCR.Request, url: nil, headers: [], method: nil, body: nil, options: []
-defrecord ExVCR.Response, type: "ok", status_code: nil, headers: [], body: nil
-defrecord ExVCR.Checker.Results, dirs: nil, files: []
-defrecord ExVCR.Checker.Counts, server: 0, cache: 0
+defmodule ExVCR.Record do
+  defstruct options: nil, responses: nil
+end
+
+defmodule ExVCR.Request do
+  defstruct url: nil, headers: [], method: nil, body: nil, options: []
+end
+
+defmodule ExVCR.Response do
+  defstruct type: "ok", status_code: nil, headers: [], body: nil
+end
+
+defmodule ExVCR.Checker.Results do
+  defstruct dirs: nil, files: []
+end
+defmodule ExVCR.Checker.Counts do
+  defstruct server: 0, cache: 0
+end

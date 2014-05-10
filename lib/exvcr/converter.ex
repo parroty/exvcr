@@ -8,8 +8,8 @@ defmodule ExVCR.Converter do
       @doc """
       Parse string format into original request / response tuples.
       """
-      def convert_from_string([{"request", request}, {"response", response}]) do
-        [ request:  string_to_request(request), response: string_to_response(response) ]
+      def convert_from_string(%{"request" => request, "response" => response}) do
+        %{ request:  string_to_request(request), response: string_to_response(response) }
       end
       defoverridable [convert_from_string: 1]
 
@@ -17,12 +17,13 @@ defmodule ExVCR.Converter do
       Parse request and response tuples into string format.
       """
       def convert_to_string(request, response) do
-        [ request:  request_to_string(request), response: response_to_string(response) ]
+        %{ request:  request_to_string(request), response: response_to_string(response) }
       end
       defoverridable [convert_to_string: 2]
 
       defp string_to_request(string) do
-        Enum.map(string, fn({x,y}) -> {binary_to_atom(x),y} end) |> ExVCR.Request.new
+        request = Enum.map(string, fn({x,y}) -> {binary_to_atom(x),y} end) |> Enum.into(%{})
+        struct(ExVCR.Request, request)
       end
       defoverridable [string_to_request: 1]
 

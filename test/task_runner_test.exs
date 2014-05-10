@@ -29,9 +29,9 @@ defmodule ExVCR.TaskRunnerTest do
 
   test "check vcr cassettes task prints json file summary" do
     result = capture_io(fn ->
-      record = ExVCR.Checker.Results.new(
+      record = %ExVCR.Checker.Results{
         dirs: ["test/cassettes"],
-        files: [{:cache, "test1.json"}, {:cache, "test2.json"}, {:server, "test1.json"}, {:server, "test1.json"}])
+        files: [{:cache, "test1.json"}, {:cache, "test2.json"}, {:server, "test1.json"}, {:server, "test1.json"}]}
       ExVCR.Task.Runner.check_cassettes(record)
     end)
 
