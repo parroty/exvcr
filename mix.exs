@@ -27,7 +27,7 @@ defmodule ExVCR.Mixfile do
         {:ibrowse, github: "cmullaparthi/ibrowse", ref: "866b0ff5aca229f1ef53653eabc8ed1720c13cd6", override: true},
         {:httpotion, github: "myfreeweb/httpotion"},
         {:httpoison, github: "edgurgel/httpoison"},
-        {:excoveralls, github: "parroty/excoveralls"},
+        {:excoveralls, "~> 0.2.0"},
         {:http_server, github: "parroty/http_server"}
       ]
   end
@@ -35,9 +35,9 @@ defmodule ExVCR.Mixfile do
   def deps(:prod) do
     [
       {:meck, "0.8.1", github: "eproxus/meck"},
-      {:exactor, github: "sasa1977/exactor"},
+      {:exactor, "~> 0.3"},
       {:jsex, "~> 2.0"},
-      {:exprintf, github: "parroty/exprintf"}
+      {:exprintf, "~> 0.1"}
     ]
   end
 end
