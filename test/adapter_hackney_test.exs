@@ -3,7 +3,8 @@ defmodule ExVCR.Adapter.HackneyTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   setup_all do
-    HTTPoison.start
+    {:ok, _} = HTTPoison.start
+    :ok
   end
 
   test "hackney request" do
