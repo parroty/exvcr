@@ -3,9 +3,11 @@ defmodule ExVCR.Mixfile do
 
   def project do
     [ app: :exvcr,
-      version: "0.1.1",
+      version: "0.1.5",
       elixir: ">= 0.13.1",
       deps: deps(Mix.env),
+      description: description,
+      package: package,
       test_coverage: [tool: ExCoveralls]
     ]
   end
@@ -39,5 +41,17 @@ defmodule ExVCR.Mixfile do
       {:jsex, "~> 2.0"},
       {:exprintf, "~> 0.1"}
     ]
+  end
+
+  defp description do
+    """
+    HTTP request/response recording library for elixir, inspired by VCR.
+    """
+  end
+
+  defp package do
+    [ contributors: ["parroty"],
+      licenses: ["MIT"],
+      links: [ { "GitHub", "https://github.com/parroty/exvcr" } ] ]
   end
 end
