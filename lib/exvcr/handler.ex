@@ -26,8 +26,8 @@ defmodule ExVCR.Handler do
 
     case { response, custom_mode } do
       { nil, true } ->
-        raise ExVCR.InvalidRequestError.new(message:
-                "response for [URL:#{params[:url]}, METHOD:#{params[:method]}] was not found in the custom cassette")
+        raise %ExVCR.InvalidRequestError{message:
+                "response for [URL:#{params[:url]}, METHOD:#{params[:method]}] was not found in the custom cassette"}
       { nil, false } ->
         nil
       { response, _ } ->
@@ -85,7 +85,7 @@ defmodule ExVCR.Handler do
       Request did not match with any one in the current cassette: #{file_path}.
       Delete the current cassette with [mix vcr.delete] and re-record.
       """
-      raise ExVCR.RequestNotMatchError.new(message: message)
+      raise %ExVCR.RequestNotMatchError{message: message}
     end
   end
 end

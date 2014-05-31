@@ -32,7 +32,7 @@ defmodule ExVCR.Task.Runner do
         |> Enum.filter(&(&1 =~ @json_file_pattern))
         |> Enum.sort
     else
-      raise ExVCR.PathNotFoundError.new(message: "Specified path '#{path}' for reading cassettes was not found.")
+      raise %ExVCR.PathNotFoundError{message: "Specified path '#{path}' for reading cassettes was not found."}
     end
   end
 
