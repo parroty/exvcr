@@ -7,6 +7,11 @@ defmodule ExVCR.RecorderIBrowseTest do
   @url "http://localhost:#{@port}/server"
 
   setup_all do
+    on_exit fn ->
+      File.rm_rf(@dummy_cassette_dir)
+      :ok
+    end
+
     :ibrowse.start
     HttpServer.start(path: "/server", port: @port, response: "test_response")
     ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
@@ -56,8 +61,4 @@ defmodule ExVCR.RecorderIBrowseTest do
     ExVCR.Config.filter_url_params(false)
   end
 
-  teardown_all do
-    File.rm_rf(@dummy_cassette_dir)
-    :ok
-  end
 end
