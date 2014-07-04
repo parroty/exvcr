@@ -22,7 +22,7 @@ defmodule ExVCR.Converter do
       defoverridable [convert_to_string: 2]
 
       defp string_to_request(string) do
-        request = Enum.map(string, fn({x,y}) -> {binary_to_atom(x),y} end) |> Enum.into(%{})
+        request = Enum.map(string, fn({x,y}) -> {String.to_atom(x),y} end) |> Enum.into(%{})
         struct(ExVCR.Request, request)
       end
       defoverridable [string_to_request: 1]

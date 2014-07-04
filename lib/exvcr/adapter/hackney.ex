@@ -46,13 +46,13 @@ defmodule ExVCR.Adapter.Hackney do
   def hook_response_from_cache(%ExVCR.Response{type: "error"} = response), do: response
   def hook_response_from_cache(%ExVCR.Response{body: body} = response) do
     client          = make_ref
-    client_key_atom = client |> inspect |> binary_to_atom
+    client_key_atom = client |> inspect |> String.to_atom
     Store.set(client_key_atom, body)
     %{response | body: client}
   end
 
   defp handle_body_request(recorder, [client]) do
-    client_key_atom = client |> inspect |> binary_to_atom
+    client_key_atom = client |> inspect |> String.to_atom
     if body = Store.get(client_key_atom) do
       Store.delete(client_key_atom)
       {:ok, body}

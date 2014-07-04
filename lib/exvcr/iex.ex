@@ -10,7 +10,7 @@ defmodule ExVCR.IEx do
   """
   defmacro print(options \\ [], test) do
     adapter = options[:adapter] || ExVCR.Adapter.IBrowse
-    uniq_id = :erlang.now |> tuple_to_list |> Enum.join("")
+    uniq_id = :erlang.now |> Tuple.to_list |> Enum.join("")
 
     quote do
       defmodule unquote(:"ExVCR.IEx.Sample#{uniq_id}") do
