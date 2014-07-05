@@ -4,7 +4,7 @@ defmodule ExVCR.Mixfile do
   def project do
     [ app: :exvcr,
       version: "0.1.6",
-      elixir: "~> 0.13.3",
+      elixir: "~> 0.14.2",
       deps: deps(Mix.env),
       description: description,
       package: package,
@@ -36,7 +36,7 @@ defmodule ExVCR.Mixfile do
 
   def deps(:prod) do
     [
-      {:meck, "0.8.1", github: "eproxus/meck"},
+      {:meck, "0.8.2", github: "eproxus/meck"},
       {:exactor, "~> 0.3"},
       {:jsex, "~> 2.0"},
       {:exprintf, "~> 0.1"}

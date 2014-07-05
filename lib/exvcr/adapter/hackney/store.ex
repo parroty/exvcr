@@ -39,6 +39,6 @@ defmodule ExVCR.Adapter.Hackney.Store do
   end
 
   defp table do
-    "exvcr_hackney#{inspect self}" |> binary_to_atom
+    "exvcr_hackney#{inspect self}" |> String.to_atom
   end
 end

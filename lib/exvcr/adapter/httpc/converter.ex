@@ -6,15 +6,15 @@ defmodule ExVCR.Adapter.Httpc.Converter do
   use ExVCR.Converter
 
   defp string_to_response(string) do
-    response = Enum.traverse(string, fn({x, y}) -> {binary_to_atom(x), y} end)
+    response = Enum.traverse(string, fn({x, y}) -> {String.to_atom(x), y} end)
     response = struct(ExVCR.Response, response)
 
     if response.status_code do
-      response = %{response | status_code: list_to_tuple(response.status_code)}
+      response = %{response | status_code: List.to_tuple(response.status_code)}
     end
 
     if response.type == "error" do
-      response = %{response | body: {binary_to_atom(response.body), []}}
+      response = %{response | body: {String.to_atom(response.body), []}}
     end
 
     response
@@ -50,7 +50,7 @@ defmodule ExVCR.Adapter.Httpc.Converter do
   defp response_to_string({:error, {reason, _detail}}) do
     %ExVCR.Response{
       type: "error",
-      body: atom_to_binary(reason)
+      body: Atom.to_string(reason)
     }
   end
 end

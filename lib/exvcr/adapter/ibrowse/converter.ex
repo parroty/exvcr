@@ -6,11 +6,11 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
   use ExVCR.Converter
 
   defp string_to_response(string) do
-    response = Enum.traverse(string, fn({x, y}) -> {binary_to_atom(x), y} end)
+    response = Enum.traverse(string, fn({x, y}) -> {String.to_atom(x), y} end)
     response = struct(ExVCR.Response, response)
 
     if response.status_code do
-      response = %{response | status_code: integer_to_list(response.status_code)}
+      response = %{response | status_code: Integer.to_char_list(response.status_code)}
     end
 
     if response.type == "error" do
@@ -21,8 +21,8 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
     response
   end
 
-  defp string_to_error_reason([reason, details]), do: { binary_to_atom(reason), binary_to_tuple(details) }
-  defp string_to_error_reason([reason]), do: binary_to_atom(reason)
+  defp string_to_error_reason([reason, details]), do: { String.to_atom(reason), binary_to_tuple(details) }
+  defp string_to_error_reason([reason]), do: String.to_atom(reason)
 
   defp request_to_string([url, headers, method]), do: request_to_string([url, headers, method, [], []])
   defp request_to_string([url, headers, method, body]), do: request_to_string([url, headers, method, body, []])
@@ -31,7 +31,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
     %ExVCR.Request{
       url: parse_url(url),
       headers: parse_headers(headers),
-      method: atom_to_binary(method),
+      method: Atom.to_string(method),
       body: parse_request_body(body),
       options: options
     }
@@ -40,7 +40,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
   defp response_to_string({:ok, status_code, headers, body}) do
     %ExVCR.Response{
       type: "ok",
-      status_code: list_to_integer(status_code),
+      status_code: List.to_integer(status_code),
       headers: parse_headers(headers),
       body: to_string(body)
     }
@@ -53,18 +53,18 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
     }
   end
 
-  defp error_reason_to_string({reason, details}), do: [atom_to_binary(reason), tuple_to_binary(details)]
-  defp error_reason_to_string(reason), do: [atom_to_binary(reason)]
+  defp error_reason_to_string({reason, details}), do: [Atom.to_string(reason), tuple_to_binary(details)]
+  defp error_reason_to_string(reason), do: [Atom.to_string(reason)]
 
   defp tuple_to_binary(tuple) do
-    Enum.map(tuple_to_list(tuple), fn(x) ->
-      if is_atom(x), do: atom_to_binary(x), else: x
+    Enum.map(Tuple.to_list(tuple), fn(x) ->
+      if is_atom(x), do: Atom.to_string(x), else: x
     end)
   end
 
   defp binary_to_tuple(list) do
     Enum.map(list, fn(x) ->
-      if is_binary(x), do: binary_to_atom(x), else: x
-    end) |> list_to_tuple
+      if is_binary(x), do: String.to_atom(x), else: x
+    end) |> List.to_tuple
   end
 end

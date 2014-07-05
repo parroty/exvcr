@@ -4,8 +4,16 @@ defmodule ExVCR.ConfigTest do
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes"
   @dummy_custom_dir   "tmp/vcr_tmp/vcr_custom"
 
-  setup do
+  setup_all do
     File.rm_rf!(@dummy_cassette_dir)
+    :ok
+  end
+
+  setup do
+    on_exit fn ->
+      File.rm_rf!(@dummy_cassette_dir)
+      :ok
+    end
     :ok
   end
 
@@ -29,11 +37,6 @@ defmodule ExVCR.ConfigTest do
 
     ExVCR.Config.filter_sensitive_data(nil)
     assert ExVCR.Setting.get(:filter_sensitive_data) == []
-  end
-
-  teardown do
-    File.rm_rf!(@dummy_cassette_dir)
-    :ok
   end
 
 end

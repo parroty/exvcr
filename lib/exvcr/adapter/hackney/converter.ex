@@ -6,7 +6,7 @@ defmodule ExVCR.Adapter.Hackney.Converter do
   use ExVCR.Converter
 
   defp string_to_response(string) do
-    response = Enum.traverse(string, fn({x, y}) -> {binary_to_atom(x), y} end)
+    response = Enum.traverse(string, fn({x, y}) -> {String.to_atom(x), y} end)
     struct(ExVCR.Response, response)
   end
 
@@ -33,7 +33,7 @@ defmodule ExVCR.Adapter.Hackney.Converter do
   defp response_to_string({:error, reason}) do
     %ExVCR.Response{
       type: "error",
-      body: atom_to_binary(reason)
+      body: Atom.to_string(reason)
     }
   end
 end
