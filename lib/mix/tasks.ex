@@ -56,13 +56,15 @@ defmodule Mix.Tasks.Vcr do
 
     @doc "Entry point for [mix vcr.check] task."
     def run(args) do
-      {options, files, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom])
+      {options, _files, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom])
       dirs = ExVCR.Task.Util.parse_basic_options(options)
       ExVCR.Checker.start(%ExVCR.Checker.Results{dirs: dirs})
 
       Mix.env(:test)
-      Code.load_file(Path.join([Path.dirname(__ENV__.file), "mix_file.exs"]))
-      Mix.Task.run("test", files ++ ["--cover"])
+      Mix.Task.run("test")
+      System.at_exit(fn(_) ->
+        ExVCR.Task.Runner.check_cassettes(ExVCR.Checker.get)
+      end)
     end
   end
 
