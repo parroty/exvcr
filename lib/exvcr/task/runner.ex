@@ -3,11 +3,10 @@ defmodule ExVCR.Task.Runner do
   Provides task processing logics, which will be invoked by custom mix tasks.
   """
 
-  import ExPrintf
-  @print_header_format   "  %-40s %-30s\n"
-  @check_header_format   "  %-40s %-20s %-20s\n"
-  @check_content_format  "  %-40s %-20d %-20d\n"
-  @date_format   "%04d/%02d/%02d %02d:%02d:%02d"
+  @print_header_format   "  ~-40s ~-30s\n"
+  @check_header_format   "  ~-40s ~-20s ~-20s\n"
+  @check_content_format  "  ~-40s ~-20w ~-20w\n"
+  @date_format   "~4..0B/~2..0B/~2..0B ~2..0B:~2..0B:~2..0B"
   @json_file_pattern ~r/\.json$/
 
   @doc """
@@ -103,5 +102,14 @@ defmodule ExVCR.Task.Runner do
       counts = Dict.get(counts_hash, name, %ExVCR.Checker.Counts{})
       printf(@check_content_format, [name, counts.cache, counts.server])
     end)
+  end
+
+  defp printf(format, params) do
+    IO.write sprintf(format, params)
+  end
+
+  defp sprintf(format, params) do
+    char_list = :io_lib.format(format, params)
+    List.to_string(char_list)
   end
 end
