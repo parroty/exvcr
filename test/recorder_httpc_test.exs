@@ -9,6 +9,7 @@ defmodule ExVCR.RecorderHttpcTest do
   setup_all do
     on_exit fn ->
       File.rm_rf(@dummy_cassette_dir)
+      HttpServer.stop(@port)
       :ok
     end
 

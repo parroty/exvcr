@@ -6,6 +6,9 @@ defmodule ExVCR.IExTest do
   setup_all do
     :ibrowse.start
     HttpServer.start(path: "/server", port: 34003, response: "test_response")
+    on_exit fn ->
+      HttpServer.stop(34003)
+    end
     :ok
   end
 
