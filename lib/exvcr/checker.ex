@@ -8,7 +8,7 @@ defmodule ExVCR.Checker do
 
   defcall get, state: state, do: reply(state)
   defcast set(x), do: new_state(x)
-  defcast append(x), state: state, do: new_state(state.files([x|state.files]))
+  defcast append(x), state: state, do: new_state(%{state | files: [x|state.files]})
 
   @doc """
   Increment the counter for cache cassettes hit.

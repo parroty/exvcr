@@ -3,7 +3,7 @@ defmodule ExVCR.Adapter.HttpcTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   setup_all do
-    :inets.start
+    Application.ensure_started(:inets)
     :ok
   end
 

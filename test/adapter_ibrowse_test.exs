@@ -3,13 +3,13 @@ defmodule ExVCR.Adapter.IBrowseTest do
   use ExVCR.Mock
 
   setup_all do
+    Application.ensure_started(:ibrowse)
     ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes", "fixture/custom_cassettes")
     :ok
   end
 
   test "example single request" do
     use_cassette "example_ibrowse" do
-      :ibrowse.start
       {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com', [], :get)
       assert status_code == '200'
       assert to_string(body) =~ ~r/Example Domain/
@@ -18,7 +18,6 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "example multiple requests" do
     use_cassette "example_ibrowse_multiple" do
-      :ibrowse.start
       {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com', [], :get)
       assert status_code == '200'
       assert to_string(body) =~ ~r/Example Domain/
@@ -31,7 +30,6 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "single request with error" do
     use_cassette "error_ibrowse" do
-      :ibrowse.start
       response = :ibrowse.send_req('http://invalid_url', [], :get)
       assert response == {:error, {:conn_failed, {:error, :nxdomain}}}
     end
@@ -128,7 +126,6 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "using recorded cassete, but requesting with different url should return error" do
     use_cassette "example_ibrowse_different" do
-      :ibrowse.start
       {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com', [], :get)
       assert status_code == '200'
       assert to_string(body) =~ ~r/Example Domain/

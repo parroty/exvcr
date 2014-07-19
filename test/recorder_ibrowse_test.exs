@@ -12,7 +12,7 @@ defmodule ExVCR.RecorderIBrowseTest do
       :ok
     end
 
-    :ibrowse.start
+    Application.ensure_started(:ibrowse)
     HttpServer.start(path: "/server", port: @port, response: "test_response")
     ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
     :ok
