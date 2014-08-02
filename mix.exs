@@ -28,7 +28,7 @@ defmodule ExVCR.Mixfile do
       {:httpotion, "~> 0.2", optional: true},
       {:httpoison, github: "edgurgel/httpoison", optional: true},
       {:excoveralls, "~> 0.3", only: :dev},
-      {:http_server, github: "parroty/http_server", only: :test}
+      {:http_server, github: "parroty/http_server", only: [:dev, :test]}
     ]
   end
 
