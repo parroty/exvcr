@@ -31,10 +31,10 @@ defmodule ExVCR.Recorder do
   Load record-data from json file.
   """
   def load(recorder) do
-    file_path = get_file_path(recorder)
-    custom    = options(recorder)[:custom]
-    adapter   = options(recorder)[:adapter]
-    responses = ExVCR.JSON.load(file_path, custom, adapter)
+    file_path   = get_file_path(recorder)
+    custom_mode = options(recorder)[:custom]
+    adapter     = options(recorder)[:adapter]
+    responses   = ExVCR.JSON.load(file_path, custom_mode, adapter)
     set(responses, recorder)
   end
 
@@ -49,7 +49,7 @@ defmodule ExVCR.Recorder do
   end
 
   @doc """
-  Returns the file path of the save/load target.
+  Returns the file path of the save/load target, based on the custom_mode(true or false).
   """
   def get_file_path(recorder) do
     opts = options(recorder)
