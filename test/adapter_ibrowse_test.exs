@@ -10,8 +10,9 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "example single request" do
     use_cassette "example_ibrowse" do
-      {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com', [], :get)
+      {:ok, status_code, headers, body} = :ibrowse.send_req('http://example.com', [], :get)
       assert status_code == '200'
+      assert List.keyfind(headers, 'Content-Type', 0) == {'Content-Type', 'text/html'}
       assert to_string(body) =~ ~r/Example Domain/
     end
   end
@@ -38,7 +39,9 @@ defmodule ExVCR.Adapter.IBrowseTest do
   test "httpotion" do
     use_cassette "example_httpotion" do
       HTTPotion.start
-      assert HTTPotion.get("http://example.com", []).body =~ ~r/Example Domain/
+      response = HTTPotion.get("http://example.com", [])
+      assert response.body =~ ~r/Example Domain/
+      assert response.headers[:"Content-Type"] == "text/html"
     end
   end
 
