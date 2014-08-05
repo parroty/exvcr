@@ -10,14 +10,30 @@ defmodule ExVCR.Adapter.Httpc.Converter do
     response = struct(ExVCR.Response, response)
 
     if response.status_code do
-      response = %{response | status_code: List.to_tuple(response.status_code)}
+      status_code = response.status_code |> Enum.map(&convert_string_to_char_list/1)
+                                         |> List.to_tuple
+      response = %{response | status_code: status_code}
     end
 
     if response.type == "error" do
       response = %{response | body: {String.to_atom(response.body), []}}
     end
 
+    if is_map(response.headers) do
+      headers = response.headers |> Map.to_list
+                                 |> Enum.map(fn({k,v}) -> {to_char_list(k), to_char_list(v)} end)
+      response = %{response | headers: headers}
+    end
+
     response
+  end
+
+  defp convert_string_to_char_list(elem) do
+    if is_binary(elem) do
+      to_char_list(elem)
+    else
+      elem
+    end
   end
 
   defp request_to_string([url]) do

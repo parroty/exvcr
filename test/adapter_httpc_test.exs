@@ -10,8 +10,11 @@ defmodule ExVCR.Adapter.HttpcTest do
   test "example httpc request/1" do
     use_cassette "example_httpc_request_1" do
       {:ok, result} = :httpc.request('http://example.com')
-      {{_http_version, _status_code = 200, _reason_phrase}, _headers, body} = result
+      {{http_version, _status_code = 200, reason_phrase}, headers, body} = result
       assert to_string(body) =~ ~r/Example Domain/
+      assert http_version == 'HTTP/1.1'
+      assert reason_phrase == 'OK'
+      assert List.keyfind(headers, 'content-type', 0) == {'content-type', 'text/html'}
     end
   end
 
