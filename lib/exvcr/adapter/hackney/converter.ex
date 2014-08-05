@@ -7,7 +7,14 @@ defmodule ExVCR.Adapter.Hackney.Converter do
 
   defp string_to_response(string) do
     response = Enum.traverse(string, fn({x, y}) -> {String.to_atom(x), y} end)
-    struct(ExVCR.Response, response)
+    response = struct(ExVCR.Response, response)
+
+    if is_map(response.headers) do
+      headers = response.headers |> Map.to_list
+      response = %{response | headers: headers}
+    end
+
+    response
   end
 
   defp request_to_string([method, url, headers, body, options]) do

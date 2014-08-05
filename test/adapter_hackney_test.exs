@@ -9,9 +9,11 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   test "hackney request" do
     use_cassette "hackney_get" do
-      {:ok, _status_code, _headers, client} = :hackney.request(:get, "http://www.example.com", [], [], [])
+      {:ok, status_code, headers, client} = :hackney.request(:get, "http://www.example.com", [], [], [])
       {:ok, body} = :hackney.body(client)
       assert body =~ ~r/Example Domain/
+      assert status_code == 200
+      assert List.keyfind(headers, "Content-Type", 0) == {"Content-Type", "text/html"}
     end
   end
 
