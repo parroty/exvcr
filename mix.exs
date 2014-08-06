@@ -24,7 +24,7 @@ defmodule ExVCR.Mixfile do
       {:meck, "0.8.2", github: "eproxus/meck"},
       {:exactor, "~> 0.3"},
       {:jsex, "~> 2.0"},
-      {:ibrowse, github: "cmullaparthi/ibrowse", ref: "866b0ff5aca229f1ef53653eabc8ed1720c13cd6", override: true, optional: true},
+      {:ibrowse, github: "cmullaparthi/ibrowse", optional: true},
       {:httpotion, "~> 0.2", optional: true},
       {:httpoison, github: "edgurgel/httpoison", optional: true},
       {:excoveralls, "~> 0.3", only: :dev},

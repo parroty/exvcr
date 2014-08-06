@@ -7,7 +7,7 @@
   "http_server": {:git, "git://github.com/parroty/http_server.git", "debdaee9d3598c01bfd5cd5fabe67c56703698a4", []},
   "httpoison": {:git, "git://github.com/edgurgel/httpoison.git", "7f4f32a502d488693b6af469f2b5b5268bb5173c", []},
   "httpotion": {:package, "0.2.4"},
-  "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "866b0ff5aca229f1ef53653eabc8ed1720c13cd6", [ref: "866b0ff5aca229f1ef53653eabc8ed1720c13cd6"]},
+  "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "fae777f86d31407c4442a37f8017f6f2ea6c0a22", []},
   "idna": {:git, "git://github.com/benoitc/erlang-idna.git", "21aa158b7f36bf2a000f12fe40d7f21eece9cf65", [tag: "hackney-0.11.2"]},
   "jsex": {:package, "2.0.0"},
   "jsx": {:package, "2.0.4"},
