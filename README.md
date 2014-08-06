@@ -353,7 +353,7 @@ iex(2)> ExVCR.IEx.print(adapter: ExVCR.Adapter.Hackney) do
 ### Stubbing Response
 Specifing `:stub` as fixture name allows directly stubbing the response header/body information based on parameter.
 
-```
+```Elixir
 test "stub request works for HTTPotion" do
   use_cassette :stub, [url: "http://example.com", body: "Stub Response", status_code: 200] do
     response = HTTPotion.get("http://example.com", [])
