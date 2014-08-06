@@ -35,7 +35,10 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   test "get request" do
     use_cassette "httpoison_get" do
-      assert HTTPoison.get("http://example.com").body =~ ~r/Example Domain/
+      response = HTTPoison.get("http://example.com")
+      assert response.body =~ ~r/Example Domain/
+      assert response.headers["Content-Type"] == "text/html"
+      assert response.status_code == 200
     end
   end
 
@@ -68,6 +71,25 @@ defmodule ExVCR.Adapter.HackneyTest do
   test "delete method" do
     use_cassette "httpoison_delete" do
       assert_response HTTPoison.delete("http://httpbin.org/delete")
+    end
+  end
+
+  test "stub request works for hackney" do
+    use_cassette :stub, [url: "http://www.example.com", body: "Stub Response"] do
+      {:ok, status_code, headers, client} = :hackney.request(:get, "http://www.example.com", [], [], [])
+      {:ok, body} = :hackney.body(client)
+      assert body =~ ~r/Stub Response/
+      assert status_code == 200
+      assert List.keyfind(headers, "Content-Type", 0) == {"Content-Type", "text/html"}
+    end
+  end
+
+  test "stub request works for HTTPoison" do
+    use_cassette :stub, [url: "http://www.example.com", body: "Stub Response"] do
+      response = HTTPoison.get("http://www.example.com")
+      assert response.body =~ ~r/Stub Response/
+      assert response.headers["Content-Type"] == "text/html"
+      assert response.status_code == 200
     end
   end
 

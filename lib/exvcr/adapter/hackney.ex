@@ -75,4 +75,10 @@ defmodule ExVCR.Adapter.Hackney do
       {ret, body}
     end
   end
+
+  @doc """
+  Default definitions for stub.
+  """
+  def default_stub_params(:headers), do: %{"Content-Type" => "text/html"}
+  def default_stub_params(:status_code), do: 200
 end

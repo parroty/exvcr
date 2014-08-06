@@ -3,6 +3,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
   use ExVCR.Mock
 
   setup_all do
+    HTTPotion.start
     Application.ensure_started(:ibrowse)
     ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes", "fixture/custom_cassettes")
     :ok
@@ -38,10 +39,10 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "httpotion" do
     use_cassette "example_httpotion" do
-      HTTPotion.start
       response = HTTPotion.get("http://example.com", [])
       assert response.body =~ ~r/Example Domain/
       assert response.headers[:"Content-Type"] == "text/html"
+      assert response.status_code == 200
     end
   end
 
@@ -138,6 +139,23 @@ defmodule ExVCR.Adapter.IBrowseTest do
       assert_raise ExVCR.RequestNotMatchError, fn ->
         :ibrowse.send_req('http://example.com/different_from_original', [], :get)
       end
+    end
+  end
+
+  test "stub request works for ibrowse" do
+    use_cassette :stub, [url: 'http://example.com', body: 'Stub Response', status_code: 200] do
+      {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com', [], :get)
+      assert status_code == '200'
+      assert to_string(body) =~ ~r/Stub Response/
+    end
+  end
+
+  test "stub request works for HTTPotion" do
+    use_cassette :stub, [url: "http://example.com", body: "Stub Response", status_code: 200] do
+      response = HTTPotion.get("http://example.com", [])
+      assert response.body =~ ~r/Stub Response/
+      assert response.headers[:"Content-Type"] == "text/html"
+      assert response.status_code == 200
     end
   end
 

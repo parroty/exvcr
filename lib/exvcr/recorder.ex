@@ -11,12 +11,17 @@ defmodule ExVCR.Recorder do
   Initialize recorder.
   """
   def start(options) do
-   {:ok, act_responses} = Responses.start([])
-   {:ok, act_options}   = Options.start(options)
+    {:ok, act_responses} = Responses.start([])
+    {:ok, act_options}   = Options.start(options)
 
-   recorder = %ExVCR.Record{options: act_options, responses: act_responses}
-   load(recorder)
-   recorder
+    recorder = %ExVCR.Record{options: act_options, responses: act_responses}
+
+    if stub = options(recorder)[:stub] do
+      set(stub, recorder)
+    else
+      load_from_json(recorder)
+    end
+    recorder
   end
 
   @doc """
@@ -30,7 +35,7 @@ defmodule ExVCR.Recorder do
   @doc """
   Load record-data from json file.
   """
-  def load(recorder) do
+  def load_from_json(recorder) do
     file_path   = get_file_path(recorder)
     custom_mode = options(recorder)[:custom]
     adapter     = options(recorder)[:adapter]

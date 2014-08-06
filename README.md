@@ -350,5 +350,30 @@ iex(2)> ExVCR.IEx.print(adapter: ExVCR.Adapter.Hackney) do
 ...
 ```
 
+### Stubbing Response
+Specifing `:stub` as fixture name allows directly stubbing the response header/body information based on parameter.
+
+```
+test "stub request works for HTTPotion" do
+  use_cassette :stub, [url: "http://example.com", body: "Stub Response", status_code: 200] do
+    response = HTTPotion.get("http://example.com", [])
+    assert response.body =~ ~r/Stub Response/
+    assert response.headers[:"Content-Type"] == "text/html"
+    assert response.status_code == 200
+  end
+end
+
+test "stub request works for HTTPoison" do
+  use_cassette :stub, [url: "http://www.example.com", body: "Stub Response"] do
+    response = HTTPoison.get("http://www.example.com")
+    assert response.body =~ ~r/Stub Response/
+    assert response.headers["Content-Type"] == "text/html"
+    assert response.status_code == 200
+  end
+end
+```
+
+If the specified `:url` parameter doesn't match requests called inside the `use_cassette` block, it raises `ExVCR.InvalidRequestError`. The `:url` can be regular expression string.
+
 ### TODO
 - Improve performance, as it's very slow.

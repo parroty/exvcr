@@ -69,4 +69,10 @@ defmodule ExVCR.Adapter.Httpc do
       {:ok, {response.status_code, response.headers, response.body}}
     end
   end
+
+  @doc """
+  Default definitions for stub.
+  """
+  def default_stub_params(:headers), do: %{"content-type" => "text/html"}
+  def default_stub_params(:status_code), do: ["HTTP/1.1", 200, "OK"]
 end

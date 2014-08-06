@@ -31,4 +31,13 @@ defmodule ExVCR.Adapter.HttpcTest do
       assert reason == :failed_connect
     end
   end
+
+  test "stub request works" do
+    use_cassette :stub, [url: 'http://example.com', body: 'Stub Response'] do
+      {:ok, result} = :httpc.request('http://example.com')
+      {{_http_version, _status_code = 200, _reason_phrase}, headers, body} = result
+      assert to_string(body) =~ ~r/Stub Response/
+      assert List.keyfind(headers, 'content-type', 0) == {'content-type', 'text/html'}
+    end
+  end
 end

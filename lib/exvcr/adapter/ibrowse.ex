@@ -53,4 +53,10 @@ defmodule ExVCR.Adapter.IBrowse do
   defp filter_sensitive_data({:error, reason}) do
     {:error, reason}
   end
+
+  @doc """
+  Default definitions for stub.
+  """
+  def default_stub_params(:headers), do: %{"Content-Type" => "text/html"}
+  def default_stub_params(:status_code), do: 200
 end

@@ -10,10 +10,10 @@ defmodule ExVCR.IEx do
   """
   defmacro print(options \\ [], test) do
     adapter = options[:adapter] || ExVCR.Adapter.IBrowse
-    uniq_id = :erlang.now |> Tuple.to_list |> Enum.join("")
+    method_name = :"ExVCR.IEx.Sample#{ExVCR.Util.uniq_id}"
 
     quote do
-      defmodule unquote(:"ExVCR.IEx.Sample#{uniq_id}") do
+      defmodule unquote(method_name) do
         use ExVCR.Mock, adapter: unquote(adapter)
 
         def run do
@@ -38,7 +38,7 @@ defmodule ExVCR.IEx do
           :ok
         end
       end
-      unquote(:"ExVCR.IEx.Sample#{uniq_id}").run()
+      unquote(method_name).run()
     end
   end
 end
