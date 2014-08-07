@@ -4,7 +4,7 @@ defmodule ExVCR.Mixfile do
   def project do
     [ app: :exvcr,
       version: "0.3.1",
-      elixir: "~> 0.14.2",
+      elixir: "~> 0.14.2 or ~> 0.15.0",
       deps: deps,
       description: description,
       package: package,
@@ -26,7 +26,8 @@ defmodule ExVCR.Mixfile do
       {:jsex, "~> 2.0"},
       {:ibrowse, github: "cmullaparthi/ibrowse", optional: true},
       {:httpotion, "~> 0.2", optional: true},
-      {:httpoison, github: "edgurgel/httpoison", optional: true},
+      {:hackney, github: "benoitc/hackney", tag: "0.13.0"},
+      {:httpoison, "~> 0.3"},
       {:excoveralls, "~> 0.3", only: :dev},
       {:http_server, github: "parroty/http_server", only: [:dev, :test]}
     ]
