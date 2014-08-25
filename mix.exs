@@ -21,13 +21,12 @@ defmodule ExVCR.Mixfile do
   # { :foobar, "~> 0.1", git: "https://github.com/elixir-lang/foobar.git" }
   def deps do
     [
-      {:meck, "0.8.2", github: "eproxus/meck"},
+      {:meck, "~> 0.8.2"},
       {:exactor, "~> 0.3"},
       {:jsex, "~> 2.0"},
       {:ibrowse, github: "cmullaparthi/ibrowse", optional: true},
       {:httpotion, "~> 0.2", optional: true},
-      {:hackney, github: "benoitc/hackney", tag: "0.13.0"},
-      {:httpoison, "~> 0.3"},
+      {:httpoison, "~> 0.4"},
       {:excoveralls, "~> 0.3", only: :dev},
       {:http_server, github: "parroty/http_server", only: [:dev, :test]}
     ]
