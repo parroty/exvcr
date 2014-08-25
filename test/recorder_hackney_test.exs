@@ -1,5 +1,5 @@
 defmodule ExVCR.RecorderHackneyTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_hackney"

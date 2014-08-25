@@ -1,5 +1,5 @@
 defmodule ExVCR.SettingTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
 
   test "default vcr path" do
     assert ExVCR.Setting.get(:cassette_library_dir) == "fixture/vcr_cassettes"

@@ -1,5 +1,5 @@
 defmodule ExVCR.TaskUtilTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
 
   test "default option" do
     option = ExVCR.Task.Util.parse_basic_options([])

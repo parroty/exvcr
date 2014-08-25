@@ -1,5 +1,5 @@
 defmodule ExVCR.RecorderHttpcTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_httpc"

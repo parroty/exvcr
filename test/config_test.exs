@@ -1,5 +1,5 @@
 defmodule ExVCR.ConfigTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes"
   @dummy_custom_dir   "tmp/vcr_tmp/vcr_custom"

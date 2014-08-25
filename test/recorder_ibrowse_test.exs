@@ -1,5 +1,5 @@
 defmodule ExVCR.RecorderIBrowseTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   use ExVCR.Mock
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_ibrowse"

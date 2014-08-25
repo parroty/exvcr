@@ -20,8 +20,8 @@ It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide 
 - HTTP interactions are recorded as JSON file.
     - The JSON file can be recorded automatically (vcr_cassettes) or manually updated (custom_cassettes)
 
-### Notes for v0.1.0 or later
-Please specify `use ExVCR.Mock` instead of `import ExVCR.Mock`. Otherwise, `(CompileError) ***: function adapter/0 undefined` might be displayed.
+### Notes
+- In case test behaves unstable, please try to specify `use ExUnit.Case, async: false`.
 
 ### Usage
 - Add `use ExVCR.Mock` to the test module. This mocks ibrowse by default. For using hackney, specify `adapter: ExVCR.Adapter.Hackney` options as follows.
@@ -29,7 +29,7 @@ Please specify `use ExVCR.Mock` instead of `import ExVCR.Mock`. Otherwise, `(Com
 ##### Example with ibrowse
 ```Elixir
 defmodule ExVCR.Adapter.IBrowseTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   use ExVCR.Mock
 
   setup_all do
@@ -58,7 +58,7 @@ end
 ##### Example with hackney
 ```Elixir
 defmodule ExVCR.Adapter.HackneyTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   setup_all do
@@ -76,7 +76,7 @@ end
 ##### Example with httpc
 ```Elixir
 defmodule ExVCR.Adapter.HttpcTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   setup_all do
@@ -377,3 +377,4 @@ If the specified `:url` parameter doesn't match requests called inside the `use_
 
 ### TODO
 - Improve performance, as it's very slow.
+- Fix unstable behavior without `async: false`.

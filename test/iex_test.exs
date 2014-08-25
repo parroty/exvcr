@@ -1,5 +1,5 @@
 defmodule ExVCR.IExTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   import ExUnit.CaptureIO
   require ExVCR.IEx
 
