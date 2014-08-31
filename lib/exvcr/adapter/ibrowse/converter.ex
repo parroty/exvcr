@@ -6,7 +6,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
   use ExVCR.Converter
 
   defp string_to_response(string) do
-    response = Enum.traverse(string, fn({x, y}) -> {String.to_atom(x), y} end)
+    response = Enum.map(string, fn({x, y}) -> {String.to_atom(x), y} end)
     response = struct(ExVCR.Response, response)
 
     if response.status_code do
