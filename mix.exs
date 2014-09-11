@@ -22,7 +22,7 @@ defmodule ExVCR.Mixfile do
   def deps do
     [
       {:meck, "~> 0.8.2"},
-      {:exactor, "~> 0.3"},
+      {:exactor, "~> 0.7"},
       {:jsex, "~> 2.0"},
       {:ibrowse, github: "cmullaparthi/ibrowse", optional: true},
       {:httpotion, "~> 0.2", optional: true},
