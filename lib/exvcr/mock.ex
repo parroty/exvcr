@@ -7,24 +7,19 @@ defmodule ExVCR.Mock do
 
   defmacro __using__(opts) do
     adapter = opts[:adapter] || ExVCR.Adapter.IBrowse
+    options = opts[:options]
 
     quote do
       import ExVCR.Mock
       :application.start(unquote(adapter).module_name)
       use unquote(adapter)
 
-      def adapter do
+      def adapter_method do
         unquote(adapter)
       end
 
-      def setup_all do
-        :meck.new(adapter.module_name, [:passthrough])
-        :ok
-      end
-
-      def teardown_all do
-        :meck.unload(adapter.module_name)
-        :ok
+      def options_method do
+        unquote(options)
       end
     end
   end
@@ -35,13 +30,16 @@ defmodule ExVCR.Mock do
   defmacro use_cassette(:stub, options, test) do
     quote do
       stub_fixture = "stub_fixture_#{ExVCR.Util.uniq_id}"
-      stub = prepare_stub_record(unquote(options), adapter)
-      recorder = Recorder.start([fixture: stub_fixture, stub: stub, adapter: adapter])
+      stub = prepare_stub_record(unquote(options), adapter_method)
+      recorder = Recorder.start([fixture: stub_fixture, stub: stub, adapter: adapter_method])
 
-      mock_methods(recorder, adapter)
+      mock_methods(recorder, adapter_method)
 
       try do
         unquote(test)
+        if options_method[:clear_mock] || unquote(options)[:clear_mock] do
+          :meck.unload(adapter_method.module_name)
+        end
       end
     end
   end
@@ -52,12 +50,15 @@ defmodule ExVCR.Mock do
   defmacro use_cassette(fixture, options, test) do
     quote do
       recorder = Recorder.start(
-        unquote(options) ++ [fixture: normalize_fixture(unquote(fixture)), adapter: adapter])
+        unquote(options) ++ [fixture: normalize_fixture(unquote(fixture)), adapter: adapter_method])
 
-      mock_methods(recorder, adapter)
+      mock_methods(recorder, adapter_method)
 
       try do
         unquote(test)
+        if options_method[:clear_mock] || unquote(options)[:clear_mock] do
+          :meck.unload(adapter_method.module_name)
+        end
       after
         Recorder.save(recorder)
       end

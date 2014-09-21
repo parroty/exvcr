@@ -165,6 +165,24 @@ test "filter url param flag removes url params when recording cassettes" do
   refute String.contains?(json, "should_not_be_contained")
 ```
 
+#### Clearing Mock After Each Cassette
+By default, mocking through `:meck.expect` is not cleared after each `use_cassette`. It can cause error when mixing actual/mocking accesses. In order to clear mock, please specify `[clear_mock: :true]` option through either of the followings.
+
+```elixir
+# For applying all the tests under the module.
+defmodule ExVCR.Adapter.OptionsTest do
+  use ExVCR.Mock, options: [clear_mock: true]
+  use ExUnit.Case, async: false
+...
+```
+
+```elixir
+# For applying specific test.
+use_cassette "option_clean_each", clear_mock: true do
+  assert HTTPotion.get(@url, []).body == "test_response1"
+end
+```
+
 ### Mix Tasks
 The following tasks are added by including exvcr package.
 - [mix vcr](#mix-vcr-show-cassettes)
