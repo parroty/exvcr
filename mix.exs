@@ -41,6 +41,6 @@ defmodule ExVCR.Mixfile do
   defp package do
     [ contributors: ["parroty"],
       licenses: ["MIT"],
-      links: [ { "GitHub", "https://github.com/parroty/exvcr" } ] ]
+      links: %{"GitHub" => "https://github.com/parroty/exvcr"} ]
   end
 end
