@@ -389,6 +389,17 @@ test "stub request works for HTTPoison" do
     assert response.status_code == 200
   end
 end
+
+test "stub request works for httpc" do
+  use_cassette :stub, [url: "http://www.example.com",
+                       method: "get",
+                       status_code: ["HTTP/1.1", 200, "OK"],
+                       body: "success!"] do
+  
+  {:ok, result} = :httpc.request('http://example.com')
+  {{_http_version, _status_code = 200, _reason_phrase}, _headers, body} = result
+  assert to_string(body) == "success!"
+end
 ```
 
 If the specified `:url` parameter doesn't match requests called inside the `use_cassette` block, it raises `ExVCR.InvalidRequestError`. The `:url` can be regular expression string.
