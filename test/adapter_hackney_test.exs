@@ -35,7 +35,7 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   test "get request" do
     use_cassette "httpoison_get" do
-      response = HTTPoison.get("http://example.com")
+      response = HTTPoison.get!("http://example.com")
       assert response.body =~ ~r/Example Domain/
       assert response.headers["Content-Type"] == "text/html"
       assert response.status_code == 200
@@ -44,33 +44,33 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   test "get with error" do
     use_cassette "httpoison_get_error" do
-      assert_raise HTTPoison.HTTPError, fn ->
-        HTTPoison.get("http://invalid_url", [])
+      assert_raise HTTPoison.Error, fn ->
+        HTTPoison.get!("http://invalid_url", [])
       end
     end
   end
 
   test "post method" do
     use_cassette "httpoison_post" do
-      assert_response HTTPoison.post("http://httpbin.org/post", "test")
+      assert_response HTTPoison.post!("http://httpbin.org/post", "test")
     end
   end
 
   test "put method" do
     use_cassette "httpoison_put" do
-      assert_response HTTPoison.put("http://httpbin.org/put", "test")
+      assert_response HTTPoison.put!("http://httpbin.org/put", "test")
     end
   end
 
   test "patch method" do
     use_cassette "httpoison_patch" do
-      assert_response HTTPoison.patch("http://httpbin.org/patch", "test")
+      assert_response HTTPoison.patch!("http://httpbin.org/patch", "test")
     end
   end
 
   test "delete method" do
     use_cassette "httpoison_delete" do
-      assert_response HTTPoison.delete("http://httpbin.org/delete")
+      assert_response HTTPoison.delete!("http://httpbin.org/delete")
     end
   end
 
@@ -86,7 +86,7 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   test "stub request works for HTTPoison" do
     use_cassette :stub, [url: "http://www.example.com", body: "Stub Response"] do
-      response = HTTPoison.get("http://www.example.com")
+      response = HTTPoison.get!("http://www.example.com")
       assert response.body =~ ~r/Stub Response/
       assert response.headers["Content-Type"] == "text/html"
       assert response.status_code == 200
