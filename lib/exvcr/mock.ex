@@ -40,6 +40,8 @@ defmodule ExVCR.Mock do
         if options_method[:clear_mock] || unquote(options)[:clear_mock] do
           :meck.unload(adapter_method.module_name)
         end
+      after
+        # do nothing
       end
     end
   end
