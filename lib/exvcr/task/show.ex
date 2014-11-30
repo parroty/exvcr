@@ -16,7 +16,7 @@ defmodule ExVCR.Task.Show do
       IO.puts "\e[32mShowing #{file}\e[m"
       IO.puts "\e[32m**************************************\e[m"
       json = File.read!(file)
-      IO.puts json |> JSEX.prettify! |> String.replace(~r/\\n/, "\n")
+      IO.puts json |> JSX.prettify! |> String.replace(~r/\\n/, "\n")
       display_parsed_body(json)
       IO.puts "\e[32m**************************************\e[m"
     else
@@ -25,7 +25,7 @@ defmodule ExVCR.Task.Show do
   end
 
   defp display_parsed_body(json) do
-    case extract_body(json) |> JSEX.prettify do
+    case extract_body(json) |> JSX.prettify do
       {:ok, body_json } ->
         IO.puts "\n\e[33m[Showing parsed JSON body]\e[m"
         IO.puts body_json
@@ -34,7 +34,7 @@ defmodule ExVCR.Task.Show do
   end
 
   defp extract_body(json) do
-    response = JSEX.decode!(json) |> List.first |> Enum.into(HashDict.new) |> fetch_value("response")
+    response = JSX.decode!(json) |> List.first |> Enum.into(HashDict.new) |> fetch_value("response")
     Enum.into(response, HashDict.new) |> fetch_value("body")
   end
 

@@ -7,9 +7,9 @@ defmodule ExVCR.JSON do
   Save responses into the json file.
   """
   def save(file_name, responses) do
-    json = responses |> Enum.reverse |> JSEX.encode!
+    json = responses |> Enum.reverse |> JSX.encode!
     unless File.exists?(path = Path.dirname(file_name)), do: File.mkdir_p(path)
-    File.write!(file_name, JSEX.prettify!(json))
+    File.write!(file_name, JSX.prettify!(json))
   end
 
   @doc """
@@ -28,6 +28,6 @@ defmodule ExVCR.JSON do
   Reads and parse the json file located at the specified file_name.
   """
   def read_json_file(file_name) do
-    File.read!(file_name) |> JSEX.decode!
+    File.read!(file_name) |> JSX.decode!
   end
 end
