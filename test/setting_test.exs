@@ -22,4 +22,9 @@ defmodule ExVCR.SettingTest do
     ExVCR.Setting.set(:cassette_library_dir, "cassette_dummy")
     assert ExVCR.Setting.get(:cassette_library_dir) == "cassette_dummy"
   end
+
+  test "set response_headers_blacklist" do
+    ExVCR.Setting.set(:response_headers_blacklist, ["Content-Type", "Accept"])
+    assert ExVCR.Setting.get(:response_headers_blacklist) == ["Content-Type", "Accept"]
+  end
 end

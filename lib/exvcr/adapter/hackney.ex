@@ -40,6 +40,22 @@ defmodule ExVCR.Adapter.Hackney do
   end
 
   @doc """
+  Callback from ExVCR.Handler when response is retrieved from the HTTP server.
+  """
+  def hook_response_from_server(response) do
+    apply_filters(response)
+  end
+
+  defp apply_filters({:ok, status_code, headers, reference}) do
+    filtered_headers = ExVCR.Filter.remove_blacklisted_headers(headers)
+    {:ok, status_code, filtered_headers, reference}
+  end
+
+  defp apply_filters({:error, reason}) do
+    {:error, reason}
+  end
+
+  @doc """
   Callback from ExVCR.Handler when response is retrieved from the json file cache.
   """
   def hook_response_from_cache(nil), do: nil

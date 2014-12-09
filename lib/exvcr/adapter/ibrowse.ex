@@ -42,15 +42,16 @@ defmodule ExVCR.Adapter.IBrowse do
   Callback from ExVCR.Handler when response is retrieved from the HTTP server.
   """
   def hook_response_from_server(response) do
-    filter_sensitive_data(response)
+    apply_filters(response)
   end
 
-  defp filter_sensitive_data({:ok, status_code, headers, body}) do
+  defp apply_filters({:ok, status_code, headers, body}) do
     replaced_body = to_string(body) |> ExVCR.Filter.filter_sensitive_data
-    {:ok, status_code, headers, replaced_body}
+    filtered_headers = ExVCR.Filter.remove_blacklisted_headers(headers)
+    {:ok, status_code, filtered_headers, replaced_body}
   end
 
-  defp filter_sensitive_data({:error, reason}) do
+  defp apply_filters({:error, reason}) do
     {:error, reason}
   end
 

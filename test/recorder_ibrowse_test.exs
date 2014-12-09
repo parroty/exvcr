@@ -62,4 +62,12 @@ defmodule ExVCR.RecorderIBrowseTest do
     ExVCR.Config.filter_url_params(false)
   end
 
+  test "remove blacklisted headers" do
+    ExVCR.Config.response_headers_blacklist(["date"])
+    use_cassette "remove_blacklisted_headers" do
+      assert HTTPotion.get(@url, []).headers == [connection: "keep-alive", "content-length": "13", server: "Cowboy"]
+    end
+    ExVCR.Config.response_headers_blacklist([])
+  end
+
 end

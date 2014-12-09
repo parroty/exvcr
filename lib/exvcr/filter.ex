@@ -32,4 +32,22 @@ defmodule ExVCR.Filter do
   def strip_query_params(url) do
     url |> String.replace(~r/\?.+$/, "")
   end
+
+  @doc """
+  Removes the headers listed in the response headers blacklist
+  from the headers
+  """
+  def remove_blacklisted_headers([]), do: []
+
+  def remove_blacklisted_headers(headers) do
+    Enum.filter(headers, fn({key, _value}) ->
+      is_header_allowed?(key)
+    end)
+  end
+
+  defp is_header_allowed?(header_name) do
+    Enum.find(ExVCR.Setting.get(:response_headers_blacklist), fn(x) -> 
+      to_string(header_name) == x 
+    end) == nil
+  end
 end

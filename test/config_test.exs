@@ -39,4 +39,12 @@ defmodule ExVCR.ConfigTest do
     assert ExVCR.Setting.get(:filter_sensitive_data) == []
   end
 
+  test "add response headers blacklist" do
+    ExVCR.Config.response_headers_blacklist(["Content-Type", "Accept"])
+    assert ExVCR.Setting.get(:response_headers_blacklist) == ["content-type", "accept"]
+
+    ExVCR.Config.response_headers_blacklist([])
+    assert ExVCR.Setting.get(:response_headers_blacklist) == []
+  end
+
 end

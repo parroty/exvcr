@@ -13,6 +13,7 @@ defmodule ExVCR.Setting do
       :ets.insert(@ets_table, {:cassette_library_dir, @default_vcr_path})
       :ets.insert(@ets_table, {:custom_library_dir, @default_custom_path})
       :ets.insert(@ets_table, {:filter_sensitive_data, []})
+      :ets.insert(@ets_table, {:response_headers_blacklist, []})
     end
   end
 

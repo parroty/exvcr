@@ -58,4 +58,13 @@ defmodule ExVCR.RecorderHttpcTest do
     ExVCR.Config.filter_url_params(false)
   end
 
+  test "remove blacklisted headers" do
+    ExVCR.Config.response_headers_blacklist(["Date"])
+    use_cassette "remove_blacklisted_headers" do
+      {:ok, {_, headers, _}} = :httpc.request(@url)
+      assert headers == [{'connection', 'keep-alive'}, {'server', 'Cowboy'}, {'content-length', '13'}]
+    end
+    ExVCR.Config.response_headers_blacklist([])
+  end
+
 end
