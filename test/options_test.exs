@@ -11,19 +11,18 @@ defmodule ExVCR.Adapter.OptionsTest do
       :ok
     end
 
-    test "clearn option works" do
+    test "clear_mock option for use ExVCR.Mock works" do
       HttpServer.start(path: "/server", port: @port, response: "test_response1")
       use_cassette "option_clean_all" do
         assert HTTPotion.get(@url, []).body == "test_response1"
       end
       HttpServer.stop(@port)
 
-      # this method should not be mocked
+      # this method should not be mocked (should not return test_response1).
       HttpServer.start(path: "/server", port: @port, response: "test_response2")
       assert HTTPotion.get(@url, []).body == "test_response2"
       HttpServer.stop(@port)
 
-      # this method should be mocked
       use_cassette "option_clean_all" do
         assert HTTPotion.get(@url, []).body == "test_response1"
       end
@@ -42,19 +41,18 @@ defmodule ExVCR.Adapter.OptionsTest do
       :ok
     end
 
-    test "clean_each switch works" do
+    test "clear_mock option for use_cassette works" do
       HttpServer.start(path: "/server", port: @port, response: "test_response1")
       use_cassette "option_clean_each", clear_mock: true do
         assert HTTPotion.get(@url, []).body == "test_response1"
       end
       HttpServer.stop(@port)
 
-      # this method should not be mocked
+      # this method should not be mocked (should not return test_response1).
       HttpServer.start(path: "/server", port: @port, response: "test_response2")
       assert HTTPotion.get(@url, []).body == "test_response2"
       HttpServer.stop(@port)
 
-      # this method should be mocked
       use_cassette "option_clean_each" do
         assert HTTPotion.get(@url, []).body == "test_response1"
       end
