@@ -59,4 +59,17 @@ defmodule ExVCR.RecorderHackneyTest do
     refute String.contains?(json, "should_not_be_contained")
     ExVCR.Config.filter_url_params(false)
   end
+
+  test "remove blacklisted headers" do
+    use_cassette "original_headers" do
+      assert Map.has_key?(HTTPoison.get!(@url, []).headers, "connection") == true
+    end
+
+    ExVCR.Config.response_headers_blacklist(["Connection"])
+    use_cassette "remove_blacklisted_headers" do
+      assert Map.has_key?(HTTPoison.get!(@url, []).headers, "connection") == false
+    end
+    
+    ExVCR.Config.response_headers_blacklist([])
+  end
 end

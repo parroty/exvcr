@@ -40,4 +40,12 @@ defmodule ExVCR.Config do
   def filter_url_params(flag) do
     Setting.set(:filter_url_params, flag)
   end
+
+  @doc """
+  Sets a list of headers to remove from the response
+  """
+  def response_headers_blacklist(headers_blacklist) do
+    blacklist = Enum.map(headers_blacklist, fn(x) -> String.downcase(x) end)
+    Setting.set(:response_headers_blacklist, blacklist)
+  end
 end

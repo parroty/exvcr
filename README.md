@@ -165,6 +165,24 @@ test "filter url param flag removes url params when recording cassettes" do
   refute String.contains?(json, "should_not_be_contained")
 ```
 
+#### Removing headers from response
+If `ExVCR.Config.response_headers_blacklist(headers_blacklist)` is specified, the headers in the list will be removed from the response.
+
+```elixir
+  test "remove blacklisted headers" do
+    use_cassette "original_headers" do
+      assert Map.has_key?(HTTPoison.get!(@url, []).headers, "connection") == true
+    end
+
+    ExVCR.Config.response_headers_blacklist(["Connection"])
+    use_cassette "remove_blacklisted_headers" do
+      assert Map.has_key?(HTTPoison.get!(@url, []).headers, "connection") == false
+    end
+    
+    ExVCR.Config.response_headers_blacklist([])
+  end
+```
+
 #### Clearing Mock After Each Cassette
 By default, mocking through `:meck.expect` is not cleared after each `use_cassette`. It can cause error when mixing actual/mocking accesses. In order to clear mock, please specify `[clear_mock: :true]` option through either of the followings.
 
