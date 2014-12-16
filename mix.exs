@@ -25,7 +25,7 @@ defmodule ExVCR.Mixfile do
       {:exactor, "~> 0.7"},
       {:exjsx, "~> 3.0"},
       {:ibrowse, github: "cmullaparthi/ibrowse", optional: true},
-      {:httpotion, "~> 0.2", optional: true},
+      {:httpotion, "~> 1.0", optional: true},
       {:httpoison, "~> 0.5"},
       {:excoveralls, "~> 0.3", only: :dev},
       {:http_server, github: "parroty/http_server", only: [:dev, :test]}
