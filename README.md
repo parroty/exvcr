@@ -178,7 +178,7 @@ If `ExVCR.Config.response_headers_blacklist(headers_blacklist)` is specified, th
     use_cassette "remove_blacklisted_headers" do
       assert Map.has_key?(HTTPoison.get!(@url, []).headers, "connection") == false
     end
-    
+
     ExVCR.Config.response_headers_blacklist([])
   end
 ```
@@ -198,6 +198,18 @@ defmodule ExVCR.Adapter.OptionsTest do
 # For applying specific test.
 use_cassette "option_clean_each", clear_mock: true do
   assert HTTPotion.get(@url, []).body == "test_response1"
+end
+```
+
+#### Matching Against Query Params
+By default, query params are not used for url matching. In order to include query params, specify `match_requests_on: [:query]` for `use_cassette` call.
+
+```elixir
+test "matching query params with match_request_on params" do
+  use_cassette "different_query_params", match_requests_on: [:query] do
+    assert HTTPotion.get("http://localhost/server?p=3", []).body =~ ~r/test_response3/
+    assert HTTPotion.get("http://localhost/server?p=4", []).body =~ ~r/test_response4/
+  end
 end
 ```
 
@@ -413,7 +425,7 @@ test "stub request works for httpc" do
                        method: "get",
                        status_code: ["HTTP/1.1", 200, "OK"],
                        body: "success!"] do
-  
+
   {:ok, result} = :httpc.request('http://example.com')
   {{_http_version, _status_code = 200, _reason_phrase}, _headers, body} = result
   assert to_string(body) == "success!"

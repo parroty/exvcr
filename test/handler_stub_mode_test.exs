@@ -1,4 +1,4 @@
-defmodule ExVCR.Adapter.MockTest do
+defmodule ExVCR.Adapter.HandlerStubModeTest do
   use ExUnit.Case, async: false
   use ExVCR.Mock
 

@@ -17,14 +17,13 @@ defmodule ExVCR.Handler do
   Get response from the cache (pre-recorded cassettes).
   """
   def get_response_from_cache(request, recorder) do
-    stub_mode = Options.get(recorder.options)[:custom] == true ||
-                Options.get(recorder.options)[:stub] != nil
+    recorder_options = Options.get(recorder.options)
     adapter = ExVCR.Recorder.options(recorder)[:adapter]
     params = adapter.generate_keys_for_request(request)
-    response = find_response(Recorder.get(recorder), params, stub_mode)
+    response = find_response(Recorder.get(recorder), params, recorder_options)
     response = adapter.hook_response_from_cache(response)
 
-    case { response, stub_mode } do
+    case { response, stub_mode?(recorder_options) } do
       { nil, true } ->
         raise %ExVCR.InvalidRequestError{
           message: "response for [URL:#{params[:url]}, METHOD:#{params[:method]}] was not found" }
@@ -36,27 +35,50 @@ defmodule ExVCR.Handler do
     end
   end
 
-  defp find_response([], _keys, _stub_mode), do: nil
-  defp find_response([response|tail], keys, stub_mode) do
-    case match_response(response, keys, stub_mode) do
+  defp stub_mode?(options) do
+    options[:custom] == true || options[:stub] != nil
+  end
+
+  defp match_query_param_mode?(options) do
+    flags = options[:match_requests_on] || []
+
+    if is_list(flags) == false do
+      raise "Invalid match_requests_on option is specified - #{inspect flags}"
+    end
+
+    Enum.member?(flags, :query)
+  end
+
+  defp find_response([], _keys, _recorder_options), do: nil
+  defp find_response([response|tail], keys, recorder_options) do
+    case match_response(response, keys, recorder_options) do
       true  -> response[:response]
-      false -> find_response(tail, keys, stub_mode)
+      false -> find_response(tail, keys, recorder_options)
     end
   end
 
-  defp match_response(response, keys, stub_mode) do
-    match_by_url(response, keys, stub_mode) and match_by_method(response, keys)
+  defp match_response(response, keys, recorder_options) do
+    match_by_url(response, keys, recorder_options) and match_by_method(response, keys)
   end
 
-  defp match_by_url(response, keys, stub_mode) do
-    if stub_mode do
+  defp match_by_url(response, keys, recorder_options) do
+
+    if stub_mode?(recorder_options) do
       pattern = Regex.compile!("^#{response[:request].url}.*$")
       Regex.match?(pattern, to_string(keys[:url]))
     else
-      request_url = response[:request].url |> to_string |> ExVCR.Filter.strip_query_params
-      key_url = keys[:url] |> to_string |> ExVCR.Filter.strip_query_params
+      request_url = parse_url(response[:request].url, recorder_options)
+      key_url     = parse_url(keys[:url], recorder_options)
 
       request_url == key_url
+    end
+  end
+
+  defp parse_url(url, options) do
+    if match_query_param_mode?(options) do
+      to_string(url)
+    else
+      to_string(url) |> ExVCR.Filter.strip_query_params
     end
   end
 
