@@ -10,6 +10,8 @@ defmodule ExVCR.Actor do
 
     use ExActor.GenServer
 
+    defstart start(arg), do: initial_state(arg)
+
     defcast append(x), state: state, do: new_state([x|state])
     defcast set(x), do: new_state(x)
     defcall get, state: state, do: reply(state)
@@ -30,6 +32,8 @@ defmodule ExVCR.Actor do
     """
 
     use ExActor.GenServer
+
+    defstart start(arg), do: initial_state(arg)
 
     defcast set(x), do: new_state(x)
     defcall get, state: state, do: reply(state)

@@ -6,6 +6,8 @@ defmodule ExVCR.Checker do
 
   use ExActor.GenServer, export: :singleton
 
+  defstart start(arg), do: initial_state(arg)
+
   defcall get, state: state, do: reply(state)
   defcast set(x), do: new_state(x)
   defcast append(x), state: state, do: new_state(%{state | files: [x|state.files]})
