@@ -22,7 +22,7 @@ defmodule ExVCR.Checker do
   def add_server_count(recorder), do: add_count(recorder, :server)
 
   defp add_count(recorder, type) do
-    if Mix.Project.config[:test_coverage][:tool] == ExVCR do
+    if ExVCR.Checker.get != [] do
       ExVCR.Checker.append({type, ExVCR.Recorder.get_file_path(recorder)})
     end
   end

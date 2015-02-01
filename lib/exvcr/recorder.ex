@@ -11,6 +11,8 @@ defmodule ExVCR.Recorder do
   Initialize recorder.
   """
   def start(options) do
+    ExVCR.Checker.start([])
+
     {:ok, act_responses} = Responses.start([])
     {:ok, act_options}   = Options.start(options)
 
