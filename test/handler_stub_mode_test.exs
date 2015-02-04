@@ -33,7 +33,7 @@ defmodule ExVCR.Adapter.HandlerStubModeTest do
   end
 
   test "url matches as regex" do
-    use_cassette :stub, [url: ".+"] do
+    use_cassette :stub, [url: "~r/.+/"] do
       {:ok, status_code, headers, body} = :ibrowse.send_req('http://localhost', [], :get)
       assert status_code == '200'
       assert to_string(body) =~ ~r/Hello World/

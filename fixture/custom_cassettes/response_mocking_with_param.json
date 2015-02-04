@@ -1,7 +1,8 @@
 [
   {
     "request": {
-      "url": "~r/http://example.com/.+/abc/"
+      "url": "http://example.com?auth_token=123abc",
+      "method": "get"
     },
     "response": {
       "status_code": 200,

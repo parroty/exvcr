@@ -62,10 +62,16 @@ defmodule ExVCR.Handler do
   end
 
   defp match_by_url(response, keys, recorder_options) do
-
     if stub_mode?(recorder_options) do
-      pattern = Regex.compile!("^#{response[:request].url}.*$")
-      Regex.match?(pattern, to_string(keys[:url]))
+      request_url = response[:request].url
+      key_url     = to_string(keys[:url])
+
+      if match = Regex.run(~r/~r\/(.+)\//, request_url) do
+        pattern = Regex.compile!(Enum.at(match, 1))
+        Regex.match?(pattern, key_url)
+      else
+        request_url == key_url
+      end
     else
       request_url = parse_url(response[:request].url, recorder_options)
       key_url     = parse_url(keys[:url], recorder_options)

@@ -93,7 +93,7 @@ defmodule ExVCR.Mock do
   """
   def prepare_stub_record(options, adapter) do
     method      = (options[:method] || "get") |> to_string
-    url         = (options[:url] || ".+") |> to_string
+    url         = (options[:url] || "~r/.+/") |> to_string
     body        = (options[:body] || "Hello World") |> to_string
 
     headers     = options[:headers] || adapter.default_stub_params(:headers)
