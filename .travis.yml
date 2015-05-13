@@ -1,6 +1,6 @@
 language: elixir
-env:
-  - MIX_ENV=test
+elixir:
+    - 1.0.4
 otp_release:
   - 17.1
 after_success: "MIX_ENV=test mix do deps.get, test && mix compile && mix coveralls.travis"
