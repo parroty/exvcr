@@ -43,4 +43,10 @@ defmodule ExVCR.Adapter.Hackney.Converter do
       body: Atom.to_string(reason)
     }
   end
+
+  defp parse_request_body({:form, body}) do
+    :hackney_request.encode_form(body) |> elem(2) |> to_string |> ExVCR.Filter.filter_sensitive_data
+  end
+
+  defp parse_request_body(body), do: super(body)
 end

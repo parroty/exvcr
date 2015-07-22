@@ -56,6 +56,12 @@ defmodule ExVCR.Adapter.HackneyTest do
     end
   end
 
+  test "post with form-encoded data" do
+    use_cassette "httpoison_post_form" do
+      HTTPoison.post!("http://httpbin.org/post", {:form, [key: "value"]}, %{"Content-type" => "application/x-www-form-urlencoded"})
+    end
+  end
+
   test "put method" do
     use_cassette "httpoison_put" do
       assert_response HTTPoison.put!("http://httpbin.org/put", "test")
