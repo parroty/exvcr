@@ -1,3 +1,8 @@
+0.4.1
+------
+#### Enhancements
+* Support for POST requests with form-encoded data in the hackney adapter (#25).
+
 0.4.0
 ------
 #### Enhancements
