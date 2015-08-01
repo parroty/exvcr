@@ -23,7 +23,7 @@ defmodule ExVCR.Filter do
       strip_query_params(url)
     else
       url
-    end
+    end |> filter_sensitive_data
   end
 
   @doc """
@@ -46,8 +46,8 @@ defmodule ExVCR.Filter do
   end
 
   defp is_header_allowed?(header_name) do
-    Enum.find(ExVCR.Setting.get(:response_headers_blacklist), fn(x) -> 
-      to_string(header_name) == x 
+    Enum.find(ExVCR.Setting.get(:response_headers_blacklist), fn(x) ->
+      to_string(header_name) == x
     end) == nil
   end
 end
