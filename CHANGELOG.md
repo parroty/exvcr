@@ -2,6 +2,7 @@
 ------
 #### Enhancements
 * Support for POST requests with form-encoded data in the hackney adapter (#25).
+* Support for `filter_sensitive_data` for request url (#26).
 
 0.4.0
 ------
