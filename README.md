@@ -205,7 +205,7 @@ end
 By default, query params are not used for url matching. In order to include query params, specify `match_requests_on: [:query]` for `use_cassette` call.
 
 ```elixir
-test "matching query params with match_request_on params" do
+test "matching query params with match_requests_on params" do
   use_cassette "different_query_params", match_requests_on: [:query] do
     assert HTTPotion.get("http://localhost/server?p=3", []).body =~ ~r/test_response3/
     assert HTTPotion.get("http://localhost/server?p=4", []).body =~ ~r/test_response4/
