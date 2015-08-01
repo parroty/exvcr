@@ -5,6 +5,7 @@ defmodule ExVCR.RecorderIBrowseTest do
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_ibrowse"
   @port 34000
   @url "http://localhost:#{@port}/server"
+  @url_with_query "http://localhost:#{@port}/server?password=sample"
 
   setup_all do
     on_exit fn ->
@@ -43,14 +44,27 @@ defmodule ExVCR.RecorderIBrowseTest do
     end
   end
 
-  test "replace sensitive data" do
+  test "replace sensitive data in body" do
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
-    use_cassette "server_sensitive_data" do
+    use_cassette "server_sensitive_data_in_body" do
       assert HTTPotion.get(@url, []).body =~ ~r/PLACEHOLDER/
     end
     ExVCR.Config.filter_sensitive_data(nil)
   end
 
+  test "replace sensitive data in query" do
+    ExVCR.Config.filter_sensitive_data("password=[a-z]+", "password=***")
+    use_cassette "server_sensitive_data_in_query" do
+      assert HTTPotion.get(@url_with_query, []).body =~ ~r/test_response/
+    end
+
+    # The recorded cassette should contain replaced data.
+    cassette = File.read!("#{@dummy_cassette_dir}/server_sensitive_data_in_query.json")
+    assert cassette =~ "password=***"
+    refute cassette =~ "password=sample"
+
+    ExVCR.Config.filter_sensitive_data(nil)
+  end
 
   test "filter url param flag removes url params when recording cassettes" do
     ExVCR.Config.filter_url_params(true)

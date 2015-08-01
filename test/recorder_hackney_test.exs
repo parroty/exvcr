@@ -5,6 +5,7 @@ defmodule ExVCR.RecorderHackneyTest do
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_hackney"
   @port 34002
   @url "http://localhost:#{@port}/server"
+  @url_with_query "http://localhost:#{@port}/server?password=sample"
 
   setup_all do
     on_exit fn ->
@@ -42,11 +43,26 @@ defmodule ExVCR.RecorderHackneyTest do
     end
   end
 
-  test "replace sensitive data" do
+  test "replace sensitive data in body" do
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
-    use_cassette "sensitive_data" do
+    use_cassette "sensitive_data_in_body" do
       assert HTTPoison.get!(@url, []).body =~ ~r/PLACEHOLDER/
     end
+    ExVCR.Config.filter_sensitive_data(nil)
+  end
+
+  test "replace sensitive data in query" do
+    ExVCR.Config.filter_sensitive_data("password=[a-z]+", "password=***")
+    use_cassette "sensitive_data_in_query" do
+      body = HTTPoison.get!(@url_with_query, []).body
+      assert body == "test_response"
+    end
+
+    # The recorded cassette should contain replaced data.
+    cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_query.json")
+    assert cassette =~ "password=***"
+    refute cassette =~ "password=sample"
+
     ExVCR.Config.filter_sensitive_data(nil)
   end
 
@@ -69,7 +85,7 @@ defmodule ExVCR.RecorderHackneyTest do
     use_cassette "remove_blacklisted_headers" do
       assert Map.has_key?(HTTPoison.get!(@url, []).headers, "connection") == false
     end
-    
+
     ExVCR.Config.response_headers_blacklist([])
   end
 end
