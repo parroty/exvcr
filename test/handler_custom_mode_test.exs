@@ -39,14 +39,14 @@ defmodule ExVCR.Adapter.HandlerCustomModeTest do
 
   test "match method succeeds" do
     use_cassette "method_mocking", custom: true do
-      HTTPotion.post("http://example.com", "").body =~ ~r/Custom Response/
+      HTTPotion.post("http://example.com", []).body =~ ~r/Custom Response/
     end
   end
 
   test "match method fails" do
     assert_raise ExVCR.InvalidRequestError, fn ->
       use_cassette "method_mocking", custom: true do
-        HTTPotion.put("http://example.com", "").body =~ ~r/Custom Response/
+        HTTPotion.put("http://example.com", []).body =~ ~r/Custom Response/
       end
     end
   end

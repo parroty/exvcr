@@ -56,32 +56,32 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "post method" do
     use_cassette "httpotion_post" do
-      assert_response HTTPotion.post("http://httpbin.org/post", "test")
+      assert_response HTTPotion.post("http://httpbin.org/post", [body: "test"])
     end
   end
 
   test "put method" do
     use_cassette "httpotion_put" do
-      assert_response HTTPotion.put("http://httpbin.org/put", "test", [timeout: 10000])
+      assert_response HTTPotion.put("http://httpbin.org/put", [body: "test", timeout: 10000])
     end
   end
 
   test "patch method" do
     use_cassette "httpotion_patch" do
-      assert_response HTTPotion.patch("http://httpbin.org/patch", "test")
+      assert_response HTTPotion.patch("http://httpbin.org/patch", [body: "test"])
     end
   end
 
   test "delete method" do
     use_cassette "httpotion_delete" do
-      assert_response HTTPotion.delete("http://httpbin.org/delete", [], [timeout: 10000])
+      assert_response HTTPotion.delete("http://httpbin.org/delete", [timeout: 10000])
     end
   end
 
   test "get fails with timeout" do
     assert_raise HTTPotion.HTTPError, fn ->
       use_cassette "httpotion_get_timeout" do
-        assert HTTPotion.get("http://example.com", [], [timeout: 1])
+        assert HTTPotion.get("http://example.com", [timeout: 1])
       end
     end
   end
