@@ -1,3 +1,9 @@
+0.5.0
+------
+#### Changes
+* Update HTTPotion and HTTPoison dependencies (#27).
+* Put `:optional` option to HTTPoison dependency.
+
 0.4.1
 ------
 #### Enhancements
