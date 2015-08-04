@@ -37,8 +37,8 @@ defmodule ExVCR.Adapter.HackneyTest do
     use_cassette "httpoison_get" do
       response = HTTPoison.get!("http://example.com")
       assert response.body =~ ~r/Example Domain/
-      assert response.headers["Content-Type"] == "text/html"
       assert response.status_code == 200
+      assert List.keyfind(response.headers, "Content-Type", 0) == {"Content-Type", "text/html"}
     end
   end
 
@@ -94,8 +94,8 @@ defmodule ExVCR.Adapter.HackneyTest do
     use_cassette :stub, [url: "http://www.example.com", body: "Stub Response"] do
       response = HTTPoison.get!("http://www.example.com")
       assert response.body =~ ~r/Stub Response/
-      assert response.headers["Content-Type"] == "text/html"
       assert response.status_code == 200
+      assert List.keyfind(response.headers, "Content-Type", 0) == {"Content-Type", "text/html"}
     end
   end
 

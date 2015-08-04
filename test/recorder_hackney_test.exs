@@ -78,12 +78,12 @@ defmodule ExVCR.RecorderHackneyTest do
 
   test "remove blacklisted headers" do
     use_cassette "original_headers" do
-      assert Map.has_key?(HTTPoison.get!(@url, []).headers, "connection") == true
+      assert List.keyfind(HTTPoison.get!(@url, []).headers, "connection", 0) != nil
     end
 
     ExVCR.Config.response_headers_blacklist(["Connection"])
     use_cassette "remove_blacklisted_headers" do
-      assert Map.has_key?(HTTPoison.get!(@url, []).headers, "connection") == false
+      assert List.keyfind(HTTPoison.get!(@url, []).headers, "connection", 0) == nil
     end
 
     ExVCR.Config.response_headers_blacklist([])
