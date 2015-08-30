@@ -67,7 +67,7 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   test "get request" do
     use_cassette "httpoison_get" do
-      assert HTTPoison.get("http://example.com").body =~ ~r/Example Domain/
+      assert HTTPoison.get!("http://example.com").body =~ ~r/Example Domain/
     end
   end
 end
@@ -389,7 +389,7 @@ Interactive Elixir (0.12.5) - press Ctrl+C to exit (type h() ENTER for help)
 iex(1)> require ExVCR.IEx
 nil
 iex(2)> ExVCR.IEx.print(adapter: ExVCR.Adapter.Hackney) do
-...(2)>   HTTPoison.get("http://example.com").body
+...(2)>   HTTPoison.get!("http://example.com").body
 ...(2)> end
 [
   {
@@ -413,7 +413,7 @@ end
 
 test "stub request works for HTTPoison" do
   use_cassette :stub, [url: "http://www.example.com", body: "Stub Response"] do
-    response = HTTPoison.get("http://www.example.com")
+    response = HTTPoison.get!("http://www.example.com")
     assert response.body =~ ~r/Stub Response/
     assert response.headers["Content-Type"] == "text/html"
     assert response.status_code == 200
