@@ -42,14 +42,14 @@ defmodule ExVCR.Adapter.IBrowseTest do
       :ibrowse.start
       {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com', [], :get)
       assert status_code == '200'
-      assert to_string(body) =~ %r/Example Domain/
+      assert to_string(body) =~ ~r/Example Domain/
     end
   end
 
   test "httpotion" do
     use_cassette "example_httpotion" do
       HTTPotion.start
-      assert HTTPotion.get("http://example.com", []).body =~ %r/Example Domain/
+      assert HTTPotion.get("http://example.com", []).body =~ ~r/Example Domain/
     end
   end
 end
@@ -67,7 +67,7 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   test "get request" do
     use_cassette "httpoison_get" do
-      assert HTTPoison.get("http://example.com").body =~ %r/Example Domain/
+      assert HTTPoison.get!("http://example.com").body =~ ~r/Example Domain/
     end
   end
 end
@@ -110,7 +110,7 @@ defmodule ExVCR.MockTest do
 
   test "custom with valid response" do
     use_cassette "response_mocking", custom: true do
-      assert HTTPotion.get("http://example.com", []).body =~ %r/Custom Response/
+      assert HTTPotion.get("http://example.com", []).body =~ ~r/Custom Response/
     end
   end
 ```
@@ -146,7 +146,7 @@ ExVCR uses url parameter to match request and cassettes. The "url" parameter in 
 test "replace sensitive data" do
   ExVCR.Config.filter_sensitive_data("<PASSWORD>.+</PASSWORD>", "PLACEHOLDER")
   use_cassette "sensitive_data" do
-    assert HTTPotion.get("http://something.example.com", []).body =~ %r/PLACEHOLDER/
+    assert HTTPotion.get("http://something.example.com", []).body =~ ~r/PLACEHOLDER/
   end
 end
 ```
@@ -159,7 +159,7 @@ test "filter url param flag removes url params when recording cassettes" do
   ExVCR.Config.filter_url_params(true)
   use_cassette "example_ignore_url_params" do
     assert HTTPotion.get(
-      "http://localhost:34000/server?should_not_be_contained", []).body =~ %r/test_response/
+      "http://localhost:34000/server?should_not_be_contained", []).body =~ ~r/test_response/
   end
   json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
   refute String.contains?(json, "should_not_be_contained")
@@ -389,7 +389,7 @@ Interactive Elixir (0.12.5) - press Ctrl+C to exit (type h() ENTER for help)
 iex(1)> require ExVCR.IEx
 nil
 iex(2)> ExVCR.IEx.print(adapter: ExVCR.Adapter.Hackney) do
-...(2)>   HTTPoison.get("http://example.com").body
+...(2)>   HTTPoison.get!("http://example.com").body
 ...(2)> end
 [
   {
@@ -413,7 +413,7 @@ end
 
 test "stub request works for HTTPoison" do
   use_cassette :stub, [url: "http://www.example.com", body: "Stub Response"] do
-    response = HTTPoison.get("http://www.example.com")
+    response = HTTPoison.get!("http://www.example.com")
     assert response.body =~ ~r/Stub Response/
     assert response.headers["Content-Type"] == "text/html"
     assert response.status_code == 200
