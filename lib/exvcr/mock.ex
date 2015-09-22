@@ -92,14 +92,15 @@ defmodule ExVCR.Mock do
   Prepare stub record based on specified option parameters.
   """
   def prepare_stub_record(options, adapter) do
-    method      = (options[:method] || "get") |> to_string
-    url         = (options[:url] || "~r/.+/") |> to_string
-    body        = (options[:body] || "Hello World") |> to_string
+    method        = (options[:method] || "get") |> to_string
+    url           = (options[:url] || "~r/.+/") |> to_string
+    body          = (options[:body] || "Hello World") |> to_string
+    request_body  = (options[:request_body] || "") |> to_string
 
     headers     = options[:headers] || adapter.default_stub_params(:headers)
     status_code = options[:status_code] || adapter.default_stub_params(:status_code)
 
-    record = %{ "request"  => %{"method" => method, "url" => url},
+    record = %{ "request"  => %{"method" => method, "url" => url, "request_body" => request_body},
                 "response" => %{"body" => body, "headers"  => headers, "status_code" => status_code} }
 
     [adapter.convert_from_string(record)]

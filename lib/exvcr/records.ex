@@ -3,7 +3,7 @@ defmodule ExVCR.Record do
 end
 
 defmodule ExVCR.Request do
-  defstruct url: nil, headers: [], method: nil, body: nil, options: []
+  defstruct url: nil, headers: [], method: nil, body: nil, options: [], request_body: ""
 end
 
 defmodule ExVCR.Response do

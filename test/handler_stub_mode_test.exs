@@ -26,7 +26,7 @@ defmodule ExVCR.Adapter.HandlerStubModeTest do
   end
 
   test "method name in atom works" do
-    use_cassette :stub, [url: 'http://localhost', method: :post] do
+    use_cassette :stub, [url: 'http://localhost', method: :post, request_body: 'param1=value1&param2=value2'] do
       {:ok, status_code, _headers, _body} = :ibrowse.send_req('http://localhost', [], :post, 'param1=value1&param2=value2')
       assert status_code == '200'
     end
@@ -37,6 +37,14 @@ defmodule ExVCR.Adapter.HandlerStubModeTest do
       {:ok, status_code, _headers, body} = :ibrowse.send_req('http://localhost', [], :get)
       assert status_code == '200'
       assert to_string(body) =~ ~r/Hello World/
+    end
+  end
+
+  test "request_body mismatch should raise error" do
+    assert_raise ExVCR.InvalidRequestError, fn ->
+      use_cassette :stub, [url: 'http://localhost', method: :post, request_body: '{"one" => 1}'] do
+        {:ok, _status_code, _headers, _body} = :ibrowse.send_req('http://localhost', [], :post)
+      end
     end
   end
 

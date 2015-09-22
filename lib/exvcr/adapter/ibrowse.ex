@@ -35,7 +35,11 @@ defmodule ExVCR.Adapter.IBrowse do
   def generate_keys_for_request(request) do
     url    = Enum.fetch!(request, 0)
     method = Enum.fetch!(request, 2)
-    [url: url, method: method]
+    request_body = case Enum.fetch(request, 3) do
+      {:ok, body} -> body
+      :error -> ""
+    end
+    [url: url, method: method, request_body: request_body]
   end
 
   @doc """
