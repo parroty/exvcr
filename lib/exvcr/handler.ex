@@ -97,7 +97,8 @@ defmodule ExVCR.Handler do
   end
 
   defp match_by_request_body(response, params) do
-    response[:request].request_body == params[:request_body] |> to_string
+    (response[:request].body || response[:request].request_body) ==
+      params[:request_body] |> to_string
   end
 
   defp get_response_from_server(request, recorder) do
