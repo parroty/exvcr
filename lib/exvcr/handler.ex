@@ -58,7 +58,7 @@ defmodule ExVCR.Handler do
   end
 
   defp match_response(response, keys, recorder_options) do
-    match_by_url(response, keys, recorder_options) and match_by_method(response, keys)
+    match_by_url(response, keys, recorder_options) and match_by_method(response, keys) and match_by_request_body(response, keys)
   end
 
   defp match_by_url(response, keys, recorder_options) do
@@ -94,6 +94,11 @@ defmodule ExVCR.Handler do
     else
       to_string(params[:method]) == head[:request].method
     end
+  end
+
+  defp match_by_request_body(response, params) do
+    (response[:request].body || response[:request].request_body) ==
+      params[:request_body] |> to_string
   end
 
   defp get_response_from_server(request, recorder) do

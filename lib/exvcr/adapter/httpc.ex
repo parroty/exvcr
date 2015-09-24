@@ -11,6 +11,7 @@ defmodule ExVCR.Adapter.Httpc do
 
   defdelegate convert_from_string(string), to: ExVCR.Adapter.Httpc.Converter
   defdelegate convert_to_string(request, response), to: ExVCR.Adapter.Httpc.Converter
+  defdelegate parse_request_body(request_body), to: ExVCR.Adapter.Httpc.Converter
 
   @doc """
   Returns the name of the mock target module.
@@ -39,7 +40,9 @@ defmodule ExVCR.Adapter.Httpc do
     else
       url = Enum.fetch!(request, 1) |> elem(0)
       method = Enum.fetch!(request, 0)
-      [url: url, method: method]
+      request_body = Enum.fetch(request, 3) |> parse_request_body
+
+      [url: url, method: method, request_body: request_body]
     end
   end
 

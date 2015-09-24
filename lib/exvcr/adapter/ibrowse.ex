@@ -11,6 +11,7 @@ defmodule ExVCR.Adapter.IBrowse do
 
   defdelegate convert_from_string(string), to: ExVCR.Adapter.IBrowse.Converter
   defdelegate convert_to_string(request, response), to: ExVCR.Adapter.IBrowse.Converter
+  defdelegate parse_request_body(request_body), to: ExVCR.Adapter.IBrowse.Converter
 
   @doc """
   Returns the name of the mock target module.
@@ -35,7 +36,9 @@ defmodule ExVCR.Adapter.IBrowse do
   def generate_keys_for_request(request) do
     url    = Enum.fetch!(request, 0)
     method = Enum.fetch!(request, 2)
-    [url: url, method: method]
+    request_body = Enum.fetch(request, 3) |> parse_request_body
+
+    [url: url, method: method, request_body: request_body]
   end
 
   @doc """
