@@ -1,7 +1,8 @@
 0.5.1
 ------
 #### Enhancements
-* Support for POST requests with form-encoded data in the hackney adapter (#25).
+* Support matching on request body (#22, #29).
+    - match_requests_on: [:request_body]
 
 0.5.0
 ------
