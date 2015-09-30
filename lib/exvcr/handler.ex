@@ -39,14 +39,14 @@ defmodule ExVCR.Handler do
     options[:custom] == true || options[:stub] != nil
   end
 
-  defp match_query_param_mode?(options) do
+  defp has_match_requests_on(type, options) do
     flags = options[:match_requests_on] || []
 
     if is_list(flags) == false do
       raise "Invalid match_requests_on option is specified - #{inspect flags}"
     end
 
-    Enum.member?(flags, :query)
+    Enum.member?(flags, type)
   end
 
   defp find_response([], _keys, _recorder_options), do: nil
@@ -58,7 +58,7 @@ defmodule ExVCR.Handler do
   end
 
   defp match_response(response, keys, recorder_options) do
-    match_by_url(response, keys, recorder_options) and match_by_method(response, keys) and match_by_request_body(response, keys)
+    match_by_url(response, keys, recorder_options) and match_by_method(response, keys) and match_by_request_body(response, keys, recorder_options)
   end
 
   defp match_by_url(response, keys, recorder_options) do
@@ -81,7 +81,7 @@ defmodule ExVCR.Handler do
   end
 
   defp parse_url(url, options) do
-    if match_query_param_mode?(options) do
+    if has_match_requests_on(:query, options) do
       to_string(url)
     else
       to_string(url) |> ExVCR.Filter.strip_query_params
@@ -96,9 +96,13 @@ defmodule ExVCR.Handler do
     end
   end
 
-  defp match_by_request_body(response, params) do
-    (response[:request].body || response[:request].request_body) ==
-      params[:request_body] |> to_string
+  defp match_by_request_body(response, params, options) do
+    if stub_mode?(options) || has_match_requests_on(:request_body, options) do
+      (response[:request].body || response[:request].request_body) ==
+        params[:request_body] |> to_string
+    else
+      true
+    end
   end
 
   defp get_response_from_server(request, recorder) do

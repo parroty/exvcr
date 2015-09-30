@@ -201,14 +201,27 @@ use_cassette "option_clean_each", clear_mock: true do
 end
 ```
 
-#### Matching Against Query Params
-By default, query params are not used for url matching. In order to include query params, specify `match_requests_on: [:query]` for `use_cassette` call.
+#### Matching Options
+##### matching against query params
+By default, query params are not used for matching. In order to include query params, specify `match_requests_on: [:query]` for `use_cassette` call.
 
 ```elixir
 test "matching query params with match_requests_on params" do
   use_cassette "different_query_params", match_requests_on: [:query] do
     assert HTTPotion.get("http://localhost/server?p=3", []).body =~ ~r/test_response3/
     assert HTTPotion.get("http://localhost/server?p=4", []).body =~ ~r/test_response4/
+  end
+end
+```
+
+##### matching against request body
+By default, request body is not used for matching. In order to include query params, specify `match_requests_on: [:request_body]` for `use_cassette` call.
+
+```elixir
+test "matching query params with match_requests_on params" do
+  use_cassette "different_request_body_params", match_requests_on: [:request_body] do
+    assert HTTPotion.post("http://localhost/server", [body: "p=3"]).body =~ ~r/test_response3/
+    assert HTTPotion.post("http://localhost/server", [body: "p=4"]).body =~ ~r/test_response4/
   end
 end
 ```

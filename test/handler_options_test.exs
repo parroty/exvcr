@@ -77,24 +77,50 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
         assert HTTPotion.get("#{@url}?p=3", []).body =~ ~r/test_response_before/
         HttpServer.stop(@port)
 
+        # this method call should NOT be mocked as previous "test_response_before" response
         HttpServer.start(path: "/server", port: @port, response: "test_response_after")
         assert HTTPotion.get("#{@url}?p=4", []).body =~ ~r/test_response_after/
         HttpServer.stop(@port)
       end
     end
 
-    test "Not specifying match_requests_on: [:query] does not match query params" do
+    test "Not specifying match_requests_on: [:query] ignores query params" do
       use_cassette "different_query_params_off" do
         HttpServer.start(path: "/server", port: @port, response: "test_response_before")
         assert HTTPotion.get("#{@url}?p=3", []).body =~ ~r/test_response_before/
         HttpServer.stop(@port)
 
-        # this method should be mocked (should return previously recorded test_response1).
+        # this method call should be mocked as previous "test_response_before" response
         HttpServer.start(path: "/server", port: @port, response: "test_response_after")
         assert HTTPotion.get("#{@url}?p=4", []).body =~ ~r/test_response_before/
         HttpServer.stop(@port)
       end
     end
+
+    test "Specifying match_requests_on: [:request_body] matches request_body params" do
+      use_cassette "different_request_body_params_on", match_requests_on: [:request_body] do
+        HttpServer.start(path: "/server", port: @port, response: "test_response_before")
+        assert HTTPotion.post(@url, [body: "p=3"]).body =~ ~r/test_response_before/
+        HttpServer.stop(@port)
+
+        # this method call should NOT be mocked as previous "test_response_before" response
+        HttpServer.start(path: "/server", port: @port, response: "test_response_after")
+        assert HTTPotion.post(@url, [body: "p=4"]).body =~ ~r/test_response_after/
+        HttpServer.stop(@port)
+      end
+    end
+
+    test "Not Specifying match_requests_on: [:request_body] ignores request_body params" do
+      use_cassette "different_request_body_params_on" do
+        HttpServer.start(path: "/server", port: @port, response: "test_response_before")
+        assert HTTPotion.post(@url, [body: "p=3"]).body =~ ~r/test_response_before/
+        HttpServer.stop(@port)
+
+        # this method call should be mocked as previous "test_response_before" response
+        HttpServer.start(path: "/server", port: @port, response: "test_response_after")
+        assert HTTPotion.post(@url, [body: "p=4"]).body =~ ~r/test_response_before/
+        HttpServer.stop(@port)
+      end
+    end
   end
 end
-
