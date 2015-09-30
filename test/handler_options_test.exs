@@ -71,7 +71,7 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
       :ok
     end
 
-    test "Specifying match_requests_on: [:query] matches query params" do
+    test "specifying match_requests_on: [:query] matches query params" do
       use_cassette "different_query_params_on", match_requests_on: [:query] do
         HttpServer.start(path: "/server", port: @port, response: "test_response_before")
         assert HTTPotion.get("#{@url}?p=3", []).body =~ ~r/test_response_before/
@@ -84,7 +84,7 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
       end
     end
 
-    test "Not specifying match_requests_on: [:query] ignores query params" do
+    test "not specifying match_requests_on: [:query] ignores query params" do
       use_cassette "different_query_params_off" do
         HttpServer.start(path: "/server", port: @port, response: "test_response_before")
         assert HTTPotion.get("#{@url}?p=3", []).body =~ ~r/test_response_before/
@@ -97,7 +97,7 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
       end
     end
 
-    test "Specifying match_requests_on: [:request_body] matches request_body params" do
+    test "specifying match_requests_on: [:request_body] matches request_body params" do
       use_cassette "different_request_body_params_on", match_requests_on: [:request_body] do
         HttpServer.start(path: "/server", port: @port, response: "test_response_before")
         assert HTTPotion.post(@url, [body: "p=3"]).body =~ ~r/test_response_before/
@@ -110,8 +110,8 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
       end
     end
 
-    test "Not Specifying match_requests_on: [:request_body] ignores request_body params" do
-      use_cassette "different_request_body_params_on" do
+    test "not specifying match_requests_on: [:request_body] ignores request_body params" do
+      use_cassette "different_request_body_params_off" do
         HttpServer.start(path: "/server", port: @port, response: "test_response_before")
         assert HTTPotion.post(@url, [body: "p=3"]).body =~ ~r/test_response_before/
         HttpServer.stop(@port)
