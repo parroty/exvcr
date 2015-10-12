@@ -8,7 +8,8 @@ defmodule ExVCR.Mixfile do
       deps: deps,
       description: description,
       package: package,
-      test_coverage: [tool: ExCoveralls]
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [coveralls: :test]
     ]
   end
 
