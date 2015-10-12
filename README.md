@@ -23,6 +23,27 @@ It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide 
 ### Notes
 - In case test behaves unstable, please try to specify `use ExUnit.Case, async: false`.
 
+### Install
+Add `:exvcr` to `deps` section of `mix.exs`.
+
+```elixir
+  def deps do
+    [ {:exvcr, "~> 0.5", only: :test} ]
+  end
+```
+
+Optionally, `preferred_cli_env: [vcr: :test]` can be specified for running `mix vcr` in `:test` env by default
+
+```elixir
+  def project do
+    [ ...
+      preferred_cli_env: [
+        vcr: :test, "vcr.delete": :test, "vcr.check": :test, "vcr.show": :test
+      ],
+      ...
+  end
+```
+
 ### Usage
 - Add `use ExVCR.Mock` to the test module. This mocks ibrowse by default. For using hackney, specify `adapter: ExVCR.Adapter.Hackney` options as follows.
 
