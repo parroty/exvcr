@@ -19,8 +19,9 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
     end
 
     if is_map(response.headers) do
-      headers = response.headers |> Map.to_list
-                                 |> Enum.map(fn({k,v}) -> {to_char_list(k), to_char_list(v)} end)
+      headers = response.headers
+                |> Map.to_list
+                |> Enum.map(fn({k,v}) -> {to_char_list(k), to_char_list(v)} end)
       response = %{response | headers: headers}
     end
 
