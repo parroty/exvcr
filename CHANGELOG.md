@@ -1,3 +1,9 @@
+0.5.2
+------
+#### Changes
+* Exclude `:custom` mode from applying `match_requests_on: [:request_body]` by default.
+    - Make it only applies to `:stub` mode, as it breaks existing custom cassettes.
+
 0.5.1
 ------
 #### Enhancements

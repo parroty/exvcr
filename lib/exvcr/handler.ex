@@ -97,7 +97,7 @@ defmodule ExVCR.Handler do
   end
 
   defp match_by_request_body(response, params, options) do
-    if stub_mode?(options) || has_match_requests_on(:request_body, options) do
+    if options[:stub] != nil || has_match_requests_on(:request_body, options) do
       (response[:request].body || response[:request].request_body) ==
         params[:request_body] |> to_string
     else
