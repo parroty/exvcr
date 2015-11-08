@@ -1,5 +1,8 @@
 0.5.2
 ------
+#### Enhancements
+* Make the return value from use_cassette block available (#17).
+
 #### Changes
 * Exclude `:custom` mode from applying `match_requests_on: [:request_body]` by default.
     - Make it only applies to `:stub` mode, as it breaks existing custom cassettes.
