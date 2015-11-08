@@ -14,4 +14,18 @@ defmodule ExVCR.RecorderBaseTest do
     Recorder.append(record, "test")
     assert Recorder.pop(record) == "test"
   end
+
+  test "return values from the block" do
+    value = use_cassette "return_value_from_block" do
+      1
+    end
+    assert value == 1
+  end
+
+  test "return values from the block with stub mode" do
+    value = use_cassette :stub, [] do
+      1
+    end
+    assert value == 1
+  end
 end
