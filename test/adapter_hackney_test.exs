@@ -50,6 +50,14 @@ defmodule ExVCR.Adapter.HackneyTest do
     end
   end
 
+  test "get request with basic_auth" do
+    use_cassette "httpoison_get_basic_auth" do
+      response = HTTPoison.get!("http://example.com", [], [hackney: [basic_auth: {"user", "password"}]])
+      assert response.body =~ ~r/Example Domain/
+      assert response.status_code == 200
+    end
+  end
+
   test "post method" do
     use_cassette "httpoison_post" do
       assert_response HTTPoison.post!("http://httpbin.org/post", "test")
