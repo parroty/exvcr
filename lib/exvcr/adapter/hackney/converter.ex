@@ -23,8 +23,19 @@ defmodule ExVCR.Adapter.Hackney.Converter do
       headers: parse_headers(headers),
       method: to_string(method),
       body: parse_request_body(body),
-      options: options
+      options: sanitize_options(options)
     }
+  end
+
+  # If option value is tuple, make it as list, for encoding as json.
+  defp sanitize_options(options) do
+    Enum.map(options, fn({key, value}) ->
+      if is_tuple(value) do
+        {key, Tuple.to_list(value)}
+      else
+        {key, value}
+      end
+    end)
   end
 
   # Client is already replaced by body through ExVCR.Adapter.Hackney adapter.
