@@ -1,3 +1,8 @@
+0.6.0
+------
+#### Changes
+* Update dependency module versions.
+
 0.5.2
 ------
 #### Enhancements

@@ -3,7 +3,7 @@ defmodule ExVCR.Mixfile do
 
   def project do
     [ app: :exvcr,
-      version: "0.5.2",
+      version: "0.6.0",
       elixir: "~> 1.0",
       deps: deps,
       description: description,
@@ -22,13 +22,13 @@ defmodule ExVCR.Mixfile do
   # { :foobar, "~> 0.1", git: "https://github.com/elixir-lang/foobar.git" }
   def deps do
     [
-      {:meck, "~> 0.8.2"},
-      {:exactor, "~> 2.1"},
+      {:meck, "~> 0.8.3"},
+      {:exactor, "~> 2.2"},
       {:exjsx, "~> 3.2"},
       {:ibrowse, github: "cmullaparthi/ibrowse", optional: true},
       {:httpotion, "~> 2.1", optional: true},
-      {:httpoison, "~> 0.7", optional: true},
-      {:excoveralls, "~> 0.3", only: :test},
+      {:httpoison, "~> 0.8", optional: true},
+      {:excoveralls, "~> 0.4", only: :test},
       {:http_server, github: "parroty/http_server", only: [:dev, :test]}
     ]
   end
