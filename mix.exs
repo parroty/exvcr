@@ -3,7 +3,7 @@ defmodule ExVCR.Mixfile do
 
   def project do
     [ app: :exvcr,
-      version: "0.6.0",
+      version: "0.6.1",
       elixir: "~> 1.0",
       deps: deps,
       description: description,
