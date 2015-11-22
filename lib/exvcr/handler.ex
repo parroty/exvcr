@@ -109,7 +109,7 @@ defmodule ExVCR.Handler do
     raise_error_if_cassette_already_exists(recorder)
     adapter = ExVCR.Recorder.options(recorder)[:adapter]
     response = :meck.passthrough(request)
-                 |> adapter.hook_response_from_server
+               |> adapter.hook_response_from_server
     Recorder.append(recorder, adapter.convert_to_string(request, response))
     ExVCR.Checker.add_server_count(recorder)
     response
