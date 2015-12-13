@@ -67,7 +67,12 @@ defmodule ExVCR.Converter do
       end
 
       def parse_request_body(body) do
-        to_string(body) |> ExVCR.Filter.filter_sensitive_data
+        body_string = try do
+          to_string(body)
+        rescue
+          _e in Protocol.UndefinedError -> inspect(body)
+        end
+        ExVCR.Filter.filter_sensitive_data(body_string)
       end
       defoverridable [parse_request_body: 1]
     end

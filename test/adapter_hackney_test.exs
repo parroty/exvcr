@@ -70,6 +70,28 @@ defmodule ExVCR.Adapter.HackneyTest do
     end
   end
 
+  test "post with multipart data" do
+    File.touch!("tmp/vcr_tmp/dummy_file.txt")
+    use_cassette "httpoison_mutipart_post" do
+      HTTPoison.post!(
+        "https://httpbin.org/post",
+        {
+          :multipart,
+          [
+            {
+              :file,
+              "tmp/vcr_tmp/dummy_file.txt",
+              { ["form-data"], [name: "\"photo\"", filename: "\"dummy_file.txt\""] },
+              []
+            }
+          ]
+        },
+        [],
+        [recv_timeout: 30000]
+      )
+    end
+  end
+
   test "put method" do
     use_cassette "httpoison_put" do
       assert_response HTTPoison.put!("http://httpbin.org/put", "test")
