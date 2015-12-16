@@ -1,3 +1,8 @@
+0.6.1
+------
+#### Changes
+* Fix for Protocol.UndefinedError when using :multipart with :hackney (#34).
+
 0.6.0
 ------
 #### Changes
