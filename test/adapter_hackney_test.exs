@@ -71,6 +71,7 @@ defmodule ExVCR.Adapter.HackneyTest do
   end
 
   test "post with multipart data" do
+    File.mkdir_p("tmp/vcr_tmp")
     File.touch!("tmp/vcr_tmp/dummy_file.txt")
     use_cassette "httpoison_mutipart_post" do
       HTTPoison.post!(
