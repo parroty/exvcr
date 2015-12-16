@@ -5,7 +5,7 @@
   "excoveralls": {:hex, :excoveralls, "0.4.2"},
   "exjsx": {:hex, :exjsx, "3.2.0"},
   "hackney": {:hex, :hackney, "1.4.4"},
-  "http_server": {:git, "https://github.com/parroty/http_server.git", "08c7a0e624cef1f81cff712c449eb495e3aa1650", []},
+  "http_server": {:git, "https://github.com/parroty/http_server.git", "cc67cb4be7f2e98e5e5f545fd633005c65e34c5a", []},
   "httpoison": {:hex, :httpoison, "0.8.0"},
   "httpotion": {:hex, :httpotion, "2.1.0"},
   "ibrowse": {:git, "https://github.com/cmullaparthi/ibrowse.git", "fd81d44182507c23445ed720df8c30e2e8da9d9b", []},
