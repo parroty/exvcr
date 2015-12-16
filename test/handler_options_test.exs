@@ -17,11 +17,11 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
         assert HTTPotion.get(@url, []).body == "test_response1"
       end
       HttpServer.stop(@port)
-      :timer.sleep(200) # put short sleep.
+      :timer.sleep(100) # put short sleep.
 
       # this method should not be mocked (should not return test_response1).
       HttpServer.start(path: "/server", port: @port, response: "test_response2")
-      :timer.sleep(200) # put short sleep.
+      :timer.sleep(100) # put short sleep.
       assert HTTPotion.get(@url, []).body == "test_response2"
       HttpServer.stop(@port)
 
@@ -49,11 +49,11 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
         assert HTTPotion.get(@url, []).body == "test_response1"
       end
       HttpServer.stop(@port)
-      :timer.sleep(200) # put short sleep.
+      :timer.sleep(100) # put short sleep.
 
       # this method should not be mocked (should not return test_response1).
       HttpServer.start(path: "/server", port: @port, response: "test_response2")
-      :timer.sleep(200) # put short sleep.
+      :timer.sleep(100) # put short sleep.
       assert HTTPotion.get(@url, []).body == "test_response2"
       HttpServer.stop(@port)
 
