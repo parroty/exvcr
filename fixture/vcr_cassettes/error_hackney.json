@@ -1,0 +1,17 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "url": "http://invalid_url"
+    },
+    "response": {
+      "body": "nxdomain",
+      "headers": [],
+      "status_code": null,
+      "type": "error"
+    }
+  }
+]

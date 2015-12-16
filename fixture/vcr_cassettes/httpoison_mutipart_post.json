@@ -1,0 +1,28 @@
+[
+  {
+    "request": {
+      "body": "{:multipart, [{:file, \"tmp/vcr_tmp/dummy_file.txt\", {[\"form-data\"], [name: \"\\\"photo\\\"\", filename: \"\\\"dummy_file.txt\\\"\"]}, []}]}",
+      "headers": [],
+      "method": "post",
+      "options": {
+        "recv_timeout": 30000
+      },
+      "request_body": "",
+      "url": "https://httpbin.org/post"
+    },
+    "response": {
+      "body": "{\n  \"args\": {}, \n  \"data\": \"\", \n  \"files\": {\n    \"photo\": \"dummy_file\"\n  }, \n  \"form\": {}, \n  \"headers\": {\n    \"Content-Length\": \"227\", \n    \"Content-Type\": \"multipart/form-data; boundary=---------------------------mtynipxrmpegseog\", \n    \"Host\": \"httpbin.org\", \n    \"User-Agent\": \"hackney/1.4.4\"\n  }, \n  \"json\": null, \n  \"origin\": \"219.52.146.216\", \n  \"url\": \"https://httpbin.org/post\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Sun, 13 Dec 2015 09:49:55 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "389",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

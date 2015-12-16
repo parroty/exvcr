@@ -1,0 +1,19 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "url": "http://example.com"
+    },
+    "response": {
+      "body": [
+        "req_timedout"
+      ],
+      "headers": [],
+      "status_code": null,
+      "type": "error"
+    }
+  }
+]

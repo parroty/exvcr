@@ -1,0 +1,22 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "url": "http://localhost:34004/server"
+    },
+    "response": {
+      "body": "test_response1",
+      "headers": {
+        "connection": "keep-alive",
+        "server": "Cowboy",
+        "date": "Sun, 30 Nov 2014 11:14:52 GMT",
+        "content-length": "14"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

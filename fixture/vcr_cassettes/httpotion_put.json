@@ -1,0 +1,28 @@
+[
+  {
+    "request": {
+      "body": "test",
+      "headers": {
+        "timeout": "10000"
+      },
+      "method": "put",
+      "options": [],
+      "url": "http://httpbin.org/put"
+    },
+    "response": {
+      "body": "{\n  \"args\": {}, \n  \"data\": \"test\", \n  \"files\": {}, \n  \"form\": {}, \n  \"headers\": {\n    \"Connect-Time\": \"0\", \n    \"Connection\": \"close\", \n    \"Content-Length\": \"4\", \n    \"Host\": \"httpbin.org\", \n    \"Timeout\": \"10000\", \n    \"Total-Route-Time\": \"0\", \n    \"Via\": \"1.1 vegur\", \n    \"X-Request-Id\": \"45cf1e1b-0c88-45a6-8e34-96e50d42d6d8\"\n  }, \n  \"json\": null, \n  \"origin\": \"219.52.146.216\", \n  \"url\": \"http://httpbin.org/put\"\n}",
+      "headers": {
+        "Connection": "keep-alive",
+        "Server": "gunicorn/18.0",
+        "Date": "Sun, 30 Nov 2014 11:15:03 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "420",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true",
+        "Via": "1.1 vegur"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
