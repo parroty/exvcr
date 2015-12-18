@@ -20,7 +20,7 @@ defmodule ExVCR.Handler do
     recorder_options = Options.get(recorder.options)
     adapter = ExVCR.Recorder.options(recorder)[:adapter]
     params = adapter.generate_keys_for_request(request)
-    response = find_response(Recorder.get(recorder), params, recorder_options)
+    {response, responses} = find_response(Recorder.get(recorder), params, recorder_options)
     response = adapter.hook_response_from_cache(response)
 
     case { response, stub_mode?(recorder_options) } do
@@ -31,6 +31,7 @@ defmodule ExVCR.Handler do
         nil
       { response, _ } ->
         ExVCR.Checker.add_cache_count(recorder)
+        Recorder.set(responses, recorder)
         adapter.get_response_value_from_cache(response)
     end
   end
@@ -49,11 +50,12 @@ defmodule ExVCR.Handler do
     Enum.member?(flags, type)
   end
 
-  defp find_response([], _keys, _recorder_options), do: nil
-  defp find_response([response|tail], keys, recorder_options) do
+  defp find_response(responses, keys, recorder_options), do: find_response(responses, keys, recorder_options, [])
+  defp find_response([], _keys, _recorder_options, acc), do: {nil, nil}
+  defp find_response([response|tail], keys, recorder_options, acc) do
     case match_response(response, keys, recorder_options) do
-      true  -> response[:response]
-      false -> find_response(tail, keys, recorder_options)
+      true  -> {response[:response], Enum.reverse(acc) ++ tail ++ [response]}
+      false -> find_response(tail, keys, recorder_options, [response|acc])
     end
   end
 
