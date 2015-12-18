@@ -42,6 +42,13 @@ defmodule ExVCR.Adapter.HackneyTest do
     end
   end
 
+  test "get request with alternate" do
+    use_cassette "httpoison_get_alternate", custom: true do
+      assert %HTTPoison.Response{body: "Example Domain 1", status_code: 200} = HTTPoison.get!("http://example.com")
+      assert %HTTPoison.Response{body: "Example Domain 2", status_code: 200} = HTTPoison.get!("http://example.com")
+    end
+  end
+
   test "get with error" do
     use_cassette "httpoison_get_error" do
       assert_raise HTTPoison.Error, fn ->

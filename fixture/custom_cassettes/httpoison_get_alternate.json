@@ -1,0 +1,20 @@
+[
+  {
+    "request": {
+      "url": "http://example.com"
+    },
+    "response": {
+      "body": "Example Domain 1",
+      "status_code": 200
+    }
+  },
+  {
+    "request": {
+      "url": "http://example.com"
+    },
+    "response": {
+      "body": "Example Domain 2",
+      "status_code": 200
+    }
+  }
+]
