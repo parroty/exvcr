@@ -1,3 +1,10 @@
+0.7.0
+------
+#### Changes
+* Fix handling for response sequence (#35).
+    - If recorded cassettes contain multiple HTTP interactions that match a request, the returned responses are now sequenced.
+    - It can break the existing cassettes in certain condition. If error occurred, please try re-recording the cassettes.
+
 0.6.1
 ------
 #### Changes
