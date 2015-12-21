@@ -51,7 +51,7 @@ defmodule ExVCR.Handler do
   end
 
   defp find_response(responses, keys, recorder_options), do: find_response(responses, keys, recorder_options, [])
-  defp find_response([], _keys, _recorder_options, acc), do: {nil, nil}
+  defp find_response([], _keys, _recorder_options, _acc), do: {nil, nil}
   defp find_response([response|tail], keys, recorder_options, acc) do
     case match_response(response, keys, recorder_options) do
       true  -> {response[:response], Enum.reverse(acc) ++ tail ++ [response]}
