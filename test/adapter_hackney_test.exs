@@ -17,6 +17,21 @@ defmodule ExVCR.Adapter.HackneyTest do
     end
   end
 
+  test "hackney request with gzipped response" do
+    use_cassette "hackney_get_gzipped" do
+      headers = [{"Accept-Encoding", "gzip, deflate"}]
+      {:ok, status_code, headers, client} = :hackney.request(:get, "http://www.example.com", headers, [], [])
+      {:ok, body} = :hackney.body(client)
+
+      assert status_code == 200
+      assert List.keyfind(headers, "Content-Type", 0) == {"Content-Type", "text/html"}
+
+      assert List.keyfind(headers, "Content-Encoding", 0) == {"Content-Encoding", "gzip"}
+      decoded_body = :zlib.gunzip(body)
+      assert decoded_body =~ ~r/Example Domain/
+    end
+  end
+
   test "hackney request with error" do
     use_cassette "error_hackney" do
       {type, _body} = :hackney.request(:get, "http://invalid_url", [], [], [])
