@@ -161,7 +161,7 @@ The custom json file format is the same as vcr cassettes.
 ExVCR uses url parameter to match request and cassettes. The "url" parameter in the json file is taken as regexp string.
 
 #### Removing Sensitive Data
-`ExVCR.Config.filter_sensitive_data(pattern, placeholder)` method can be used to remove sensitive data. It searches for string matches with `pattern` and replaces with `placeholder`.
+`ExVCR.Config.filter_sensitive_data(pattern, placeholder)` method can be used to remove sensitive data. It searches for string matches with `pattern`, which is a string representing a regular expression, and replaces with `placeholder`. Replacements happen both in URLs and request and response bodies.
 
 ```elixir
 test "replace sensitive data" do
