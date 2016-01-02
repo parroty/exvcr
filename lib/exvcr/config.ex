@@ -1,6 +1,6 @@
 defmodule ExVCR.Config do
   @moduledoc """
-  Store configurations for libraries.
+  Assign configuration parameters.
   """
 
   alias ExVCR.Setting

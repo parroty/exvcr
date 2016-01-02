@@ -30,6 +30,7 @@ defmodule ExVCR.ConfigTest do
   end
 
   test "add filter sensitive data" do
+    ExVCR.Config.filter_sensitive_data(nil)
     ExVCR.Config.filter_sensitive_data("test_before1", "test_after1")
     ExVCR.Config.filter_sensitive_data("test_before2", "test_after2")
     assert ExVCR.Setting.get(:filter_sensitive_data) ==
@@ -39,6 +40,11 @@ defmodule ExVCR.ConfigTest do
     assert ExVCR.Setting.get(:filter_sensitive_data) == []
   end
 
+  test "add filter_url_params" do
+    ExVCR.Config.filter_url_params(true)
+    assert ExVCR.Setting.get(:filter_url_params) == true
+  end
+
   test "add response headers blacklist" do
     ExVCR.Config.response_headers_blacklist(["Content-Type", "Accept"])
     assert ExVCR.Setting.get(:response_headers_blacklist) == ["content-type", "accept"]
@@ -46,5 +52,4 @@ defmodule ExVCR.ConfigTest do
     ExVCR.Config.response_headers_blacklist([])
     assert ExVCR.Setting.get(:response_headers_blacklist) == []
   end
-
 end

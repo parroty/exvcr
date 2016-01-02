@@ -247,6 +247,23 @@ test "matching query params with match_requests_on params" do
 end
 ```
 
+### Default Configs
+Default parameters for `ExVCR.Config` module can be specified in `config\config.exs` as follows.
+
+```elixir
+use Mix.Config
+
+config :exvcr, [
+  vcr_cassette_library_dir: "fixture/vcr_cassettes",
+  custom_cassette_library_dir: "fixture/custom_cassettes",
+  filter_sensitive_data: [
+    [pattern: "<PASSWORD>.+</PASSWORD>", placeholder: "PASSWORD_PLACEHOLDER"]
+  ],
+  filter_url_params: false,
+  response_headers_blacklist: []
+]
+```
+
 ### Mix Tasks
 The following tasks are added by including exvcr package.
 - [mix vcr](#mix-vcr-show-cassettes)

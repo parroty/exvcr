@@ -4,7 +4,6 @@ defmodule ExVCR.Adapter.HandlerStubModeTest do
 
   setup_all do
     Application.ensure_started(:ibrowse)
-    ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes", "fixture/custom_cassettes")
     :ok
   end
 

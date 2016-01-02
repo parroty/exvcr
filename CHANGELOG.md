@@ -1,3 +1,8 @@
+0.7.1
+------
+#### Enhancements
+* Support config parameters in config.exs (#37).
+
 0.7.0
 ------
 #### Changes

@@ -7,16 +7,6 @@ defmodule ExVCR.Setting do
   @default_vcr_path    "fixture/vcr_cassettes"
   @default_custom_path "fixture/custom_cassettes"
 
-  def setup do
-    if :ets.info(@ets_table) == :undefined do
-      :ets.new(@ets_table, [:set, :public, :named_table])
-      :ets.insert(@ets_table, {:cassette_library_dir, @default_vcr_path})
-      :ets.insert(@ets_table, {:custom_library_dir, @default_custom_path})
-      :ets.insert(@ets_table, {:filter_sensitive_data, []})
-      :ets.insert(@ets_table, {:response_headers_blacklist, []})
-    end
-  end
-
   def get(key) do
     setup
     :ets.lookup(@ets_table, key)[key]
@@ -33,4 +23,11 @@ defmodule ExVCR.Setting do
 
   def get_default_vcr_path, do: @default_vcr_path
   def get_default_custom_path, do: @default_custom_path
+
+  defp setup do
+    if :ets.info(@ets_table) == :undefined do
+      :ets.new(@ets_table, [:set, :public, :named_table])
+      ExVCR.ConfigLoader.load_defaults
+    end
+  end
 end
