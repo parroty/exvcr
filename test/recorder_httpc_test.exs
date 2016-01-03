@@ -82,5 +82,4 @@ defmodule ExVCR.RecorderHttpcTest do
     end
     ExVCR.Config.response_headers_blacklist([])
   end
-
 end

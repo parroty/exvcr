@@ -32,7 +32,7 @@ Add `:exvcr` to `deps` section of `mix.exs`.
   end
 ```
 
-Optionally, `preferred_cli_env: [vcr: :test]` can be specified for running `mix vcr` in `:test` env by default
+Optionally, `preferred_cli_env: [vcr: :test]` can be specified for running `mix vcr` in `:test` env by default.
 
 ```elixir
   def project do

@@ -34,7 +34,7 @@ defmodule ExVCR.ConfigTest do
     ExVCR.Config.filter_sensitive_data("test_before1", "test_after1")
     ExVCR.Config.filter_sensitive_data("test_before2", "test_after2")
     assert ExVCR.Setting.get(:filter_sensitive_data) ==
-      [{"test_before2","test_after2"},{"test_before1","test_after1"}]
+      [{"test_before2", "test_after2"},{"test_before1", "test_after1"}]
 
     ExVCR.Config.filter_sensitive_data(nil)
     assert ExVCR.Setting.get(:filter_sensitive_data) == []
