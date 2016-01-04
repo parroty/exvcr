@@ -264,6 +264,8 @@ config :exvcr, [
 ]
 ```
 
+If `exvcr` is defined as test-only dependency, describe the above statement in test-only config file (ex. `config\test.exs`) or make it conditional (ex. wrap with `if Mix.env == :test`).
+
 ### Mix Tasks
 The following tasks are added by including exvcr package.
 - [mix vcr](#mix-vcr-show-cassettes)
