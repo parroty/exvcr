@@ -485,7 +485,30 @@ test "stub request works for httpc" do
 end
 ```
 
-If the specified `:url` parameter doesn't match requests called inside the `use_cassette` block, it raises `ExVCR.InvalidRequestError`. The `:url` can be regular expression string.
+If the specified `:url` parameter doesn't match requests called inside the `use_cassette` block, it raises `ExVCR.InvalidRequestError`.
+
+The `:url` can be regular expression string. Please note that you should use the `~r` sigil with `/` as delimiters.
+
+```Elixir
+test "match URL with regular expression" do
+  use_cassette :stub, [url: "~r/(foo|bar)/", body: "Stub Response", status_code: 200] do
+    # ...
+  end
+end
+
+test "make sure to properly escape the /" do
+  # escape /path/to/file
+  use_cassette :stub, [url: "~r/\/path\/to\/file", body: "Stub Response", status_code: 200] do
+    # ...
+  end
+end
+
+test "the sigil delimiter cannot be anything else" do
+  use_cassette :stub, [url: "~r{this-delimiter-doesn-not-work}", body: "Stub Response", status_code: 200] do
+    # ...
+  end
+end
+```
 
 ### TODO
 - Improve performance, as it's very slow.
