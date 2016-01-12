@@ -4,6 +4,7 @@ defmodule ExVCR.ConfigLoader do
   """
 
   alias ExVCR.Config
+  alias ExVCR.Setting
 
   @doc """
   Load default config values.
@@ -16,7 +17,7 @@ defmodule ExVCR.ConfigLoader do
         env[:vcr_cassette_library_dir], env[:custom_cassette_library_dir])
     else
       Config.cassette_library_dir(
-        Config.get_default_vcr_path, Config.get_default_custom_path)
+        Setting.get_default_vcr_path, Setting.get_default_custom_path)
     end
 
     Config.filter_sensitive_data(nil) # reset to empty list
