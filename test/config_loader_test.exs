@@ -47,7 +47,7 @@ defmodule ExVCR.ConfigLoaderTest do
     Application.delete_env(:exvcr, :filter_sensitive_data)
     Application.delete_env(:exvcr, :response_headers_blacklist)
 
-    # Load default values (defined in config/config.exs)
+    # Load default values
     ExVCR.ConfigLoader.load_defaults
 
     # Verify against default values
