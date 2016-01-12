@@ -25,6 +25,17 @@ defmodule ExVCR.Adapter.HttpcTest do
     end
   end
 
+  test "example httpc request/4 with additional options" do
+    use_cassette "example_httpc_request_4_additional_options" do
+      {:ok, {{_, 200, _reason_phrase}, _headers, body}} = :httpc.request(
+        :get,
+        {'http://example.com', [{'Content-Type', 'text/html'}]},
+        [connect_timeout: 3000, timeout: 5000],
+        body_format: :binary)
+      assert to_string(body) =~ ~r/Example Domain/
+    end
+  end
+
   test "example httpc request error" do
     use_cassette "example_httpc_request_error" do
       {:error, {reason, _detail}} = :httpc.request('http://invalidurl')
