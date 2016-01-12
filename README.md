@@ -1,4 +1,4 @@
-# ExVCR [![Build Status](https://secure.travis-ci.org/parroty/exvcr.png?branch=master "Build Status")](http://travis-ci.org/parroty/exvcr) [![Coverage Status](https://coveralls.io/repos/parroty/exvcr/badge.png?branch=master)](https://coveralls.io/r/parroty/exvcr?branch=master) [![hex.pm version](https://img.shields.io/hexpm/v/exvcr.svg)](https://hex.pm/packages/exvcr) [![hex.pm downloads](https://img.shields.io/hexpm/dt/exvcr.svg)](https://hex.pm/packages/exvcr) [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+# ExVCR [![Build Status](https://secure.travis-ci.org/parroty/exvcr.png?branch=master "Build Status")](https://travis-ci.org/parroty/exvcr) [![Coverage Status](https://coveralls.io/repos/parroty/exvcr/badge.png?branch=master)](https://coveralls.io/r/parroty/exvcr?branch=master) [![hex.pm version](https://img.shields.io/hexpm/v/exvcr.svg)](https://hex.pm/packages/exvcr) [![hex.pm downloads](https://img.shields.io/hexpm/dt/exvcr.svg)](https://hex.pm/packages/exvcr) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
 
 Record and replay HTTP interactions library for elixir.
@@ -14,7 +14,7 @@ It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide 
         - support is very limited, and tested only with sync request of HTTPoison yet.
     - <a href="http://erlang.org/doc/man/httpc.html" target="_blank">httpc</a>-based libraries.
         - <a href="https://github.com/tim/erlang-oauth/" target="_blank">erlang-oauth</a>
-        - <a href="https://github.com/roundscope/tirexs/" target="_blank">tirexs</a>
+        - <a href="https://github.com/Zatvobor/tirexs" target="_blank">tirexs</a>
         - support is very limited, and tested only with :httpc.request/1 and :httpc.request/4
 
 - HTTP interactions are recorded as JSON file.
