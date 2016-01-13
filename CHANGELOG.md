@@ -3,6 +3,9 @@
 #### Enhancements
 * Support config parameters in config.exs (#37).
 
+#### Changes
+* Fix wrong request arguments handling for httpc adapter (#38).
+
 0.7.0
 ------
 #### Changes
