@@ -2,11 +2,18 @@
   {
     "request": {
       "body": "",
-      "headers": [],
+      "headers": {
+        "Content-Type": "text/html"
+      },
       "method": "get",
       "options": {
-        "httpc_options": [],
-        "http_options": []
+        "httpc_options": {
+          "body_format": "binary"
+        },
+        "http_options": {
+          "connect_timeout": "3000",
+          "timeout": "5000"
+        }
       },
       "request_body": "",
       "url": "http://example.com"

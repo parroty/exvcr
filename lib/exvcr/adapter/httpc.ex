@@ -35,14 +35,13 @@ defmodule ExVCR.Adapter.Httpc do
   Generate key for searching response.
   """
   def generate_keys_for_request(request) do
-    if Enum.count(request) <= 2 do
-      [url: Enum.fetch!(request, 0), method: :get]
-    else
-      url = Enum.fetch!(request, 1) |> elem(0)
-      method = Enum.fetch!(request, 0)
-      request_body = Enum.fetch(request, 3) |> parse_request_body
-
-      [url: url, method: method, request_body: request_body]
+    case request do
+      [method, {url, _} | _] ->
+        [url: url, method: method, request_body: nil]
+      [method, {url, _, _, body} | _] ->
+        [url: url, method: method, request_body: body]
+      [url | _] ->
+        [url: url, method: :get, request_body: nil]
     end
   end
 
