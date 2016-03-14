@@ -52,16 +52,12 @@ defmodule ExVCR.JSON do
   end
 
   defp gzip_recording(recording) do
-    %{"request" => request, "response" => response} = recording
-
-    # add guards for empty things
-
-    case response["headers"]["Content-Encoding"] do
-      "gzip" ->
-        encoded_body = :zlib.gzip(response["body"])
-        encoded_response = %{ response | "body" => encoded_body }
-        %{"request" => request, "response" => encoded_response}
-      _ -> recording
-    end
+    %{recording | "response" => gzip_response(recording["response"])}
   end
+
+  defp gzip_response(response = %{"headers" => %{"Content-Encoding" => "gzip"}}) do
+        encoded_body = :zlib.gzip(response["body"])
+        %{ response | "body" => encoded_body }
+  end
+  defp gzip_response(response), do: response
 end
