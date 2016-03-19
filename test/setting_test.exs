@@ -27,4 +27,9 @@ defmodule ExVCR.SettingTest do
     ExVCR.Setting.set(:response_headers_blacklist, ["Content-Type", "Accept"])
     assert ExVCR.Setting.get(:response_headers_blacklist) == ["Content-Type", "Accept"]
   end
+
+  test "set match_requests_on" do
+    ExVCR.Setting.set(:match_requests_on, [:query, :request_body])
+    assert ExVCR.Setting.get(:match_requests_on) == [:query, :request_body]
+  end
 end

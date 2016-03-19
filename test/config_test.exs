@@ -52,4 +52,12 @@ defmodule ExVCR.ConfigTest do
     ExVCR.Config.response_headers_blacklist([])
     assert ExVCR.Setting.get(:response_headers_blacklist) == []
   end
+
+  test "add default match_requests_on" do
+    ExVCR.Config.match_requests_on([])
+    assert ExVCR.Setting.get(:match_requests_on) == []
+
+    ExVCR.Config.match_requests_on([:query, :request_body])
+    assert ExVCR.Setting.get(:match_requests_on) == [:query, :request_body]
+  end
 end

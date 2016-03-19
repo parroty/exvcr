@@ -48,4 +48,11 @@ defmodule ExVCR.Config do
     blacklist = Enum.map(headers_blacklist, fn(x) -> String.downcase(x) end)
     Setting.set(:response_headers_blacklist, blacklist)
   end
+
+  @doc """
+  Sets default match_requests_on option
+  """
+  def match_requests_on(match_requests_on) do
+    Setting.set(:match_requests_on, match_requests_on)
+  end
 end

@@ -74,7 +74,7 @@ defmodule ExVCR.Mock do
   """
   defmacro use_cassette(fixture, test) do
     quote do
-      use_cassette(unquote(fixture), [], unquote(test))
+      use_cassette(unquote(fixture), ExVCR.Setting.get(:match_requests_on), unquote(test))
     end
   end
 

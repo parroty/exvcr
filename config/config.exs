@@ -7,5 +7,6 @@ config :exvcr, [
     [pattern: "<PASSWORD>.+</PASSWORD>", placeholder: "PASSWORD_PLACEHOLDER"]
   ],
   filter_url_params: false,
-  response_headers_blacklist: []
+  response_headers_blacklist: [],
+  match_requests_on: [],
 ]
