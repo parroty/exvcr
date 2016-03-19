@@ -1,3 +1,9 @@
+0.7.2
+------
+#### Enhancements
+* Support recording/replaying gzipped response.
+    - Gzipped response body (#46).
+
 0.7.1
 ------
 #### Enhancements
