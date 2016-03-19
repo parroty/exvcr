@@ -66,6 +66,8 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
   defmodule MatchRequestsOn do
     use ExVCR.Mock
     use ExUnit.Case, async: false
+    alias ExVCR.Setting
+    alias ExVCR.Config
 
     @port 34006
     @url "http://localhost:#{@port}/server"
@@ -101,6 +103,23 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
       end
     end
 
+    test "setting default match_requests_on: [:query]" do
+      Config.match_requests_on([:query])
+
+      use_cassette "same_query_params_on" do
+        HttpServer.start(path: "/server", port: @port, response: "test_response_before")
+        assert HTTPotion.get("#{@url}?p=3", []).body =~ ~r/test_response_before/
+        HttpServer.stop(@port)
+
+        # this method call should NOT be mocked as previous "test_response_before" response
+        HttpServer.start(path: "/server", port: @port, response: "test_response_after")
+        assert HTTPotion.get("#{@url}?p=3", []).body =~ ~r/test_response_before/
+        HttpServer.stop(@port)
+      end
+
+      Config.match_requests_on(Setting.get_default_match_requests_on)
+    end
+
     test "specifying match_requests_on: [:request_body] matches request_body params" do
       use_cassette "different_request_body_params_on", match_requests_on: [:request_body] do
         HttpServer.start(path: "/server", port: @port, response: "test_response_before")
@@ -125,6 +144,22 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
         assert HTTPotion.post(@url, [body: "p=4"]).body =~ ~r/test_response_before/
         HttpServer.stop(@port)
       end
+    end
+
+    test "setting default match_requests_on: [:request_body]" do
+      Config.match_requests_on([:request_body])
+
+      use_cassette "same_request_body_params_on"do
+        HttpServer.start(path: "/server", port: @port, response: "test_response_before")
+        assert HTTPotion.post(@url, [body: "p=3"]).body =~ ~r/test_response_before/
+        HttpServer.stop(@port)
+
+        HttpServer.start(path: "/server", port: @port, response: "test_response_after")
+        assert HTTPotion.post(@url, [body: "p=3"]).body =~ ~r/test_response_before/
+        HttpServer.stop(@port)
+      end
+
+      Config.match_requests_on(Setting.get_default_match_requests_on)
     end
   end
 end
