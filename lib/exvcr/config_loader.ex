@@ -36,5 +36,11 @@ defmodule ExVCR.ConfigLoader do
     else
       Config.response_headers_blacklist([])
     end
+
+    if env[:match_requests_on] != nil do
+      Config.match_requests_on(env[:match_requests_on])
+    else
+      Config.match_requests_on(Setting.get_default_match_requests_on)
+    end
   end
 end

@@ -1,0 +1,23 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "http://localhost:34006/server?p=3"
+    },
+    "response": {
+      "body": "test_response_before",
+      "headers": {
+        "connection": "keep-alive",
+        "server": "Cowboy",
+        "date": "Sat, 19 Mar 2016 20:31:04 GMT",
+        "content-length": "20"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
