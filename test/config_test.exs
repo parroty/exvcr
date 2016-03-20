@@ -52,4 +52,12 @@ defmodule ExVCR.ConfigTest do
     ExVCR.Config.response_headers_blacklist([])
     assert ExVCR.Setting.get(:response_headers_blacklist) == []
   end
+
+  test "add cassette_defaults" do
+    ExVCR.Config.cassette_defaults([])
+    assert ExVCR.Setting.get(:cassette_defaults) == []
+
+    ExVCR.Config.cassette_defaults(match_requests_on: [:query, :request_body])
+    assert ExVCR.Setting.get(:cassette_defaults) == [match_requests_on: [:query, :request_body]]
+  end
 end

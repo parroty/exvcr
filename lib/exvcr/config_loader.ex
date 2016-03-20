@@ -36,5 +36,11 @@ defmodule ExVCR.ConfigLoader do
     else
       Config.response_headers_blacklist([])
     end
+
+    if env[:cassette_defaults] != nil do
+      Config.cassette_defaults(env[:cassette_defaults])
+    else
+      Config.cassette_defaults(Setting.get_default_cassette_defaults)
+    end
   end
 end

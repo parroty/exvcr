@@ -6,6 +6,7 @@ defmodule ExVCR.Setting do
   @ets_table :exvcr_setting
   @default_vcr_path    "fixture/vcr_cassettes"
   @default_custom_path "fixture/custom_cassettes"
+  @default_cassette_defaults []
 
   def get(key) do
     setup
@@ -23,6 +24,7 @@ defmodule ExVCR.Setting do
 
   def get_default_vcr_path, do: @default_vcr_path
   def get_default_custom_path, do: @default_custom_path
+  def get_default_cassette_defaults, do: @default_cassette_defaults
 
   defp setup do
     if :ets.info(@ets_table) == :undefined do
