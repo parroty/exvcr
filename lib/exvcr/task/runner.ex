@@ -14,8 +14,10 @@ defmodule ExVCR.Task.Runner do
   """
   def show_vcr_cassettes(path_list) do
     Enum.each(path_list, fn(path) ->
-      read_cassettes(path) |> print_cassettes(path)
-      IO.puts ""
+      if File.exists?(path) do
+        read_cassettes(path) |> print_cassettes(path)
+        IO.puts ""
+      end
     end)
   end
 
