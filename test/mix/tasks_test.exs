@@ -27,13 +27,6 @@ defmodule Mix.Tasks.VcrTest do
     end) =~ "Usage: mix vcr [options]"
   end
 
-
-  test "mix vcr with invalid path raises error" do
-    assert_raise ExVCR.PathNotFoundError, fn ->
-      Mix.Tasks.Vcr.run(["--dir", "invalidpath"])
-    end
-  end
-
   test "mix vcr.delete" do
     File.touch!(@dummy_path <> @dummy_file1)
     assert capture_io(fn ->

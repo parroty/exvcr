@@ -1,7 +1,7 @@
 0.7.3
 ------
 #### Changes
-* Fix error at [mix vcr] task when custom cassette does not exist.
+* Fix error at [mix vcr] task when cassette directory does not exist (skip instead of raising errors).
     - Running `mix vcr` without custom cassette folder gives annoying message (#49).
 
 0.7.2
