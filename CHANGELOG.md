@@ -1,3 +1,9 @@
+0.7.3
+------
+#### Changes
+* Fix error at [mix vcr] task when custom cassette does not exist.
+    - Running `mix vcr` without custom cassette folder gives annoying message (#49).
+
 0.7.2
 ------
 #### Enhancements
