@@ -10,7 +10,7 @@ defmodule ExVCR.JSON do
     gunzipped_recordings = recordings
     |> Enum.map(&gunzip_recording/1)
     json = gunzipped_recordings |> Enum.reverse |> JSX.encode!
-    unless File.exists?(path = Path.dirname(file_name)), do: File.mkdir_p(path)
+    unless File.exists?(path = Path.dirname(file_name)), do: File.mkdir_p!(path)
     File.write!(file_name, JSX.prettify!(json))
   end
 

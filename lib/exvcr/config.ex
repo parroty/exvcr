@@ -12,8 +12,6 @@ defmodule ExVCR.Config do
   """
   def cassette_library_dir(vcr_dir, custom_dir \\ nil) do
     Setting.set(:cassette_library_dir, vcr_dir)
-    File.mkdir_p!(vcr_dir)
-
     Setting.set(:custom_library_dir, custom_dir)
     :ok
   end
