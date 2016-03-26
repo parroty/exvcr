@@ -9,10 +9,13 @@ defmodule ExVCR.Adapter.Hackney.Converter do
     response = Enum.map(string, fn({x, y}) -> {String.to_atom(x), y} end)
     response = struct(ExVCR.Response, response)
 
-    if is_map(response.headers) do
-      headers = response.headers |> Map.to_list
-      response = %{response | headers: headers}
-    end
+    response =
+      if is_map(response.headers) do
+        headers = response.headers |> Map.to_list
+        %{response | headers: headers}
+      else
+        response
+      end
 
     response
   end

@@ -9,21 +9,30 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
     response = Enum.map(string, fn({x, y}) -> {String.to_atom(x), y} end)
     response = struct(ExVCR.Response, response)
 
-    if response.status_code do
-      response = %{response | status_code: Integer.to_char_list(response.status_code)}
-    end
+    response =
+      if response.status_code do
+        %{response | status_code: Integer.to_char_list(response.status_code)}
+      else
+        response
+      end
 
-    if response.type == "error" do
-      body = string_to_error_reason(response.body)
-      response = %{response | body: body}
-    end
+    response =
+      if response.type == "error" do
+        body = string_to_error_reason(response.body)
+        %{response | body: body}
+      else
+        response
+      end
 
-    if is_map(response.headers) do
-      headers = response.headers
-                |> Map.to_list
-                |> Enum.map(fn({k,v}) -> {to_char_list(k), to_char_list(v)} end)
-      response = %{response | headers: headers}
-    end
+    response =
+      if is_map(response.headers) do
+        headers = response.headers
+                  |> Map.to_list
+                  |> Enum.map(fn({k,v}) -> {to_char_list(k), to_char_list(v)} end)
+        %{response | headers: headers}
+      else
+        response
+      end
 
     response
   end
