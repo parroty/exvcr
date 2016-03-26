@@ -76,22 +76,23 @@ defmodule ExVCR.Adapter.Hackney do
       Store.delete(client_key_atom)
       {:ok, body}
     else
-      {ret, body} = :meck.passthrough([client])
-      if ret == :ok do
-        body = ExVCR.Filter.filter_sensitive_data(body)
+      case :meck.passthrough([client]) do
+        {:ok, body} ->
+          body = ExVCR.Filter.filter_sensitive_data(body)
 
-        client_key_string = inspect(client)
-        ExVCR.Recorder.update(recorder,
-          fn(%{request: _request, response: response}) ->
-            response.body == client_key_string
-          end,
-          fn(%{request: request, response: response}) ->
-            %{request: request, response: %{response | body: body}}
-          end
-        )
+          client_key_string = inspect(client)
+          ExVCR.Recorder.update(recorder,
+            fn(%{request: _request, response: response}) ->
+              response.body == client_key_string
+            end,
+            fn(%{request: request, response: response}) ->
+              %{request: request, response: %{response | body: body}}
+            end
+          )
+          {:ok, body}
+        {ret, body} ->
+          {ret, body}
       end
-
-      {ret, body}
     end
   end
 
