@@ -3,6 +3,8 @@
 #### Changes
 * Fix error at [mix vcr] task when cassette directory does not exist (skip instead of raising errors).
     - Running `mix vcr` without custom cassette folder gives annoying message (#49).
+* Fix for duplicated/unnecessary directory creation.
+    - Fix configuring cassette_library_dir (#50).
 
 0.7.2
 ------
