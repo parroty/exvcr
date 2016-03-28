@@ -48,6 +48,17 @@ defmodule ExVCR.Adapter.IBrowse do
     apply_filters(response)
   end
 
+  @doc """
+  Callback from ExVCR.Handler to get the response content tuple from the ExVCR.Reponse record.
+  """
+  def get_response_value_from_cache(response) do
+    if response.type == "error" do
+      {:error, response.body}
+    else
+      {:ok, Integer.to_char_list(response.status_code), response.headers, response.body}
+    end
+  end
+
   defp apply_filters({:ok, status_code, headers, body}) do
     replaced_body = to_string(body) |> ExVCR.Filter.filter_sensitive_data
     filtered_headers = ExVCR.Filter.remove_blacklisted_headers(headers)
