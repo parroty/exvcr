@@ -55,7 +55,14 @@ defmodule ExVCR.Adapter.IBrowse do
     if response.type == "error" do
       {:error, response.body}
     else
-      {:ok, Integer.to_char_list(response.status_code), response.headers, response.body}
+      status_code = case response.status_code do
+        integer when is_integer(integer) ->
+          Integer.to_char_list(integer)
+        char_list when is_list(char_list) ->
+          char_list
+      end
+
+      {:ok, status_code, response.headers, response.body}
     end
   end
 
