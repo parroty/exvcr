@@ -4,6 +4,7 @@ defmodule ExVCR.Adapter.IBrowse do
   """
 
   use ExVCR.Adapter
+  alias ExVCR.Util
 
   defmacro __using__(_opts) do
     # do nothing
@@ -37,13 +38,9 @@ defmodule ExVCR.Adapter.IBrowse do
     url    = Enum.fetch!(request, 0)
     method = Enum.fetch!(request, 2)
     request_body = Enum.fetch(request, 3) |> parse_request_body
-    headers = Enum.fetch!(request, 1) |> stringify_keys
+    headers = Enum.fetch!(request, 1) |> Util.stringify_keys
 
     [url: url, method: method, request_body: request_body, headers: headers]
-  end
-
-  defp stringify_keys(list) do
-    list |> Enum.map(fn {key, value} -> {to_string(key), to_string(value)} end)
   end
 
   @doc """

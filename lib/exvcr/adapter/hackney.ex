@@ -5,6 +5,7 @@ defmodule ExVCR.Adapter.Hackney do
 
   use ExVCR.Adapter
   alias ExVCR.Adapter.Hackney.Store
+  alias ExVCR.Util
 
   defmacro __using__(_opts) do
     quote do
@@ -38,8 +39,7 @@ defmodule ExVCR.Adapter.Hackney do
     url    = Enum.fetch!(request, 1)
     method = Enum.fetch!(request, 0)
     request_body = Enum.fetch(request, 3) |> parse_request_body
-    headers = Enum.fetch!(request, 2)
-    |> Enum.map(fn {key, value} -> {to_string(key), to_string(value)} end)
+    headers = Enum.fetch!(request, 2) |> Util.stringify_keys
 
     [url: url, method: method, request_body: request_body, headers: headers]
   end

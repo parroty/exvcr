@@ -5,6 +5,7 @@ defmodule ExVCR.Handler do
 
   alias ExVCR.Recorder
   alias ExVCR.Actor.Options
+  alias ExVCR.Util
 
   @doc """
   Get response from either server or cache.
@@ -89,6 +90,7 @@ defmodule ExVCR.Handler do
     if has_match_requests_on(:headers, options) do
       response[:request].headers
       |> Enum.to_list
+      |> Util.stringify_keys
       |> Keyword.equal?(keys[:headers])
     else
       true

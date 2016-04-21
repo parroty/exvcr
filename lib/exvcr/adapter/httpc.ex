@@ -4,6 +4,7 @@ defmodule ExVCR.Adapter.Httpc do
   """
 
   use ExVCR.Adapter
+  alias ExVCR.Util
 
   defmacro __using__(_opts) do
     # do nothing
@@ -37,9 +38,9 @@ defmodule ExVCR.Adapter.Httpc do
   def generate_keys_for_request(request) do
     case request do
       [method, {url, headers} | _] ->
-        [url: url, method: method, request_body: nil, headers: headers]
+        [url: url, method: method, request_body: nil, headers: Util.stringify_keys(headers)]
       [method, {url, headers, _, body} | _] ->
-        [url: url, method: method, request_body: body, headers: []]
+        [url: url, method: method, request_body: body, headers: Util.stringify_keys(headers)]
       [url | _] ->
         [url: url, method: :get, request_body: nil, headers: []]
     end
