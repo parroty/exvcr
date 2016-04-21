@@ -11,7 +11,7 @@ defmodule ExVCR.Util do
   end
 
   @doc """
-  Takes a keyword lists and returns then as strings.
+  Takes a keyword lists and returns them as strings.
   """
 
   def stringify_keys(list) do
