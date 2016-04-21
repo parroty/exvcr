@@ -60,7 +60,10 @@ defmodule ExVCR.Handler do
   end
 
   defp match_response(response, keys, recorder_options) do
-    match_by_url(response, keys, recorder_options) and match_by_method(response, keys) and match_by_request_body(response, keys, recorder_options)
+    match_by_url(response, keys, recorder_options)
+      and match_by_method(response, keys)
+      and match_by_request_body(response, keys, recorder_options)
+      and match_by_headers(response, keys, recorder_options)
   end
 
   defp match_by_url(response, keys, recorder_options) do
@@ -79,6 +82,16 @@ defmodule ExVCR.Handler do
       key_url     = parse_url(key_url, recorder_options)
 
       request_url == key_url
+    end
+  end
+
+  defp match_by_headers(response, keys, options) do
+    if has_match_requests_on(:headers, options) do
+      response[:request].headers
+      |> Enum.to_list
+      |> Keyword.equal?(keys[:headers])
+    else
+      true
     end
   end
 

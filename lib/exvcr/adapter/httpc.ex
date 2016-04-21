@@ -36,12 +36,12 @@ defmodule ExVCR.Adapter.Httpc do
   """
   def generate_keys_for_request(request) do
     case request do
-      [method, {url, _} | _] ->
-        [url: url, method: method, request_body: nil]
-      [method, {url, _, _, body} | _] ->
-        [url: url, method: method, request_body: body]
+      [method, {url, headers} | _] ->
+        [url: url, method: method, request_body: nil, headers: headers]
+      [method, {url, headers, _, body} | _] ->
+        [url: url, method: method, request_body: body, headers: []]
       [url | _] ->
-        [url: url, method: :get, request_body: nil]
+        [url: url, method: :get, request_body: nil, headers: []]
     end
   end
 

@@ -37,8 +37,13 @@ defmodule ExVCR.Adapter.IBrowse do
     url    = Enum.fetch!(request, 0)
     method = Enum.fetch!(request, 2)
     request_body = Enum.fetch(request, 3) |> parse_request_body
+    headers = Enum.fetch!(request, 1) |> stringify_keys
 
-    [url: url, method: method, request_body: request_body]
+    [url: url, method: method, request_body: request_body, headers: headers]
+  end
+
+  defp stringify_keys(list) do
+    list |> Enum.map(fn {key, value} -> {to_string(key), to_string(value)} end)
   end
 
   @doc """
