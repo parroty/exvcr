@@ -139,5 +139,18 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
         HttpServer.stop(@port)
       end
     end
+
+    test "not specifying match_requests_on: [:headers] ignores headers" do
+      use_cassette "different_headers_off" do
+        HttpServer.start(path: "/server", port: @port, response: "test_response_before")
+        assert HTTPotion.post(@url, [body: "p=3", headers: ["User-Agent": "My App"]]).body =~ ~r/test_response_before/
+        HttpServer.stop(@port)
+
+        # this method call should be mocked as previous "test_response_before" response
+        HttpServer.start(path: "/server", port: @port, response: "test_response_after")
+        assert HTTPotion.post(@url, [body: "p=4", headers: ["User-Agent": "Other App"]]).body =~ ~r/test_response_before/
+        HttpServer.stop(@port)
+      end
+    end
   end
 end
