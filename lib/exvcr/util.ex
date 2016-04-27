@@ -9,4 +9,12 @@ defmodule ExVCR.Util do
   def uniq_id do
     :os.timestamp |> Tuple.to_list |> Enum.join("")
   end
+
+  @doc """
+  Takes a keyword lists and returns them as strings.
+  """
+
+  def stringify_keys(list) do
+    list |> Enum.map(fn {key, value} -> {to_string(key), to_string(value)} end)
+  end
 end

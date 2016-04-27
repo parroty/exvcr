@@ -1,0 +1,48 @@
+[
+  {
+    "request": {
+      "body": "body",
+      "headers": {
+        "User-Agent": "My App"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "http://localhost:34006/server"
+    },
+    "response": {
+      "body": "test_response_before",
+      "headers": {
+        "connection": "keep-alive",
+        "server": "Cowboy",
+        "date": "Thu, 21 Apr 2016 17:40:10 GMT",
+        "content-length": "20"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "body",
+      "headers": {
+        "User-Agent": "Other App"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "http://localhost:34006/server"
+    },
+    "response": {
+      "body": "test_response_after",
+      "headers": {
+        "connection": "keep-alive",
+        "server": "Cowboy",
+        "date": "Thu, 21 Apr 2016 17:40:10 GMT",
+        "content-length": "19"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
