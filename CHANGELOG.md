@@ -1,10 +1,14 @@
 0.7.3
 ------
+#### Enhancements
+* Allow matching requests by headers (#56).
+
 #### Changes
 * Fix error at [mix vcr] task when cassette directory does not exist (skip instead of raising errors).
     - Running `mix vcr` without custom cassette folder gives annoying message (#49).
 * Fix for duplicated/unnecessary directory creation.
     - Fix configuring cassette_library_dir (#50).
+* Fix cached status code for ibrowse (#57).
 
 0.7.2
 ------
