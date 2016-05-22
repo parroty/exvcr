@@ -47,7 +47,7 @@ defmodule ExVCR.Filter do
 
   defp is_header_allowed?(header_name) do
     Enum.find(ExVCR.Setting.get(:response_headers_blacklist), fn(x) ->
-      to_string(header_name) == x
+      String.downcase(to_string(header_name)) == x
     end) == nil
   end
 end
