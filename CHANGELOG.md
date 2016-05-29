@@ -1,3 +1,8 @@
+0.7.4
+------
+#### Changes
+* Ensure blacklist header check is case insensitive (#59).
+
 0.7.3
 ------
 #### Enhancements
