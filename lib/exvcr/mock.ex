@@ -97,6 +97,7 @@ defmodule ExVCR.Mock do
     method        = (options[:method] || "get") |> to_string
     url           = (options[:url] || "~r/.+/") |> to_string
     body          = (options[:body] || "Hello World") |> to_string
+    # REVIEW: would be great to have "~r/.+/" as default request_body
     request_body  = (options[:request_body] || "") |> to_string
 
     headers     = options[:headers] || adapter.default_stub_params(:headers)
