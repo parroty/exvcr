@@ -39,6 +39,22 @@ defmodule ExVCR.Adapter.HandlerStubModeTest do
     end
   end
 
+  test "request_body matches as regex" do
+    use_cassette :stub, [url: 'http://localhost', method: :post, request_body: "~r/param1/", body: "Hello World"] do
+      {:ok, status_code, _headers, body} = :ibrowse.send_req('http://localhost', [], :post, 'param1=value1&param2=value2')
+      assert status_code == '200'
+      assert to_string(body) =~ ~r/Hello World/
+    end
+  end
+
+  test "request_body mismatches as regex" do
+    assert_raise ExVCR.InvalidRequestError, fn ->
+      use_cassette :stub, [url: 'http://localhost', method: :post, request_body: "~r/param3/", body: "Hello World"] do
+        {:ok, status_code, _headers, body} = :ibrowse.send_req('http://localhost', [], :post, 'param1=value1&param2=value2')
+      end
+    end
+  end
+
   test "request_body mismatch should raise error" do
     assert_raise ExVCR.InvalidRequestError, fn ->
       use_cassette :stub, [url: 'http://localhost', method: :post, request_body: '{"one" => 1}'] do

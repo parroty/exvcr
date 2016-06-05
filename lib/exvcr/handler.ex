@@ -113,10 +113,17 @@ defmodule ExVCR.Handler do
     end
   end
 
-  defp match_by_request_body(response, params, options) do
-    if options[:stub] != nil || has_match_requests_on(:request_body, options) do
-      (response[:request].body || response[:request].request_body) ==
-        params[:request_body] |> to_string
+  defp match_by_request_body(response, keys, recorder_options) do
+    if stub_mode?(recorder_options) || has_match_requests_on(:request_body, recorder_options) do
+      request_body = response[:request].body || response[:request].request_body
+      key_body     = keys[:request_body] |> to_string |> ExVCR.Filter.filter_sensitive_data
+
+      if match = Regex.run(~r/~r\/(.+)\//, request_body) do
+        pattern = Regex.compile!(Enum.at(match, 1))
+        Regex.match?(pattern, key_body)
+      else
+        request_body == key_body
+      end
     else
       true
     end
