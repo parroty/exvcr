@@ -1,3 +1,8 @@
+0.7.5
+------
+#### Enhancements
+* Support regexp request_body pattern (#62).
+
 0.7.4
 ------
 #### Changes
