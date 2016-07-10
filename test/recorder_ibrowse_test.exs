@@ -39,7 +39,7 @@ defmodule ExVCR.RecorderIBrowseTest do
   test "forcefully getting response from server with error" do
     use_cassette "server_error" do
       assert_raise HTTPotion.HTTPError, fn ->
-        HTTPotion.get("http://invalid_url", [])
+        HTTPotion.get!("http://invalid_url", [])
       end
     end
   end
@@ -79,7 +79,9 @@ defmodule ExVCR.RecorderIBrowseTest do
   test "remove blacklisted headers" do
     ExVCR.Config.response_headers_blacklist(["date"])
     use_cassette "remove_blacklisted_headers" do
-      assert HTTPotion.get(@url, []).headers == [connection: "keep-alive", "content-length": "13", server: "Cowboy"]
+      assert HTTPotion.get(@url, []).headers == %HTTPotion.Headers{
+        hdrs: ["content-length": "13", server: "Cowboy"]
+      }
     end
     ExVCR.Config.response_headers_blacklist([])
   end

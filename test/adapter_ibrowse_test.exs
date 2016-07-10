@@ -48,7 +48,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
   test "httpotion error" do
     use_cassette "httpotion_get_error" do
       assert_raise HTTPotion.HTTPError, fn ->
-        HTTPotion.get("http://invalid_url", [])
+        HTTPotion.get!("http://invalid_url", [])
       end
     end
   end
@@ -80,7 +80,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
   test "get fails with timeout" do
     assert_raise HTTPotion.HTTPError, fn ->
       use_cassette "httpotion_get_timeout" do
-        assert HTTPotion.get("http://example.com", [timeout: 1])
+        assert HTTPotion.get!("http://example.com", [timeout: 1])
       end
     end
   end
