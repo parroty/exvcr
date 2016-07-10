@@ -1,5 +1,9 @@
-0.7.5
+0.8.0
 ------
+#### Changes
+* Update dependencies.
+    - Update httpotion dependency to 3.0 (#63).
+
 #### Enhancements
 * Support regexp request_body pattern (#62).
 
