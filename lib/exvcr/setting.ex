@@ -8,12 +8,12 @@ defmodule ExVCR.Setting do
   @default_custom_path "fixture/custom_cassettes"
 
   def get(key) do
-    setup
+    setup()
     :ets.lookup(@ets_table, key)[key]
   end
 
   def set(key, value) do
-    setup
+    setup()
     :ets.insert(@ets_table, {key, value})
   end
 

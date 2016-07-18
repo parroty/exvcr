@@ -66,7 +66,7 @@ defmodule ExVCR.Adapter.Hackney do
   def hook_response_from_cache(nil), do: nil
   def hook_response_from_cache(%ExVCR.Response{type: "error"} = response), do: response
   def hook_response_from_cache(%ExVCR.Response{body: body} = response) do
-    client          = make_ref
+    client          = make_ref()
     client_key_atom = client |> inspect |> String.to_atom
     Store.set(client_key_atom, body)
     %{response | body: client}
