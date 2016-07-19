@@ -30,15 +30,15 @@ defmodule ExVCR.Mock do
   defmacro use_cassette(:stub, options, test) do
     quote do
       stub_fixture = "stub_fixture_#{ExVCR.Util.uniq_id}"
-      stub = prepare_stub_record(unquote(options), adapter_method)
-      recorder = Recorder.start([fixture: stub_fixture, stub: stub, adapter: adapter_method])
+      stub = prepare_stub_record(unquote(options), adapter_method())
+      recorder = Recorder.start([fixture: stub_fixture, stub: stub, adapter: adapter_method()])
 
-      mock_methods(recorder, adapter_method)
+      mock_methods(recorder, adapter_method())
 
       try do
         [do: return_value] = unquote(test)
-        if options_method[:clear_mock] || unquote(options)[:clear_mock] do
-          :meck.unload(adapter_method.module_name)
+        if options_method()[:clear_mock] || unquote(options)[:clear_mock] do
+          :meck.unload(adapter_method().module_name())
         end
         return_value
       after
@@ -53,14 +53,14 @@ defmodule ExVCR.Mock do
   defmacro use_cassette(fixture, options, test) do
     quote do
       recorder = Recorder.start(
-        unquote(options) ++ [fixture: normalize_fixture(unquote(fixture)), adapter: adapter_method])
+        unquote(options) ++ [fixture: normalize_fixture(unquote(fixture)), adapter: adapter_method()])
 
-      mock_methods(recorder, adapter_method)
+      mock_methods(recorder, adapter_method())
 
       try do
         [do: return_value] = unquote(test)
-        if options_method[:clear_mock] || unquote(options)[:clear_mock] do
-          :meck.unload(adapter_method.module_name)
+        if options_method()[:clear_mock] || unquote(options)[:clear_mock] do
+          :meck.unload(adapter_method().module_name)
         end
         return_value
       after
