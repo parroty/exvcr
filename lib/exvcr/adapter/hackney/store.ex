@@ -7,8 +7,8 @@ defmodule ExVCR.Adapter.Hackney.Store do
   Initialize the datastore.
   """
   def start do
-    if :ets.info(table) == :undefined do
-      :ets.new(table, [:set, :public, :named_table])
+    if :ets.info(table()) == :undefined do
+      :ets.new(table(), [:set, :public, :named_table])
     end
     :ok
   end
@@ -17,16 +17,16 @@ defmodule ExVCR.Adapter.Hackney.Store do
   Returns value (body) from the key (client key).
   """
   def get(key) do
-    start
-    :ets.lookup(table, key)[key]
+    start()
+    :ets.lookup(table(), key)[key]
   end
 
   @doc """
   Set value (body) with the key (client key).
   """
   def set(key, value) do
-    start
-    :ets.insert(table, {key, value})
+    start()
+    :ets.insert(table(), {key, value})
     value
   end
 
@@ -34,11 +34,11 @@ defmodule ExVCR.Adapter.Hackney.Store do
   Set key (client key).
   """
   def delete(key) do
-    start
-    :ets.delete(table, key)
+    start()
+    :ets.delete(table(), key)
   end
 
   defp table do
-    "exvcr_hackney#{inspect self}" |> String.to_atom
+    "exvcr_hackney#{inspect self()}" |> String.to_atom
   end
 end
