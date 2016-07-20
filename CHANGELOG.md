@@ -1,3 +1,8 @@
+0.8.1
+------
+#### Changes
+* Fix warnings when using elixir v1.4 (#65).
+
 0.8.0
 ------
 #### Changes
