@@ -34,17 +34,10 @@ defmodule ExVCR.Task.Show do
   end
 
   defp extract_body(json) do
-    response = JSX.decode!(json)
-               |> List.first
-               |> Enum.into(HashDict.new)
-               |> fetch_value("response")
-    Enum.into(response, HashDict.new) |> fetch_value("body")
-  end
-
-  defp fetch_value(dict, key) do
-    case HashDict.fetch(dict, key) do
-      {:ok, value} -> value
-      _ -> []
-    end
+    json
+    |> JSX.decode!()
+    |> List.first()
+    |> Enum.into(%{})
+    |> get_in(["responce", "body"])
   end
 end

@@ -90,10 +90,10 @@ defmodule ExVCR.Task.Runner do
   defp create_count_hash([], acc), do: acc
   defp create_count_hash([{type, path}|tail], acc) do
     file = Path.basename(path)
-    counts = Dict.get(acc, file, %ExVCR.Checker.Counts{})
+    counts = Map.get(acc, file, %ExVCR.Checker.Counts{})
     hash = case type do
-      :cache  -> Dict.put(acc, file, %{counts | cache: counts.cache + 1})
-      :server -> Dict.put(acc, file, %{counts | server: counts.server + 1})
+      :cache  -> Map.put(acc, file, %{counts | cache: counts.cache + 1})
+      :server -> Map.put(acc, file, %{counts | server: counts.server + 1})
     end
     create_count_hash(tail, hash)
   end
@@ -101,7 +101,7 @@ defmodule ExVCR.Task.Runner do
   defp print_check_cassettes(items, counts_hash) do
     printf(@check_header_format, ["[File Name]", "[Cassette Counts]", "[Server Counts]"])
     Enum.each(items, fn({name, _date}) ->
-      counts = Dict.get(counts_hash, name, %ExVCR.Checker.Counts{})
+      counts = Map.get(counts_hash, name, %ExVCR.Checker.Counts{})
       printf(@check_content_format, [name, counts.cache, counts.server])
     end)
   end
