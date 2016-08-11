@@ -1,6 +1,6 @@
 0.8.2
 ------
-#### Changes
+#### Enhancements
 * Support filtering on request headers.
     - Add ExVCR.Filter.filter_request_header (#71).
 
