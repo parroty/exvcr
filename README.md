@@ -172,6 +172,24 @@ test "replace sensitive data" do
 end
 ```
 
+`ExVCR.Config.filter_request_headers(header)` method can be used to remove sensitive data in the request headers. It checks if the `header` is found in the request headers and blanks out it's value with `***`.
+```elixir
+  test "replace sensitive data in request header" do
+    ExVCR.Config.filter_request_headers("X-My-Secret-Token")
+    use_cassette "sensitive_data_in_request_header" do
+      body = HTTPoison.get!("http://localhost:34000/server?", ["X-My-Secret-Token": "my-secret-token"]).body
+      assert body == "test_response"
+    end
+
+    # The recorded cassette should contain replaced data.
+    cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_header.json")
+    assert cassette =~ "\"X-My-Secret-Token\": \"***\""
+    refute cassette =~  "\"X-My-Secret-Token\": \"my-secret-token\""
+
+    ExVCR.Config.filter_request_headers(nil)
+  end
+```
+
 #### Ignoring query params in url
 If `ExVCR.Config.filter_url_params(true)` is specified, query params in url will be ignored when recording cassettes.
 

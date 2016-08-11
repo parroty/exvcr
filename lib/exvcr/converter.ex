@@ -46,6 +46,7 @@ defmodule ExVCR.Converter do
       end
       defp do_parse_headers([{key,value}|tail], acc) do
         replaced_value = to_string(value) |> ExVCR.Filter.filter_sensitive_data
+        replaced_value = ExVCR.Filter.filter_request_header(to_string(key), to_string(replaced_value))
         do_parse_headers(tail, [{to_string(key), replaced_value}|acc])
       end
       defoverridable [do_parse_headers: 2]

@@ -24,11 +24,27 @@ defmodule ExVCR.Config do
     Setting.append(:filter_sensitive_data, {pattern, placeholder})
   end
 
+
   @doc """
   Clear the previously specified filter_sensitive_data lists.
   """
   def filter_sensitive_data(nil) do
     Setting.set(:filter_sensitive_data, [])
+  end
+
+  @doc """
+  Clear the previously specified filter_request_headers lists.
+  """
+  def filter_request_headers(nil) do
+    Setting.set(:filter_request_headers, [])
+  end
+
+  @doc """
+  Replace the specified request header with placeholder.
+  It can be used to remove sensitive data from the casette file.
+  """
+  def filter_request_headers(header) do
+    Setting.append(:filter_request_headers, header)
   end
 
   @doc """

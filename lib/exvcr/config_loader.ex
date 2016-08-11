@@ -27,6 +27,13 @@ defmodule ExVCR.ConfigLoader do
       end)
     end
 
+    Config.filter_request_headers(nil) # reset to empty list
+    if env[:filter_request_headers] != nil do
+      Enum.each(env[:filter_request_headers], fn(header) ->
+        Config.filter_request_headers(header)
+      end)
+    end
+
     if env[:filter_url_params] != nil do
       Config.filter_url_params(env[:filter_url_params])
     end
