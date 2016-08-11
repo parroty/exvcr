@@ -1,3 +1,9 @@
+0.8.2
+------
+#### Changes
+* Support filtering on request headers.
+    - Add ExVCR.Filter.filter_request_header (#71).
+
 0.8.1
 ------
 #### Changes
