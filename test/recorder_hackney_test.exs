@@ -66,6 +66,21 @@ defmodule ExVCR.RecorderHackneyTest do
     ExVCR.Config.filter_sensitive_data(nil)
   end
 
+  test "replace sensitive data in request header" do
+    ExVCR.Config.filter_request_headers("X-My-Secret-Token")
+    use_cassette "sensitive_data_in_request_header" do
+      body = HTTPoison.get!(@url, ["X-My-Secret-Token": "my-secret-token"]).body
+      assert body == "test_response"
+    end
+
+    # The recorded cassette should contain replaced data.
+    cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_header.json")
+    assert cassette =~ "\"X-My-Secret-Token\": \"***\""
+    refute cassette =~  "\"X-My-Secret-Token\": \"my-secret-token\""
+
+    ExVCR.Config.filter_request_headers(nil)
+  end
+
   test "filter url param flag removes url params when recording cassettes" do
     ExVCR.Config.filter_url_params(true)
     use_cassette "example_ignore_url_params" do

@@ -10,6 +10,13 @@ defmodule ExVCR.Filter do
     replace(body, ExVCR.Setting.get(:filter_sensitive_data))
   end
 
+  @doc """
+  Filter out senstive data from the request header.
+  """
+  def filter_request_header(header, value) do
+    if Enum.member?(ExVCR.Setting.get(:filter_request_headers), header), do: "***", else: value
+  end
+
   defp replace(body, []), do: body
   defp replace(body, [{pattern, placeholder}|tail]) do
     replace(String.replace(body, ~r/#{pattern}/, placeholder), tail)
