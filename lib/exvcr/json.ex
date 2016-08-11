@@ -35,7 +35,7 @@ defmodule ExVCR.JSON do
   def load(file_name, custom_mode, adapter) do
     case { File.exists?(file_name), custom_mode } do
       { true, _ } -> read_json_file(file_name) |> Enum.map(&adapter.convert_from_string/1)
-      { false, true } -> raise %ExVCR.FileNotFoundError{message: "cassette file \"#{file_name}\" not found"}
+      { false, true } -> raise ExVCR.FileNotFoundError, message: "cassette file \"#{file_name}\" not found"
       { false, _ } -> []
     end
   end
