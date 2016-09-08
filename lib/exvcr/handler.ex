@@ -130,7 +130,7 @@ defmodule ExVCR.Handler do
   end
 
   defp get_response_from_server(request, recorder) do
-    raise_error_if_cassette_already_exists(recorder)
+    raise_error_if_cassette_already_exists(recorder, inspect(request))
     adapter = ExVCR.Recorder.options(recorder)[:adapter]
     response = :meck.passthrough(request)
                |> adapter.hook_response_from_server
@@ -139,12 +139,14 @@ defmodule ExVCR.Handler do
     response
   end
 
-  defp raise_error_if_cassette_already_exists(recorder) do
+  defp raise_error_if_cassette_already_exists(recorder, request_description) do
     file_path = ExVCR.Recorder.get_file_path(recorder)
     if File.exists?(file_path) do
       message = """
       Request did not match with any one in the current cassette: #{file_path}.
       Delete the current cassette with [mix vcr.delete] and re-record.
+
+      Request: #{request_description}
       """
       raise ExVCR.RequestNotMatchError, message: message
     end
