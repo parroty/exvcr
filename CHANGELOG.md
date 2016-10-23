@@ -1,3 +1,8 @@
+0.8.3
+------
+#### Changes
+* Include request info when NotMatchError occurs (#74).
+
 0.8.2
 ------
 #### Enhancements
