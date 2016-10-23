@@ -93,7 +93,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
     end
 
     use_cassette "example_ibrowse_different" do
-      assert_raise ExVCR.RequestNotMatchError, fn ->
+      assert_raise ExVCR.RequestNotMatchError, ~r/different_from_original/, fn ->
         :ibrowse.send_req('http://example.com/different_from_original', [], :get)
       end
     end
