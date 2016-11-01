@@ -109,12 +109,19 @@ defmodule ExVCR.RecorderHackneyTest do
   for option <- [:with_body, {:with_body, true}] do
     @option option
 
-    test "request using `#{inspect option}` option" do
-      use_cassette "record_hackney_with_body_#{inspect @option}" do
-        {:ok, status_code, _headers, body} = :hackney.request(:get, @url, [], [], [@option])
-        assert body =~ ~r/test_response/
-        assert status_code == 200
-      end
+    test "request using `#{inspect option}` option records and replays the same thing" do
+      recorded_body = use_cassette_with_hackney(@option)
+      assert recorded_body =~ ~r/test_response/
+      replayed_body = use_cassette_with_hackney(@option)
+      assert replayed_body == recorded_body
+    end
+  end
+
+  defp use_cassette_with_hackney(option) do
+    use_cassette "record_hackney_with_body_#{inspect option}" do
+      {:ok, status_code, _headers, body} = :hackney.request(:get, @url, [], [], [option])
+      assert status_code == 200
+      body
     end
   end
 end
