@@ -32,12 +32,15 @@ defmodule ExVCR.Adapter.Hackney.Converter do
 
   # If option value is tuple, make it as list, for encoding as json.
   defp sanitize_options(options) do
-    Enum.map(options, fn({key, value}) ->
-      if is_tuple(value) do
-        {key, Tuple.to_list(value)}
-      else
-        {key, value}
-      end
+    Enum.map(options, fn
+      {key, value} ->
+        if is_tuple(value) do
+          {key, Tuple.to_list(value)}
+        else
+          {key, value}
+        end
+      key when is_atom(key) ->
+        {key, true}
     end)
   end
 

@@ -152,6 +152,19 @@ defmodule ExVCR.Adapter.HackneyTest do
     end
   end
 
+  for option <- [:with_body, {:with_body, true}] do
+    @option option
+
+    test "request using `#{inspect option}` option" do
+      use_cassette "hackney_with_body" do
+        {:ok, status_code, headers, body} = :hackney.request(:get, "http://www.example.com", [], [], [@option])
+        assert body =~ ~r/Example Domain/
+        assert status_code == 200
+        assert List.keyfind(headers, "Content-Type", 0) == {"Content-Type", "text/html"}
+      end
+    end
+  end
+
   defp assert_response(response, function \\ nil) do
     assert response.status_code == 200
     assert is_binary(response.body)
