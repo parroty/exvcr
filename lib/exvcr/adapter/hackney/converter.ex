@@ -32,22 +32,30 @@ defmodule ExVCR.Adapter.Hackney.Converter do
 
   # If option value is tuple, make it as list, for encoding as json.
   defp sanitize_options(options) do
-    Enum.map(options, fn({key, value}) ->
-      if is_tuple(value) do
-        {key, Tuple.to_list(value)}
-      else
-        {key, value}
-      end
+    Enum.map(options, fn
+      {key, value} ->
+        if is_tuple(value) do
+          {key, Tuple.to_list(value)}
+        else
+          {key, value}
+        end
+      key when is_atom(key) ->
+        {key, true}
     end)
   end
 
-  # Client is already replaced by body through ExVCR.Adapter.Hackney adapter.
-  defp response_to_string({:ok, status_code, headers, client}) do
+  defp response_to_string({:ok, status_code, headers, body_or_client}) do
+    body = case body_or_client do
+      string when is_binary(string) -> string
+      # Client is already replaced by body through ExVCR.Adapter.Hackney adapter.
+      ref when is_reference(ref) -> inspect(ref)
+    end
+
     %ExVCR.Response{
       type: "ok",
       status_code: status_code,
       headers: parse_headers(headers),
-      body: inspect client
+      body: body
     }
   end
 
