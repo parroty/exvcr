@@ -1,3 +1,8 @@
+0.8.4
+------
+#### Changes
+* Fix hackney adapter to work with `:with_body` option (#79).
+
 0.8.3
 ------
 #### Changes
