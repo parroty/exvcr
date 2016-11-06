@@ -33,8 +33,8 @@ defmodule ExVCR.Adapter do
       @doc """
       Callback from ExVCR.Handler when response is retrieved from the json file cache.
       """
-      def hook_response_from_cache(response), do: response
-      defoverridable [hook_response_from_cache: 1]
+      def hook_response_from_cache(_request, response), do: response
+      defoverridable [hook_response_from_cache: 2]
 
       @doc """
       Callback from ExVCR.Handler to get the response content tuple from the ExVCR.Reponse record.

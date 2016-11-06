@@ -63,13 +63,17 @@ defmodule ExVCR.Adapter.Hackney do
   @doc """
   Callback from ExVCR.Handler when response is retrieved from the json file cache.
   """
-  def hook_response_from_cache(nil), do: nil
-  def hook_response_from_cache(%ExVCR.Response{type: "error"} = response), do: response
-  def hook_response_from_cache(%ExVCR.Response{body: body} = response) do
-    client          = make_ref()
-    client_key_atom = client |> inspect |> String.to_atom
-    Store.set(client_key_atom, body)
-    %{response | body: client}
+  def hook_response_from_cache(_request, nil), do: nil
+  def hook_response_from_cache(_request, %ExVCR.Response{type: "error"} = response), do: response
+  def hook_response_from_cache([_, _, _, _, opts], %ExVCR.Response{body: body} = response) do
+    if :with_body in opts || {:with_body, true} in opts do
+      response
+    else
+      client          = make_ref()
+      client_key_atom = client |> inspect |> String.to_atom
+      Store.set(client_key_atom, body)
+      %{response | body: client}
+    end
   end
 
   defp handle_body_request(recorder, [client]) do

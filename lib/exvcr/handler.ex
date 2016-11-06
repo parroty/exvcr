@@ -22,7 +22,7 @@ defmodule ExVCR.Handler do
     adapter = ExVCR.Recorder.options(recorder)[:adapter]
     params = adapter.generate_keys_for_request(request)
     {response, responses} = find_response(Recorder.get(recorder), params, recorder_options)
-    response = adapter.hook_response_from_cache(response)
+    response = adapter.hook_response_from_cache(request, response)
 
     case { response, stub_mode?(recorder_options) } do
       { nil, true } ->
