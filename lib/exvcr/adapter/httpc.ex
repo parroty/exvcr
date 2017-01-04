@@ -59,6 +59,17 @@ defmodule ExVCR.Adapter.Httpc do
     {:ok, {status_code, filtered_headers, replaced_body}}
   end
 
+  defp apply_filters({:ok, request_id}) do
+    receive do
+      {:http, {request_id, :stream_start, headers}} ->
+        apply_filters({:ok, request_id})
+      {:http, {request_id, :stream, body}} ->
+        # TODO: collect more data and retrieve proper status code headers and
+        # protocol version
+        apply_filters({:ok, {{1.0, 200, "test"}, [],  body}})
+    end
+  end
+
   defp apply_filters({:error, reason}) do
     {:error, reason}
   end
