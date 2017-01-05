@@ -21,42 +21,42 @@ defmodule ExVCR.Converter do
       end
       defoverridable [convert_to_string: 2]
 
-      defp string_to_request(string) do
+      def string_to_request(string) do
         request = Enum.map(string, fn({x,y}) -> {String.to_atom(x),y} end) |> Enum.into(%{})
         struct(ExVCR.Request, request)
       end
       defoverridable [string_to_request: 1]
 
-      defp string_to_response(string), do: raise ExVCR.ImplementationMissingError
+      def string_to_response(string), do: raise ExVCR.ImplementationMissingError
       defoverridable [string_to_response: 1]
 
-      defp request_to_string(request), do: raise ExVCR.ImplementationMissingError
+      def request_to_string(request), do: raise ExVCR.ImplementationMissingError
       defoverridable [request_to_string: 1]
 
-      defp response_to_string(response), do: raise ExVCR.ImplementationMissingError
+      def response_to_string(response), do: raise ExVCR.ImplementationMissingError
       defoverridable [response_to_string: 1]
 
-      defp parse_headers(headers) do
+      def parse_headers(headers) do
         do_parse_headers(headers, [])
       end
       defoverridable [parse_headers: 1]
 
-      defp do_parse_headers([], acc) do
+      def do_parse_headers([], acc) do
         Enum.reverse(acc) |> Enum.uniq(fn({key,value}) -> key end)
       end
-      defp do_parse_headers([{key,value}|tail], acc) do
+      def do_parse_headers([{key,value}|tail], acc) do
         replaced_value = to_string(value) |> ExVCR.Filter.filter_sensitive_data
         replaced_value = ExVCR.Filter.filter_request_header(to_string(key), to_string(replaced_value))
         do_parse_headers(tail, [{to_string(key), replaced_value}|acc])
       end
       defoverridable [do_parse_headers: 2]
 
-      defp parse_url(url) do
+      def parse_url(url) do
         to_string(url) |> ExVCR.Filter.filter_url_params
       end
       defoverridable [parse_url: 1]
 
-      defp parse_keyword_list(params) do
+      def parse_keyword_list(params) do
         Enum.map(params, fn({k,v}) -> {k,to_string(v)} end)
       end
       defoverridable [parse_keyword_list: 1]
