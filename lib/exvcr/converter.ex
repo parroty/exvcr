@@ -42,7 +42,7 @@ defmodule ExVCR.Converter do
       defoverridable [parse_headers: 1]
 
       def do_parse_headers([], acc) do
-        Enum.reverse(acc) |> Enum.uniq(fn({key,value}) -> key end)
+        Enum.reverse(acc) |> Enum.uniq_by(fn({key,value}) -> key end)
       end
       def do_parse_headers([{key,value}|tail], acc) do
         replaced_value = to_string(value) |> ExVCR.Filter.filter_sensitive_data
