@@ -27,4 +27,9 @@ defmodule ExVCR.SettingTest do
     ExVCR.Setting.set(:response_headers_blacklist, ["Content-Type", "Accept"])
     assert ExVCR.Setting.get(:response_headers_blacklist) == ["Content-Type", "Accept"]
   end
+
+  test "set cassette_defaults" do
+    ExVCR.Setting.set(:cassette_defaults, [match_requests_on: [:query, :request_body]])
+    assert ExVCR.Setting.get(:cassette_defaults) == [match_requests_on: [:query, :request_body]]
+  end
 end

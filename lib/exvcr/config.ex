@@ -62,4 +62,11 @@ defmodule ExVCR.Config do
     blacklist = Enum.map(headers_blacklist, fn(x) -> String.downcase(x) end)
     Setting.set(:response_headers_blacklist, blacklist)
   end
+
+  @doc """
+  Sets default cassette_defaults option
+  """
+  def cassette_defaults(cassette_defaults) do
+    Setting.set(:cassette_defaults, cassette_defaults)
+  end
 end

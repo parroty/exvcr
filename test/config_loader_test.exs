@@ -23,6 +23,7 @@ defmodule ExVCR.ConfigLoaderTest do
     ExVCR.Config.filter_sensitive_data("test_before1", "test_after1")
     ExVCR.Config.filter_url_params(true)
     ExVCR.Config.response_headers_blacklist(["Content-Type", "Accept"])
+    ExVCR.Config.cassette_defaults([:query, :request_body])
 
     # Load default values (defined in config/config.exs)
     ExVCR.ConfigLoader.load_defaults
@@ -32,6 +33,7 @@ defmodule ExVCR.ConfigLoaderTest do
     assert ExVCR.Setting.get(:custom_library_dir) == "fixture/custom_cassettes"
     assert ExVCR.Setting.get(:filter_url_params) == false
     assert ExVCR.Setting.get(:response_headers_blacklist) == []
+    assert ExVCR.Setting.get(:cassette_defaults) == []
   end
 
   test "loading default setting from empty values" do
@@ -40,12 +42,14 @@ defmodule ExVCR.ConfigLoaderTest do
     custom_cassette_library_dir = Application.get_env(:exvcr, :custom_cassette_library_dir)
     filter_sensitive_data       = Application.get_env(:exvcr, :filter_sensitive_data)
     response_headers_blacklist  = Application.get_env(:exvcr, :response_headers_blacklist)
+    cassette_defaults           = Application.get_env(:exvcr, :cassette_defaults)
 
     # Remove env values
     Application.delete_env(:exvcr, :vcr_cassette_library_dir)
     Application.delete_env(:exvcr, :custom_cassette_library_dir)
     Application.delete_env(:exvcr, :filter_sensitive_data)
     Application.delete_env(:exvcr, :response_headers_blacklist)
+    Application.delete_env(:exvcr, :cassette_defaults)
 
     # Load default values
     ExVCR.ConfigLoader.load_defaults
@@ -55,11 +59,13 @@ defmodule ExVCR.ConfigLoaderTest do
     assert ExVCR.Setting.get(:custom_library_dir) == "fixture/custom_cassettes"
     assert ExVCR.Setting.get(:filter_url_params) == false
     assert ExVCR.Setting.get(:response_headers_blacklist) == []
+    assert ExVCR.Setting.get(:cassette_defaults) == []
 
     # Restore env values
     Application.put_env(:exvcr, :vcr_cassette_library_dir, vcr_cassette_library_dir)
     Application.put_env(:exvcr, :custom_cassette_library_dir, custom_cassette_library_dir)
     Application.get_env(:exvcr, :filter_sensitive_data, filter_sensitive_data)
     Application.get_env(:exvcr, :response_headers_blacklist, response_headers_blacklist)
+    Application.get_env(:exvcr, :cassette_defaults, cassette_defaults)
   end
 end
