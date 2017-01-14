@@ -1,3 +1,10 @@
+0.8.5
+------
+#### Changes
+* Tidy up the applications list (#87).
+   - Fix for inappropriate startup for test-library dependency.
+* Remove elixir 1.4 deprecations (#86).
+
 0.8.4
 ------
 #### Changes
