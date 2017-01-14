@@ -15,7 +15,7 @@ defmodule ExVCR.Mixfile do
 
   # Configuration for the OTP application
   def application do
-    [ applications: [:http_server] ]
+    [applications: [:meck, :exactor, :exjsx]]
   end
 
   # Returns the list of dependencies in the format:
