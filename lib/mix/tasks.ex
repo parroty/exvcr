@@ -40,7 +40,7 @@ defmodule Mix.Tasks.Vcr do
 
       if pattern do
         ExVCR.Task.Runner.delete_cassettes(
-          options[:dir] || ExVCR.Setting.get(:cassette_library_path),
+          options[:dir] || ExVCR.Setting.get(:cassette_library_dir),
           pattern, options[:interactive] || false)
       else
         IO.puts "[Invalid Param] Specify substring of cassette file-name to be deleted - `mix vcr.delete [pattern]`, or use `mix vcr.delete --all` for deleting all cassettes."
