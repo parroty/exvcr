@@ -2,6 +2,7 @@
 ------
 #### Changes
 * Ignore body when when stub does not have request_body (#89).
+* Fix load configuration for cassette paths for mix tasks (#82, #88).
 
 0.8.5
 ------
