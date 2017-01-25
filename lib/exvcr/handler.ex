@@ -41,6 +41,10 @@ defmodule ExVCR.Handler do
     options[:custom] == true || options[:stub] != nil
   end
 
+  defp stub_with_non_empty_request_body?(options) do
+    options[:stub] != nil && List.first(options[:stub]).request.request_body != ""
+  end
+
   defp has_match_requests_on(type, options) do
     flags = options[:match_requests_on] || []
 
@@ -114,7 +118,7 @@ defmodule ExVCR.Handler do
   end
 
   defp match_by_request_body(response, keys, recorder_options) do
-    if stub_mode?(recorder_options) || has_match_requests_on(:request_body, recorder_options) do
+    if stub_with_non_empty_request_body?(recorder_options) || has_match_requests_on(:request_body, recorder_options) do
       request_body = response[:request].body || response[:request].request_body
       key_body     = keys[:request_body] |> to_string |> ExVCR.Filter.filter_sensitive_data
 

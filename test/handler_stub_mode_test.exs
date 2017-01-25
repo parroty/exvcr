@@ -63,6 +63,13 @@ defmodule ExVCR.Adapter.HandlerStubModeTest do
     end
   end
 
+  test "post request without request_body definition should ignore request body" do
+    use_cassette :stub, [url: 'http://localhost', method: :post, status_code: 500] do
+      {:ok, status_code, _headers, _body} = :ibrowse.send_req('http://localhost', [], :post, 'param=should_be_ignored')
+      assert status_code == '500'
+    end
+  end
+
   test "url mismatch should raise error" do
     assert_raise ExVCR.InvalidRequestError, fn ->
       use_cassette :stub, [url: 'http://localhost'] do
