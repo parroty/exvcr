@@ -1,3 +1,8 @@
+0.8.6
+------
+#### Changes
+* Ignore body when when stub does not have request_body (#89).
+
 0.8.5
 ------
 #### Changes
