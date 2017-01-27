@@ -56,6 +56,11 @@ defmodule ExVCR.Adapter.Hackney do
     {:ok, status_code, filtered_headers, reference}
   end
 
+  defp apply_filters({:ok, status_code, headers}) do
+    filtered_headers = ExVCR.Filter.remove_blacklisted_headers(headers)
+    {:ok, status_code, filtered_headers}
+  end
+
   defp apply_filters({:error, reason}) do
     {:error, reason}
   end
@@ -65,6 +70,7 @@ defmodule ExVCR.Adapter.Hackney do
   """
   def hook_response_from_cache(_request, nil), do: nil
   def hook_response_from_cache(_request, %ExVCR.Response{type: "error"} = response), do: response
+  def hook_response_from_cache(_request, %ExVCR.Response{body: nil} = response), do: response
   def hook_response_from_cache([_, _, _, _, opts], %ExVCR.Response{body: body} = response) do
     if :with_body in opts || {:with_body, true} in opts do
       response
@@ -98,6 +104,20 @@ defmodule ExVCR.Adapter.Hackney do
           {:ok, body}
         {ret, body} ->
           {ret, body}
+      end
+    end
+  end
+
+  @doc """
+  Returns the response from the ExVCR.Reponse record.
+  """
+  def get_response_value_from_cache(response) do
+    if response.type == "error" do
+      {:error, response.body}
+    else
+      case response.body do
+        nil -> {:ok, response.status_code, response.headers}
+        _   -> {:ok, response.status_code, response.headers, response.body}
       end
     end
   end

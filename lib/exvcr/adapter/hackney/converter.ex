@@ -59,6 +59,14 @@ defmodule ExVCR.Adapter.Hackney.Converter do
     }
   end
 
+  defp response_to_string({:ok, status_code, headers}) do
+    %ExVCR.Response{
+      type: "ok",
+      status_code: status_code,
+      headers: parse_headers(headers)
+    }
+  end
+
   defp response_to_string({:error, reason}) do
     %ExVCR.Response{
       type: "error",
