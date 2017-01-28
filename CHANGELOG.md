@@ -1,3 +1,8 @@
+0.8.7
+------
+#### Enhancements
+* Add support for HEAD request in hackney (#91).
+
 0.8.6
 ------
 #### Changes
