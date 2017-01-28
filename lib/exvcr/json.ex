@@ -14,9 +14,11 @@ defmodule ExVCR.JSON do
     File.write!(file_name, JSX.prettify!(json))
   end
 
-  defp gunzip_recording(recording) do
-    %{request: request, response: response} = recording
+  defp gunzip_recording(recording = %{request: _, response: %ExVCR.Response{body: nil}}) do
+    recording
+  end
 
+  defp gunzip_recording(recording = %{request: request, response: response}) do
     encoding_header = List.keyfind(response.headers, "Content-Encoding", 0)
 
     case encoding_header do
@@ -55,9 +57,14 @@ defmodule ExVCR.JSON do
     %{recording | "response" => gzip_response(recording["response"])}
   end
 
-  defp gzip_response(response = %{"headers" => %{"Content-Encoding" => "gzip"}}) do
-        encoded_body = :zlib.gzip(response["body"])
-        %{ response | "body" => encoded_body }
+  defp gzip_response(response = %{"body" => nil, "headers" => %{"Content-Encoding" => "gzip"}}) do
+    response
   end
+
+  defp gzip_response(response = %{"headers" => %{"Content-Encoding" => "gzip"}}) do
+    encoded_body = :zlib.gzip(response["body"])
+    %{ response | "body" => encoded_body }
+  end
+
   defp gzip_response(response), do: response
 end

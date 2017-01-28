@@ -17,6 +17,14 @@ defmodule ExVCR.Adapter.HackneyTest do
     end
   end
 
+  test "hackney head request" do
+    use_cassette "hackney_head" do
+      {:ok, status_code, headers} = :hackney.request(:head, "http://www.example.com", [], [], [])
+      assert status_code == 200
+      assert List.keyfind(headers, "Content-Type", 0) == {"Content-Type", "text/html"}
+    end
+  end
+
   test "hackney request with gzipped response" do
     use_cassette "hackney_get_gzipped" do
       headers = [{"Accept-Encoding", "gzip, deflate"}]
@@ -77,6 +85,15 @@ defmodule ExVCR.Adapter.HackneyTest do
       response = HTTPoison.get!("http://example.com", [], [hackney: [basic_auth: {"user", "password"}]])
       assert response.body =~ ~r/Example Domain/
       assert response.status_code == 200
+    end
+  end
+
+  test "head request" do
+    use_cassette "httpoison_head" do
+      response = HTTPoison.head!("http://example.com")
+      assert response.body == ""
+      assert response.status_code == 200
+      assert List.keyfind(response.headers, "Content-Type", 0) == {"Content-Type", "text/html"}
     end
   end
 
