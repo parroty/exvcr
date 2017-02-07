@@ -7,7 +7,6 @@ defmodule ExVCR.ConfigLoader do
   @default_custom_path "fixture/custom_cassettes"
 
   alias ExVCR.Config
-  alias ExVCR.Setting
 
   @doc """
   Load default config values.
