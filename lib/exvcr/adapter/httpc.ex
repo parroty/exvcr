@@ -56,7 +56,7 @@ defmodule ExVCR.Adapter.Httpc do
   defp apply_filters({:ok, {status_code, headers, body}}) do
     replaced_body = to_string(body) |> ExVCR.Filter.filter_sensitive_data
     filtered_headers = ExVCR.Filter.remove_blacklisted_headers(headers)
-    {:ok, {status_code, filtered_headers, replaced_body}}
+    {:ok, {status_code, filtered_headers, to_char_list(replaced_body)}}
   end
 
   defp apply_filters({:error, reason}) do
