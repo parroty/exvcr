@@ -29,8 +29,8 @@ defmodule ExVCR.Handler do
         if(recorder_options[:bypass]) do
           adapter = ExVCR.Recorder.options(recorder)[:adapter]
           :meck.passthrough(request)
-          |> adapter.hook_response_from_server
-          |> adapter.get_response_value_from_server
+          |> adapter.hook_response_from_server()
+          |> adapter.get_response_value_from_cache()
         else
           raise ExVCR.InvalidRequestError,
             message: "response for [URL:#{params[:url]}, METHOD:#{params[:method]}] was not found"
