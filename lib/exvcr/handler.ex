@@ -26,8 +26,13 @@ defmodule ExVCR.Handler do
 
     case { response, stub_mode?(recorder_options) } do
       { nil, true } ->
-        raise ExVCR.InvalidRequestError,
-          message: "response for [URL:#{params[:url]}, METHOD:#{params[:method]}] was not found"
+        if(recorder_options[:bypass]) do
+          get_response_from_server(request, recorder)
+          |> adapter.get_response_value_from_server
+        else
+          raise ExVCR.InvalidRequestError,
+            message: "response for [URL:#{params[:url]}, METHOD:#{params[:method]}] was not found"
+        end
       { nil, false } ->
         nil
       { response, _ } ->
