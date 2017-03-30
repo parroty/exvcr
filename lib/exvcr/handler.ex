@@ -27,7 +27,9 @@ defmodule ExVCR.Handler do
     case { response, stub_mode?(recorder_options) } do
       { nil, true } ->
         if(recorder_options[:bypass]) do
-          get_response_from_server(request, recorder)
+          adapter = ExVCR.Recorder.options(recorder)[:adapter]
+          :meck.passthrough(request)
+          |> adapter.hook_response_from_server
           |> adapter.get_response_value_from_server
         else
           raise ExVCR.InvalidRequestError,
