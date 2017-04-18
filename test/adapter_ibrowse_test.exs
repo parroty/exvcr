@@ -85,6 +85,14 @@ defmodule ExVCR.Adapter.IBrowseTest do
     end
   end
 
+  test "get request with basic_auth" do
+    use_cassette "httpotion_get_basic_auth" do
+      response = HTTPotion.get!("http://example.com", [basic_auth: {"user", "password"}])
+      assert response.body =~ ~r/Example Domain/
+      assert response.status_code == 200
+    end
+  end
+
   test "using recorded cassete, but requesting with different url should return error" do
     use_cassette "example_ibrowse_different" do
       {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com', [], :get)
