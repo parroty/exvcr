@@ -1,3 +1,9 @@
+0.8.8
+------
+#### Enhancements
+* Fix error when using basic_auth header.
+    - Add basic_auth support for ibrowse (#99).
+
 0.8.7
 ------
 #### Enhancements
