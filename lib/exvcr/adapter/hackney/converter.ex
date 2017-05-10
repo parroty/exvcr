@@ -26,7 +26,7 @@ defmodule ExVCR.Adapter.Hackney.Converter do
       headers: parse_headers(headers),
       method: to_string(method),
       body: parse_request_body(body),
-      options: sanitize_options(options)
+      options: parse_options(sanitize_options(options))
     }
   end
 
