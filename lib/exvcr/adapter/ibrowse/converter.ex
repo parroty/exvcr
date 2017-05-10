@@ -49,7 +49,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
       headers: parse_headers(headers),
       method: Atom.to_string(method),
       body: parse_request_body(body),
-      options: sanitize_options(options)
+      options: parse_options(sanitize_options(options))
     }
   end
 
