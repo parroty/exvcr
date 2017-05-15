@@ -51,6 +51,21 @@ defmodule ExVCR.Converter do
       end
       defoverridable [do_parse_headers: 2]
 
+      def parse_options(options) do
+        do_parse_options(options, [])
+      end
+      defoverridable [parse_options: 1]
+
+      def do_parse_options([], acc) do
+        Enum.reverse(acc) |> Enum.uniq_by(fn({key,value}) -> key end)
+      end
+      def do_parse_options([{key,value}|tail], acc) do
+        replaced_value = to_string(value) |> ExVCR.Filter.filter_sensitive_data
+        replaced_value = ExVCR.Filter.filter_request_option(to_string(key), to_string(replaced_value))
+        do_parse_options(tail, [{to_string(key), replaced_value}|acc])
+      end
+      defoverridable [do_parse_options: 2]
+
       def parse_url(url) do
         to_string(url) |> ExVCR.Filter.filter_url_params
       end

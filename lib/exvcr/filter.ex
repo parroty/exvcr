@@ -17,6 +17,13 @@ defmodule ExVCR.Filter do
     if Enum.member?(ExVCR.Setting.get(:filter_request_headers), header), do: "***", else: value
   end
 
+  @doc """
+  Filter out senstive data from the request options.
+  """
+  def filter_request_option(option, value) do
+    if Enum.member?(ExVCR.Setting.get(:filter_request_options), option), do: "***", else: value
+  end
+
   defp replace(body, []), do: body
   defp replace(body, [{pattern, placeholder}|tail]) do
     replace(String.replace(body, ~r/#{pattern}/, placeholder), tail)
