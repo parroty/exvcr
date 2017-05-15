@@ -1,3 +1,8 @@
+0.8.9
+------
+#### Enhancements
+* Adding filter_request_options to filter sensitive data in request options (#102).
+
 0.8.8
 ------
 #### Enhancements
