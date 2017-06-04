@@ -7,7 +7,11 @@ defmodule ExVCR.Filter do
   Filter out senstive data from the response.
   """
   def filter_sensitive_data(body) do
-    replace(body, ExVCR.Setting.get(:filter_sensitive_data))
+    if String.valid?(body) do
+      replace(body, ExVCR.Setting.get(:filter_sensitive_data))
+    else
+      body
+    end
   end
 
   @doc """
