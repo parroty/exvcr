@@ -1,3 +1,8 @@
+0.8.10
+------
+#### Changes
+* Fix for TLS 1.2 ssl doesn't work for hackney (httpoison) (#105).
+
 0.8.9
 ------
 #### Enhancements
