@@ -103,6 +103,14 @@ defmodule ExVCR.Adapter.HackneyTest do
     end
   end
 
+  test "post method with ssl option" do
+    use_cassette "httpoison_post_ssl" do
+      response = HTTPoison.post!("https://example.com", {:form, []}, [], [ssl: [{:versions, [:'tlsv1.2']}]])
+      assert response.body =~ ~r/Example Domain/
+      assert response.status_code == 200
+    end
+  end
+
   test "post with form-encoded data" do
     use_cassette "httpoison_post_form" do
       HTTPoison.post!("http://httpbin.org/post", {:form, [key: "value"]}, %{"Content-type" => "application/x-www-form-urlencoded"})

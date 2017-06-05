@@ -60,8 +60,8 @@ defmodule ExVCR.Converter do
         Enum.reverse(acc) |> Enum.uniq_by(fn({key,value}) -> key end)
       end
       def do_parse_options([{key,value}|tail], acc) do
-        replaced_value = to_string(value) |> ExVCR.Filter.filter_sensitive_data
-        replaced_value = ExVCR.Filter.filter_request_option(to_string(key), to_string(replaced_value))
+        replaced_value = atom_to_string(value) |> ExVCR.Filter.filter_sensitive_data
+        replaced_value = ExVCR.Filter.filter_request_option(to_string(key), atom_to_string(replaced_value))
         do_parse_options(tail, [{to_string(key), replaced_value}|acc])
       end
       defoverridable [do_parse_options: 2]
@@ -91,6 +91,14 @@ defmodule ExVCR.Converter do
         ExVCR.Filter.filter_sensitive_data(body_string)
       end
       defoverridable [parse_request_body: 1]
+
+      defp atom_to_string(atom) do
+        if is_atom(atom) do
+          to_string(atom)
+        else
+          atom
+        end
+      end
     end
   end
 end
