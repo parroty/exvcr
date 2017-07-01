@@ -61,6 +61,22 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
         assert HTTPotion.get(@url, []).body == "test_response1"
       end
     end
+
+    test "clear_mock option works even when exceptions are raised" do
+      # Force an exception to be raised
+      try do
+        use_cassette "option_clean_each", clear_mock: true do
+          assert false
+        end
+      rescue
+        _e in ExUnit.AssertionError -> nil
+      end
+
+      HttpServer.start(path: "/server", port: @port, response: "test_response2")
+      :timer.sleep(100) # put short sleep.
+      assert HTTPotion.get(@url, []).body == "test_response2"
+      HttpServer.stop(@port)
+    end
   end
 
   defmodule MatchRequestsOn do
