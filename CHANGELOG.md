@@ -1,3 +1,8 @@
+0.8.11
+------
+#### Changes
+* Adds filter_request_headers to default parameters (#111).
+
 0.8.10
 ------
 #### Changes
