@@ -2,6 +2,7 @@
 ------
 #### Changes
 * Adds filter_request_headers to default parameters (#111).
+* Ensure clear_mock runs after each test (#114).
 
 0.8.10
 ------
