@@ -271,10 +271,10 @@ end
 ```
 
 ##### matching against request body
-By default, request body is not used for matching. In order to include query params, specify `match_requests_on: [:request_body]` for `use_cassette` call.
+By default, request body is not used for matching. In order to include request body, specify `match_requests_on: [:request_body]` for `use_cassette` call.
 
 ```elixir
-test "matching query params with match_requests_on params" do
+test "matching request body with match_requests_on params" do
   use_cassette "different_request_body_params", match_requests_on: [:request_body] do
     assert HTTPotion.post("http://localhost/server", [body: "p=3"]).body =~ ~r/test_response3/
     assert HTTPotion.post("http://localhost/server", [body: "p=4"]).body =~ ~r/test_response4/
