@@ -1,3 +1,8 @@
+0.8.12
+------
+#### Changes
+* Upgrade version for exjsx and excoveralls (#115)
+
 0.8.11
 ------
 #### Changes
