@@ -49,8 +49,19 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
       headers: parse_headers(headers),
       method: Atom.to_string(method),
       body: parse_request_body(body),
-      options: options
+      options: parse_options(sanitize_options(options))
     }
+  end
+
+  # If option value is tuple, make it as list, for encoding as json.
+  defp sanitize_options(options) do
+    Enum.map(options, fn({key, value}) ->
+      if is_tuple(value) do
+        {key, Tuple.to_list(value)}
+      else
+        {key, value}
+      end
+    end)
   end
 
   defp response_to_string({:ok, status_code, headers, body}) do

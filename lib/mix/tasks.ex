@@ -9,7 +9,7 @@ defmodule Mix.Tasks.Vcr do
   ## Command line options
   * `--dir` - specifies the vcr cassette directory.
   * `--custom` - specifies the custom cassette directory.
-  * `-i (--interactive) - ask for confirmation for each file operation.
+  * `-i (--interactive)` - ask for confirmation for each file operation.
   """
 
   @doc "Entry point for [mix vcr] task"

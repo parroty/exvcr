@@ -48,6 +48,21 @@ defmodule ExVCR.Config do
   end
 
   @doc """
+  Clear the previously specified filter_request_options lists.
+  """
+  def filter_request_options(nil) do
+    Setting.set(:filter_request_options, [])
+  end
+
+  @doc """
+  Replace the specified request header with placeholder.
+  It can be used to remove sensitive data from the casette file.
+  """
+  def filter_request_options(header) do
+    Setting.append(:filter_request_options, header)
+  end
+
+  @doc """
   Set the flag whether to filter-out url params when recording to cassettes.
   (ex. if flag is true, "param=val" is removed from "http://example.com?param=val").
   """

@@ -37,12 +37,11 @@ defmodule ExVCR.Mock do
 
       try do
         [do: return_value] = unquote(test)
+        return_value
+      after
         if options_method()[:clear_mock] || unquote(options)[:clear_mock] do
           :meck.unload(adapter_method().module_name)
         end
-        return_value
-      after
-        # do nothing
       end
     end
   end
@@ -59,11 +58,11 @@ defmodule ExVCR.Mock do
 
       try do
         [do: return_value] = unquote(test)
+        return_value
+      after
         if options_method()[:clear_mock] || unquote(options)[:clear_mock] do
           :meck.unload(adapter_method().module_name)
         end
-        return_value
-      after
         Recorder.save(recorder)
       end
     end

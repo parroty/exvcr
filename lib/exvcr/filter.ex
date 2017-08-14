@@ -7,7 +7,11 @@ defmodule ExVCR.Filter do
   Filter out senstive data from the response.
   """
   def filter_sensitive_data(body) do
-    replace(body, ExVCR.Setting.get(:filter_sensitive_data))
+    if String.valid?(body) do
+      replace(body, ExVCR.Setting.get(:filter_sensitive_data))
+    else
+      body
+    end
   end
 
   @doc """
@@ -15,6 +19,13 @@ defmodule ExVCR.Filter do
   """
   def filter_request_header(header, value) do
     if Enum.member?(ExVCR.Setting.get(:filter_request_headers), header), do: "***", else: value
+  end
+
+  @doc """
+  Filter out senstive data from the request options.
+  """
+  def filter_request_option(option, value) do
+    if Enum.member?(ExVCR.Setting.get(:filter_request_options), option), do: "***", else: value
   end
 
   defp replace(body, []), do: body

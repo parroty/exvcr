@@ -83,6 +83,21 @@ defmodule ExVCR.RecorderHackneyTest do
     ExVCR.Config.filter_request_headers(nil)
   end
 
+  test "replace sensitive data in request options" do
+    ExVCR.Config.filter_request_options("basic_auth")
+    use_cassette "sensitive_data_in_request_options" do
+      body = HTTPoison.get!(@url, [], [hackney: [basic_auth: {"username", "password"}]]).body
+      assert body == "test_response"
+    end
+
+    # The recorded cassette should contain replaced data.
+    cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_options.json")
+    assert cassette =~ "\"basic_auth\": \"***\""
+    refute cassette =~  "\"basic_auth\": {\"username\", \"password\"}"
+
+    ExVCR.Config.filter_request_options(nil)
+  end
+
   test "filter url param flag removes url params when recording cassettes" do
     ExVCR.Config.filter_url_params(true)
     use_cassette "example_ignore_url_params" do

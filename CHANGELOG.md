@@ -1,3 +1,30 @@
+0.8.12
+------
+#### Changes
+* Upgrade version for exjsx and excoveralls (#115)
+
+0.8.11
+------
+#### Changes
+* Adds filter_request_headers to default parameters (#111).
+* Ensure clear_mock runs after each test (#114).
+
+0.8.10
+------
+#### Changes
+* Fix for TLS 1.2 ssl doesn't work for hackney (httpoison) (#105).
+
+0.8.9
+------
+#### Enhancements
+* Adding filter_request_options to filter sensitive data in request options (#102).
+
+0.8.8
+------
+#### Enhancements
+* Fix error when using basic_auth header.
+    - Add basic_auth support for ibrowse (#99).
+
 0.8.7
 ------
 #### Enhancements

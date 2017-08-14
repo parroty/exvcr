@@ -172,7 +172,7 @@ test "replace sensitive data" do
 end
 ```
 
-`ExVCR.Config.filter_request_headers(header)` method can be used to remove sensitive data in the request headers. It checks if the `header` is found in the request headers and blanks out it's value with `***`.
+`ExVCR.Config.filter_request_headers(header)` and `ExVCR.Config.filter_request_options(option)` can be used to remove sensitive data in the request headers. It checks if the `header` is found in the request headers and blanks out it's value with `***`.
 ```elixir
   test "replace sensitive data in request header" do
     ExVCR.Config.filter_request_headers("X-My-Secret-Token")
@@ -187,6 +187,23 @@ end
     refute cassette =~  "\"X-My-Secret-Token\": \"my-secret-token\""
 
     ExVCR.Config.filter_request_headers(nil)
+  end
+```
+
+```elixir
+  test "replace sensitive data in request options" do
+    ExVCR.Config.filter_request_options("basic_auth")
+    use_cassette "sensitive_data_in_request_options" do
+      body = HTTPoison.get!(@url, [], [hackney: [basic_auth: {"username", "password"}]]).body
+      assert body == "test_response"
+    end
+
+    # The recorded cassette should contain replaced data.
+    cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_options.json")
+    assert cassette =~ "\"basic_auth\": \"***\""
+    refute cassette =~  "\"basic_auth\": {\"username\", \"password\"}"
+
+    ExVCR.Config.filter_request_options(nil)
   end
 ```
 
@@ -254,10 +271,10 @@ end
 ```
 
 ##### matching against request body
-By default, request body is not used for matching. In order to include query params, specify `match_requests_on: [:request_body]` for `use_cassette` call.
+By default, request body is not used for matching. In order to include request body, specify `match_requests_on: [:request_body]` for `use_cassette` call.
 
 ```elixir
-test "matching query params with match_requests_on params" do
+test "matching request body with match_requests_on params" do
   use_cassette "different_request_body_params", match_requests_on: [:request_body] do
     assert HTTPotion.post("http://localhost/server", [body: "p=3"]).body =~ ~r/test_response3/
     assert HTTPotion.post("http://localhost/server", [body: "p=4"]).body =~ ~r/test_response4/
@@ -278,6 +295,7 @@ config :exvcr, [
     [pattern: "<PASSWORD>.+</PASSWORD>", placeholder: "PASSWORD_PLACEHOLDER"]
   ],
   filter_url_params: false,
+  filter_request_headers: [],
   response_headers_blacklist: []
 ]
 ```
