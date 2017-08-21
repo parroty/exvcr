@@ -40,6 +40,18 @@ defmodule ExVCR.Adapter.HackneyTest do
     end
   end
 
+  test "hackney request with path_encode_fun option" do
+    use_cassette "hackney_path_encode_fun" do
+      encode_fun = fn(x) -> :hackney_url.pathencode(x) end
+      {:ok, status_code, headers, client} =
+        :hackney.request(:get, "http://www.example.com", [], [], [path_encode_fun: encode_fun])
+      {:ok, body} = :hackney.body(client)
+      assert body =~ ~r/Example Domain/
+      assert status_code == 200
+      assert List.keyfind(headers, "Content-Type", 0) == {"Content-Type", "text/html"}
+    end
+  end
+
   test "hackney request with error" do
     use_cassette "error_hackney" do
       {type, _body} = :hackney.request(:get, "http://invalid_url", [], [], [])
