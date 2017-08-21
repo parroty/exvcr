@@ -1,13 +1,9 @@
-0.8.13
-------
-#### Changes
-* Fix for JSX encode argument error (#112)
-    - Skipping function option (ex. `path_encode_fun`) when encoding as json.
-
 0.8.12
 ------
 #### Changes
-* Upgrade version for exjsx and excoveralls (#115)
+* Upgrade version for exjsx and excoveralls (#115).
+* Fix for JSX encode argument error (#112).
+    - Skipping function option (ex. `path_encode_fun`) when encoding as json.
 
 0.8.11
 ------
