@@ -11,7 +11,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
 
     response =
       if response.status_code do
-        %{response | status_code: Integer.to_char_list(response.status_code)}
+        %{response | status_code: Integer.to_charlist(response.status_code)}
       else
         response
       end
