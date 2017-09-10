@@ -12,7 +12,7 @@ defmodule ExVCR.Adapter.Httpc.Converter do
     response =
       if response.status_code do
         status_code = response.status_code
-                      |> Enum.map(&convert_string_to_char_list/1)
+                      |> Enum.map(&convert_string_to_charlist/1)
                       |> List.to_tuple
         %{response | status_code: status_code}
       else
@@ -39,7 +39,7 @@ defmodule ExVCR.Adapter.Httpc.Converter do
     response
   end
 
-  defp convert_string_to_char_list(elem) do
+  defp convert_string_to_charlist(elem) do
     if is_binary(elem) do
       to_charlist(elem)
     else
