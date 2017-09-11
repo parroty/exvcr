@@ -48,6 +48,13 @@ defmodule ExVCR.Mock do
 
   @doc """
   Provides macro to trigger recording/replaying http interactions.
+
+  ## Options
+
+  - `:match_requests_on` A list of request properties to match on when
+    finding a matching response. Valid values include `:query`, `:headers`,
+    and `:request_body`
+
   """
   defmacro use_cassette(fixture, options, test) do
     quote do
