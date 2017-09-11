@@ -12,7 +12,7 @@ defmodule ExVCR.Adapter.Httpc.Converter do
     response =
       if response.status_code do
         status_code = response.status_code
-                      |> Enum.map(&convert_string_to_char_list/1)
+                      |> Enum.map(&convert_string_to_charlist/1)
                       |> List.to_tuple
         %{response | status_code: status_code}
       else
@@ -30,7 +30,7 @@ defmodule ExVCR.Adapter.Httpc.Converter do
       if is_map(response.headers) do
         headers = response.headers
                   |> Map.to_list
-                  |> Enum.map(fn({k,v}) -> {to_char_list(k), to_char_list(v)} end)
+                  |> Enum.map(fn({k,v}) -> {to_charlist(k), to_charlist(v)} end)
         %{response | headers: headers}
       else
         response
@@ -39,9 +39,9 @@ defmodule ExVCR.Adapter.Httpc.Converter do
     response
   end
 
-  defp convert_string_to_char_list(elem) do
+  defp convert_string_to_charlist(elem) do
     if is_binary(elem) do
-      to_char_list(elem)
+      to_charlist(elem)
     else
       elem
     end

@@ -11,7 +11,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
 
     response =
       if response.status_code do
-        %{response | status_code: Integer.to_char_list(response.status_code)}
+        %{response | status_code: Integer.to_charlist(response.status_code)}
       else
         response
       end
@@ -28,7 +28,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
       if is_map(response.headers) do
         headers = response.headers
                   |> Map.to_list
-                  |> Enum.map(fn({k,v}) -> {to_char_list(k), to_char_list(v)} end)
+                  |> Enum.map(fn({k,v}) -> {to_charlist(k), to_charlist(v)} end)
         %{response | headers: headers}
       else
         response

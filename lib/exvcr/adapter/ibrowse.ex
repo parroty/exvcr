@@ -59,7 +59,7 @@ defmodule ExVCR.Adapter.IBrowse do
     else
       status_code = case response.status_code do
         integer when is_integer(integer) ->
-          Integer.to_char_list(integer)
+          Integer.to_charlist(integer)
         char_list when is_list(char_list) ->
           char_list
       end
