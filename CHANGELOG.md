@@ -1,3 +1,9 @@
+0.9.0
+------
+#### Changes
+* Update dependencies for elixir v1.5.0.
+    - Address deprecations (#120).
+
 0.8.12
 ------
 #### Changes
