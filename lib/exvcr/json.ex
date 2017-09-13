@@ -46,18 +46,17 @@ defmodule ExVCR.JSON do
   Reads and parse the json file located at the specified file_name.
   """
   def read_json_file(file_name) do
-    file = File.read!(file_name)
-    recordings = JSX.decode!(file)
-
-    recordings
+    file_name
+    |> File.read!()
+    |> JSX.decode!()
     |> Enum.map(&load_binary_data/1)
   end
 
-  defp load_binary_data(%{"body" => body, "binary" => true} = recording) do
+  defp load_binary_data(%{"response" => %{"body" => body, "binary" => true} = response} = recording) do
     body = body
     |> Base.decode64!()
     |> :erlang.binary_to_term()
-    %{ recording | "body" => body }
+    %{ recording | "response" => %{ response | "body" => body } }
   end
 
   defp load_binary_data(recording), do: recording
