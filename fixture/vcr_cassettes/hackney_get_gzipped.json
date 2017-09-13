@@ -12,7 +12,22 @@
     },
     "response": {
       "binary": true,
-      "body": "g20AAAJeH4sIADuBBVIAA41UQa/TMAy+71eYcgFpXfeAB1PXViBA4gIc4MIxa9zVWpOUJO02offfcdu9ruXtQCu1jh1//mzHSZ5Jk/tzjVB6VWWL5PGHQmYL4Cfx5CvMPp+EqiuET0YJ0kk0aBfDFoVeQF4K69CnQeOLcBNAlE2Mpfd1iL8batPgo9EetQ+7sAHkwyoNPJ581IXfjlC3kLRQmAYt4bE21k/8jyR9mUpsKcewXyyBNHkSVehyUWF6d4Vy/szJdAwugXPngsG2M/IMf3qxX4r8sLem0TLMTWVsDM+LNb+vtuMWJeyedAzrq6oWUpLez3QFMw0Loag6xxB8r1HDD6FdsITgC1YtesoFfMMGWTMqlvDBcgZLcLw1dGipuCL2wkP/ldROSPfpx/B2va5PT3neowLReHOD7v3M4VbuxST+zliJNrRCUuNiuEO1nVAScUX6sOR/S448ygnBR7jXmzebzQSx60UoMTdWeDLMVRuNU9D3CiUJeKHEKbxk+a7L8uW0ZfMO/k8mD6M0L+SkmPOKzfp+w/ZPadZz61jvsWRXEsM3ifojmnXyIomGeVwkXWo8nkzycpDLuyejyarBVmc/S3Igez2whM6LXUWu5F54AzuExrFYGAtUVY3zXdVbBBwQHc8Pe+eN4gFzK/hlGs753DmBZ+Th4F3Q9dXrSL40jYfaEiPnhktBuu8n8Fq4A6feB63RKnKODaskqkfWCd8XFos06G6NOIqOx+OKhBYrY/fREM9Fl2hB9tVY5PCMp/oYqxWDiawHTKK+Ukl0qVs0XG9/AQiVqov2BAAA"
+      "body": "g20AAAJeH4sIADuBBVIAA41UQa/TMAy+71eYcgFpXfeAB1PXViBA4gIc4MIxa9zVWpOUJO02offfcdu9ruXtQCu1jh1//mzHSZ5Jk/tzjVB6VWWL5PGHQmYL4Cfx5CvMPp+EqiuET0YJ0kk0aBfDFoVeQF4K69CnQeOLcBNAlE2Mpfd1iL8batPgo9EetQ+7sAHkwyoNPJ581IXfjlC3kLRQmAYt4bE21k/8jyR9mUpsKcewXyyBNHkSVehyUWF6d4Vy/szJdAwugXPngsG2M/IMf3qxX4r8sLem0TLMTWVsDM+LNb+vtuMWJeyedAzrq6oWUpLez3QFMw0Loag6xxB8r1HDD6FdsITgC1YtesoFfMMGWTMqlvDBcgZLcLw1dGipuCL2wkP/ldROSPfpx/B2va5PT3neowLReHOD7v3M4VbuxST+zliJNrRCUuNiuEO1nVAScUX6sOR/S448ygnBR7jXmzebzQSx60UoMTdWeDLMVRuNU9D3CiUJeKHEKbxk+a7L8uW0ZfMO/k8mD6M0L+SkmPOKzfp+w/ZPadZz61jvsWRXEsM3ifojmnXyIomGeVwkXWo8nkzycpDLuyejyarBVmc/S3Igez2whM6LXUWu5F54AzuExrFYGAtUVY3zXdVbBBwQHc8Pe+eN4gFzK/hlGs753DmBZ+Th4F3Q9dXrSL40jYfaEiPnhktBuu8n8Fq4A6feB63RKnKODaskqkfWCd8XFos06G6NOIqOx+OKhBYrY/fREM9Fl2hB9tVY5PCMp/oYqxWDiawHTKK+Ukl0qVs0XG9/AQiVqov2BAAA",
+      "headers": {
+        "Content-Encoding": "gzip",
+        "Cache-Control": "max-age=604800",
+        "Content-Type": "text/html",
+        "Date": "Wed, 13 Sep 2017 08:22:45 GMT",
+        "Etag": "\"359670651+gzip\"",
+        "Expires": "Wed, 20 Sep 2017 08:22:45 GMT",
+        "Last-Modified": "Fri, 09 Aug 2013 23:54:35 GMT",
+        "Server": "ECS (lga/1378)",
+        "Vary": "Accept-Encoding",
+        "X-Cache": "HIT",
+        "Content-Length": "606"
+      },
+      "status_code": 200,
+      "type": "ok"
     }
   }
 ]

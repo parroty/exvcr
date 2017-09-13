@@ -17,16 +17,16 @@ defmodule ExVCR.JSON do
     File.write!(file_name, json)
   end
 
-  defp encode_binary_data(recording = %{request: _, response: %ExVCR.Response{body: nil}}), do: recording
+  defp encode_binary_data(%{request: _, response: %ExVCR.Response{body: nil}} = recording), do: recording
 
-  defp encode_binary_data(recording = %{response: response}) do
+  defp encode_binary_data(%{response: response} = recording) do
     case String.valid?(response.body) do
       true -> recording
       false ->
         body = response.body
         |> :erlang.term_to_binary()
         |> Base.encode64()
-        %{ recording | response: %{ body: body, binary: true } }
+        %{ recording | response: %{ response | body: body, binary: true } }
     end
   end
 
