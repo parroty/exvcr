@@ -54,7 +54,7 @@ defmodule ExVCR.JSON do
   end
 
   defp load_binary_data(%{"body" => body, "binary" => true} = recording) do
-    body
+    body = body
     |> Base.decode64!()
     |> :erlang.binary_to_term()
     %{ recording | "body" => body }
