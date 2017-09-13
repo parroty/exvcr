@@ -7,26 +7,26 @@ defmodule ExVCR.JSON do
   Save responses into the json file.
   """
   def save(file_name, recordings) do
-    gunzipped_recordings = recordings
-    |> Enum.map(&gunzip_recording/1)
-    json = gunzipped_recordings |> Enum.reverse |> JSX.encode!
+    json = recordings
+    |> Enum.map(&encode_binary_data/1)
+    |> Enum.reverse()
+    |> JSX.encode!()
+    |> JSX.prettify!()
+
     unless File.exists?(path = Path.dirname(file_name)), do: File.mkdir_p!(path)
-    File.write!(file_name, JSX.prettify!(json))
+    File.write!(file_name, json)
   end
 
-  defp gunzip_recording(recording = %{request: _, response: %ExVCR.Response{body: nil}}) do
-    recording
-  end
+  defp encode_binary_data(recording = %{request: _, response: %ExVCR.Response{body: nil}}), do: recording
 
-  defp gunzip_recording(recording = %{request: request, response: response}) do
-    encoding_header = List.keyfind(response.headers, "Content-Encoding", 0)
-
-    case encoding_header do
-      {"Content-Encoding", "gzip"} ->
-        decoded_body = :zlib.gunzip(response.body)
-        decoded_response = %{ response | body: decoded_body }
-        %{request: request, response: decoded_response}
-      _ -> recording
+  defp encode_binary_data(recording = %{response: response}) do
+    case String.valid?(response.body) do
+      true -> recording
+      false ->
+        body = response.body
+        |> :erlang.term_to_binary()
+        |> Base.encode64()
+        %{ recording | response: %{ body: body, binary: true } }
     end
   end
 
@@ -50,21 +50,15 @@ defmodule ExVCR.JSON do
     recordings = JSX.decode!(file)
 
     recordings
-    |> Enum.map(&gzip_recording/1)
+    |> Enum.map(&load_binary_data/1)
   end
 
-  defp gzip_recording(recording) do
-    %{recording | "response" => gzip_response(recording["response"])}
+  defp load_binary_data(%{"body" => body, "binary" => true} = recording) do
+    body
+    |> Base.decode64!()
+    |> :erlang.binary_to_term()
+    %{ recording | "body" => body }
   end
 
-  defp gzip_response(response = %{"body" => nil, "headers" => %{"Content-Encoding" => "gzip"}}) do
-    response
-  end
-
-  defp gzip_response(response = %{"headers" => %{"Content-Encoding" => "gzip"}}) do
-    encoded_body = :zlib.gzip(response["body"])
-    %{ response | "body" => encoded_body }
-  end
-
-  defp gzip_response(response), do: response
+  defp load_binary_data(recording), do: recording
 end

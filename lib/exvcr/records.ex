@@ -7,7 +7,7 @@ defmodule ExVCR.Request do
 end
 
 defmodule ExVCR.Response do
-  defstruct type: "ok", status_code: nil, headers: [], body: nil
+  defstruct type: "ok", status_code: nil, headers: [], body: nil, binary: false
 end
 
 defmodule ExVCR.Checker.Results do
