@@ -16,12 +16,21 @@ defmodule ExVCR.Actor do
     defcast set(x), do: new_state(x)
     defcall get, state: state, do: reply(state)
 
-    def pop(x) do
-      case ExVCR.Actor.Responses.get(x) do
-        [] -> []
-        [head|tail] ->
-          set(x, tail)
-          head
+    defcall update(finder, updater), state: state do
+      state = Enum.map(state, fn(record) ->
+        if finder.(record) do
+          updater.(record)
+        else
+          record
+        end
+      end)
+      set_and_reply(state, state)
+    end
+
+    defcall pop(), state: state do
+      case state do
+        [] -> reply(state)
+        [head | tail] -> set_and_reply(tail, head)
       end
     end
   end
