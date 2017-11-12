@@ -1,3 +1,8 @@
+0.9.1
+------
+#### Enhancements
+* Support binary responses (#121).
+
 0.9.0
 ------
 #### Changes
