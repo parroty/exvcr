@@ -3,6 +3,9 @@
 #### Enhancements
 * Support binary responses (#121).
 
+#### Changes
+* Fix race conditions in Hackney response handling (#109, #124).
+
 0.9.0
 ------
 #### Changes
