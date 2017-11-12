@@ -22,7 +22,7 @@ defmodule ExVCR.Mixfile do
   # { :foobar, "~> 0.1", git: "https://github.com/elixir-lang/foobar.git" }
   def deps do
     [
-      {:meck, "~> 0.8.3"},
+      {:meck, "~> 0.8.8"},
       {:exactor, "~> 2.2"},
       {:exjsx, "~> 4.0"},
       {:ibrowse, "~> 4.4", optional: true},
