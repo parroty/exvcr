@@ -67,20 +67,10 @@ defmodule ExVCR.Recorder do
     "#{directory}/#{opts[:fixture]}.json"
   end
 
-  def options(recorder),        do: Options.get(recorder.options)
-  def get(recorder),            do: Responses.get(recorder.responses)
-  def set(responses, recorder), do: Responses.set(recorder.responses, responses)
-  def append(recorder, x),      do: Responses.append(recorder.responses, x)
-  def pop(recorder),            do: Responses.pop(recorder.responses)
-
-  def update(recorder, finder, updator) do
-    responses = Enum.map(ExVCR.Recorder.get(recorder), fn(response) ->
-      if finder.(response) do
-        updator.(response)
-      else
-        response
-      end
-    end)
-    set(responses, recorder)
-  end
+  def options(recorder),                 do: Options.get(recorder.options)
+  def get(recorder),                     do: Responses.get(recorder.responses)
+  def set(responses, recorder),          do: Responses.set(recorder.responses, responses)
+  def append(recorder, x),               do: Responses.append(recorder.responses, x)
+  def pop(recorder),                     do: Responses.pop(recorder.responses)
+  def update(recorder, finder, updater), do: Responses.update(recorder.responses, finder, updater)
 end
