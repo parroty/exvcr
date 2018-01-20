@@ -33,15 +33,14 @@ defmodule ExVCR.Mock do
       stub = prepare_stub_record(unquote(options), adapter_method())
       recorder = Recorder.start([fixture: stub_fixture, stub: stub, adapter: adapter_method()])
 
-      mock_methods(recorder, adapter_method())
-
       try do
+        mock_methods(recorder, adapter_method())
         [do: return_value] = unquote(test)
         return_value
       after
-        if options_method()[:clear_mock] || unquote(options)[:clear_mock] do
-          :meck.unload(adapter_method().module_name)
-        end
+        module_name = adapter_method().module_name
+        :meck.unload(module_name)
+        ExVCR.MockLock.release_lock()
       end
     end
   end
@@ -61,16 +60,19 @@ defmodule ExVCR.Mock do
       recorder = Recorder.start(
         unquote(options) ++ [fixture: normalize_fixture(unquote(fixture)), adapter: adapter_method()])
 
-      mock_methods(recorder, adapter_method())
 
       try do
+        mock_methods(recorder, adapter_method())
         [do: return_value] = unquote(test)
         return_value
       after
-        if options_method()[:clear_mock] || unquote(options)[:clear_mock] do
-          :meck.unload(adapter_method().module_name)
-        end
-        Recorder.save(recorder)
+        recorder_result = Recorder.save(recorder)
+
+        module_name = adapter_method().module_name
+        :meck.unload(module_name)
+        ExVCR.MockLock.release_lock()
+
+        recorder_result
       end
     end
   end
@@ -91,9 +93,18 @@ defmodule ExVCR.Mock do
     target_methods = adapter.target_methods(recorder)
     module_name    = adapter.module_name
 
-    Enum.each(target_methods, fn({function, callback}) ->
-      :meck.expect(module_name, function, callback)
+    parent_pid = self()
+    Task.async(fn ->
+      ExVCR.MockLock.ensure_started
+      ExVCR.MockLock.request_lock(self(), parent_pid)
+      receive do
+        :lock_granted ->
+          Enum.each(target_methods, fn({function, callback}) ->
+            :meck.expect(module_name, function, callback)
+          end)
+      end
     end)
+    |> Task.await(:infinity)
   end
 
   @doc """

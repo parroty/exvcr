@@ -1,5 +1,5 @@
 defmodule ExVCR.Adapter.HttpcTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   setup_all do

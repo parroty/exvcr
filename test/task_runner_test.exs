@@ -1,5 +1,5 @@
 defmodule ExVCR.TaskRunnerTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   import ExUnit.CaptureIO
 
   @deletes_path "test/cassettes/for_deletes/"

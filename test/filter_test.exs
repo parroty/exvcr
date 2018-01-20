@@ -1,5 +1,5 @@
 defmodule ExVCR.FilterTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
 
   test "filter_sensitive_data" do
     ExVCR.Config.filter_sensitive_data("<PASSWORD>.+</PASSWORD>", "PLACEHOLDER")

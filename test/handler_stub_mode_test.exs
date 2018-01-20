@@ -1,5 +1,5 @@
 defmodule ExVCR.Adapter.HandlerStubModeTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use ExVCR.Mock
 
   setup_all do
