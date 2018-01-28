@@ -1,3 +1,8 @@
+0.10.0
+------
+#### Changes
+* Fix unstable behavior without `async: false` (#126).
+
 0.9.1
 ------
 #### Enhancements
