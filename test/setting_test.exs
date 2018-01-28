@@ -1,5 +1,5 @@
 defmodule ExVCR.SettingTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
 
   setup_all do
     cassette_library_dir = ExVCR.Setting.get(:cassette_library_dir)

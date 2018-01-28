@@ -21,7 +21,7 @@ It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide 
     - The JSON file can be recorded automatically (vcr_cassettes) or manually updated (custom_cassettes)
 
 ### Notes
-- In case test behaves unstable, please try to specify `use ExUnit.Case, async: false`.
+- ExVCR.Config functions must be called from setup or test. Calls outside of test process, such as in setup_all will not work.
 
 ### Install
 Add `:exvcr` to `deps` section of `mix.exs`.
@@ -50,10 +50,10 @@ Optionally, `preferred_cli_env: [vcr: :test]` can be specified for running `mix 
 ##### Example with ibrowse
 ```Elixir
 defmodule ExVCR.Adapter.IBrowseTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use ExVCR.Mock
 
-  setup_all do
+  setup do
     ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes")
     :ok
   end
@@ -79,7 +79,7 @@ end
 ##### Example with hackney
 ```Elixir
 defmodule ExVCR.Adapter.HackneyTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   setup_all do
@@ -97,7 +97,7 @@ end
 ##### Example with httpc
 ```Elixir
 defmodule ExVCR.Adapter.HttpcTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   setup_all do
@@ -121,10 +121,10 @@ You can manually define custom cassette json file for more flexible response con
 
 ```Elixir
 defmodule ExVCR.MockTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   import ExVCR.Mock
 
-  setup_all do
+  setup do
     ExVCR.Config.cassette_library_dir("fixture/vcr_cassettes", "fixture/custom_cassettes")
     :ok
   end
@@ -237,24 +237,6 @@ If `ExVCR.Config.response_headers_blacklist(headers_blacklist)` is specified, th
 
     ExVCR.Config.response_headers_blacklist([])
   end
-```
-
-#### Clearing Mock After Each Cassette
-By default, mocking through `:meck.expect` is not cleared after each `use_cassette`. It can cause error when mixing actual/mocking accesses. In order to clear mock, please specify `[clear_mock: :true]` option through either of the followings.
-
-```elixir
-# For applying all the tests under the module.
-defmodule ExVCR.Adapter.OptionsTest do
-  use ExVCR.Mock, options: [clear_mock: true]
-  use ExUnit.Case, async: false
-...
-```
-
-```elixir
-# For applying specific test.
-use_cassette "option_clean_each", clear_mock: true do
-  assert HTTPotion.get(@url, []).body == "test_response1"
-end
 ```
 
 #### Matching Options
@@ -548,4 +530,3 @@ end
 
 ### TODO
 - Improve performance, as it's very slow.
-- Fix unstable behavior without `async: false`.

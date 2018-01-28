@@ -1,5 +1,5 @@
 defmodule ExVCR.RecorderHttpcTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_httpc"
@@ -16,8 +16,11 @@ defmodule ExVCR.RecorderHttpcTest do
 
     Application.ensure_started(:inets)
     HttpServer.start(path: "/server", port: @port, response: "test_response")
-    ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
     :ok
+  end
+
+  setup do
+    ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
   end
 
   test "forcefully getting response from server by removing json in advance" do

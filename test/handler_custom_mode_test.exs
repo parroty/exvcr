@@ -1,5 +1,5 @@
 defmodule ExVCR.Adapter.HandlerCustomModeTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use ExVCR.Mock
 
   test "query param match succeeds with custom mode" do

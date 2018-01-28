@@ -20,16 +20,12 @@ defmodule ExVCR.IEx do
           recorder = Recorder.start(
             unquote(options) ++ [fixture: "", adapter: unquote(adapter)])
 
-          target_methods = adapter_method().target_methods(recorder)
-          module_name    = adapter_method().module_name
-
-          Enum.each(target_methods, fn({function, callback}) ->
-            :meck.expect(module_name, function, callback)
-          end)
-
           try do
+            ExVCR.Mock.mock_methods(recorder, unquote(adapter))
             unquote(test)
           after
+            :meck.unload(unquote(adapter.module_name))
+            ExVCR.MockLock.release_lock()
             Recorder.get(recorder)
             |> JSX.encode!
             |> JSX.prettify!
