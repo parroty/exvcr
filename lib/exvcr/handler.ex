@@ -11,7 +11,13 @@ defmodule ExVCR.Handler do
   Get response from either server or cache.
   """
   def get_response(recorder, request) do
-    get_response_from_cache(request, recorder) || get_response_from_server(request, recorder)
+    recorder_options = Options.get(recorder.options)
+
+    if recorder_options[:skip_cache] do
+      get_response_from_server(request, recorder)
+    else
+      get_response_from_cache(request, recorder) || get_response_from_server(request, recorder)
+    end
   end
 
   @doc """

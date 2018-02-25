@@ -1,0 +1,78 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": {
+        "httpc_options": [],
+        "http_options": []
+      },
+      "request_body": "",
+      "url": "https://www.random.org/integers/?num=1&min=1&max=10000&col=1&base=10&format=plain&rnd=new"
+    },
+    "response": {
+      "body": "4361\n",
+      "headers": {
+        "cache-control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+        "connection": "keep-alive",
+        "date": "Tue, 25 Apr 2017 12:35:08 GMT",
+        "pragma": "no-cache",
+        "server": "cloudflare-nginx",
+        "vary": "Accept-Encoding",
+        "content-length": "5",
+        "content-type": "text/plain;charset=utf-8",
+        "expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "set-cookie": "__cfduid=deb9bced1f4126e4ccb6afbe9d52c8fc91493123707; expires=Wed, 25-Apr-18 12:35:07 GMT; path=/; domain=.random.org; HttpOnly",
+        "x-powered-by": "PHP/5.4.45-0+deb7u8",
+        "rdo-authenticated-login": "-",
+        "access-control-allow-origin": "*",
+        "cf-ray": "355157266dc729a5-DUB"
+      },
+      "status_code": [
+        "HTTP/1.1",
+        200,
+        "OK"
+      ],
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": {
+        "httpc_options": [],
+        "http_options": []
+      },
+      "request_body": "",
+      "url": "https://www.random.org/integers/?num=1&min=1&max=10000&col=1&base=10&format=plain&rnd=new"
+    },
+    "response": {
+      "body": "8497\n",
+      "headers": {
+        "cache-control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+        "connection": "keep-alive",
+        "date": "Tue, 25 Apr 2017 12:35:09 GMT",
+        "pragma": "no-cache",
+        "server": "cloudflare-nginx",
+        "vary": "Accept-Encoding",
+        "content-length": "5",
+        "content-type": "text/plain;charset=utf-8",
+        "expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "set-cookie": "__cfduid=d33aab74e06d24dff4ae23de0b0be86f91493123708; expires=Wed, 25-Apr-18 12:35:08 GMT; path=/; domain=.random.org; HttpOnly",
+        "x-powered-by": "PHP/5.4.45-0+deb7u8",
+        "rdo-authenticated-login": "-",
+        "access-control-allow-origin": "*",
+        "cf-ray": "3551572a8fcb29a5-DUB"
+      },
+      "status_code": [
+        "HTTP/1.1",
+        200,
+        "OK"
+      ],
+      "type": "ok"
+    }
+  }
+]
