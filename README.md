@@ -28,7 +28,7 @@ Add `:exvcr` to `deps` section of `mix.exs`.
 
 ```elixir
   def deps do
-    [ {:exvcr, "~> 0.8", only: :test} ]
+    [ {:exvcr, "~> 0.10", only: :test} ]
   end
 ```
 
