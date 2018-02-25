@@ -1,3 +1,10 @@
+0.10.1
+------
+#### Changes
+* Update dependencies.
+    - Bump dependencies (#128).
+    - Update HTTPoison dependency (#129).
+
 0.10.0
 ------
 #### Changes
