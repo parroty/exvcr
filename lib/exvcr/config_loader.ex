@@ -52,5 +52,9 @@ defmodule ExVCR.ConfigLoader do
     else
       Config.response_headers_blacklist([])
     end
+
+    if env[:ignore_localhost] != nil do
+      Config.ignore_localhost(env[:ignore_localhost])
+    end
   end
 end

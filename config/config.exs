@@ -8,5 +8,6 @@ config :exvcr, [
   ],
   filter_url_params: false,
   filter_request_headers: [],
-  response_headers_blacklist: []
+  response_headers_blacklist: [],
+  ignore_localhost: false
 ]

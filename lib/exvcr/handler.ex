@@ -11,7 +11,11 @@ defmodule ExVCR.Handler do
   Get response from either server or cache.
   """
   def get_response(recorder, request) do
-    get_response_from_cache(request, recorder) || get_response_from_server(request, recorder)
+    if ignore_request?(request, recorder) do
+      get_response_from_server(request, recorder, false)
+    else
+      get_response_from_cache(request, recorder) || get_response_from_server(request, recorder, true)
+    end
   end
 
   @doc """
@@ -133,14 +137,25 @@ defmodule ExVCR.Handler do
     end
   end
 
-  defp get_response_from_server(request, recorder) do
-    raise_error_if_cassette_already_exists(recorder, inspect(request))
+  defp get_response_from_server(request, recorder, record?) do
     adapter = ExVCR.Recorder.options(recorder)[:adapter]
     response = :meck.passthrough(request)
                |> adapter.hook_response_from_server
-    Recorder.append(recorder, adapter.convert_to_string(request, response))
-    ExVCR.Checker.add_server_count(recorder)
+    if record? do
+      raise_error_if_cassette_already_exists(recorder, inspect(request))
+      Recorder.append(recorder, adapter.convert_to_string(request, response))
+      ExVCR.Checker.add_server_count(recorder)
+    end
     response
+  end
+
+  defp ignore_request?(request, recorder) do
+    ignore_localhost = ExVCR.Recorder.options(recorder)[:ignore_localhost] || ExVCR.Setting.get(:ignore_localhost)
+    if ignore_localhost do
+      Enum.any?(request, &(String.starts_with?("#{&1}", "http://localhost:")))
+    else
+      false
+    end
   end
 
   defp raise_error_if_cassette_already_exists(recorder, request_description) do
