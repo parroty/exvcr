@@ -1,3 +1,8 @@
+0.10.2
+------
+#### Changes
+* Add ignore_localhost config option (#133).
+
 0.10.1
 ------
 #### Changes
