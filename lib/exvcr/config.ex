@@ -77,4 +77,11 @@ defmodule ExVCR.Config do
     blacklist = Enum.map(headers_blacklist, fn(x) -> String.downcase(x) end)
     Setting.set(:response_headers_blacklist, blacklist)
   end
+
+  @doc """
+  Skip recording cassettes for localhost requests when set
+  """
+  def ignore_localhost(value) do
+    Setting.set(:ignore_localhost, value)
+  end
 end
