@@ -140,6 +140,7 @@ defmodule ExVCR.Handler do
   defp get_response_from_server(request, recorder, record?) do
     adapter = ExVCR.Recorder.options(recorder)[:adapter]
     response = :meck.passthrough(request)
+               |> convert_body
                |> adapter.hook_response_from_server
     if record? do
       raise_error_if_cassette_already_exists(recorder, inspect(request))
@@ -147,6 +148,11 @@ defmodule ExVCR.Handler do
       ExVCR.Checker.add_server_count(recorder)
     end
     response
+  end
+
+  defp convert_body(response) do
+    {status, code, headers, body} = response
+    {status, code, headers, IO.iodata_to_binary(body)}
   end
 
   defp ignore_request?(request, recorder) do
