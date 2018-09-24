@@ -1,3 +1,9 @@
+0.10.3
+------
+#### Changes
+* Add mocking for :hackney.body/2 (#142).
+* Fix errors when using request headers with ignore_localhost enabled (#140).
+
 0.10.2
 ------
 #### Enhancements
