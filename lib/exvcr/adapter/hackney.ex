@@ -29,7 +29,8 @@ defmodule ExVCR.Adapter.Hackney do
   """
   def target_methods(recorder) do
     [ {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])},
-      {:body,    &handle_body_request(recorder, [&1])} ]
+      {:body,    &handle_body_request(recorder, [&1])},
+      {:body,    &handle_body_request(recorder, [&1,&2])} ]
   end
 
   @doc """
@@ -83,12 +84,16 @@ defmodule ExVCR.Adapter.Hackney do
   end
 
   defp handle_body_request(recorder, [client]) do
+    handle_body_request(recorder, [client, :infinity])
+  end
+
+  defp handle_body_request(recorder, [client, max_length]) do
     client_key_atom = client |> inspect |> String.to_atom
     if body = Store.get(client_key_atom) do
       Store.delete(client_key_atom)
       {:ok, body}
     else
-      case :meck.passthrough([client]) do
+      case :meck.passthrough([client, max_length]) do
         {:ok, body} ->
           body = ExVCR.Filter.filter_sensitive_data(body)
 
