@@ -86,6 +86,27 @@ defmodule ExVCR.RecorderHackneyTest do
     ExVCR.Config.filter_request_headers(nil)
   end
 
+  test "replace sensitive data in matching request header" do
+    ExVCR.Config.filter_sensitive_data("Basic [a-z]+", "Basic ***")
+
+    use_cassette "sensitive_data_matches_in_request_headers", match_requests_on: [:headers] do
+      body = HTTPoison.get!(@url, [{"Authorization", "Basic credentials"}]).body
+      assert body == "test_response"
+    end
+
+    # The recorded cassette should contain replaced data.
+    cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_matches_in_request_headers.json")
+    assert cassette =~ "\"Authorization\": \"Basic ***\""
+
+    # Attempt another request should match on filtered header
+    use_cassette "sensitive_data_matches_in_request_headers", match_requests_on: [:headers] do
+      body = HTTPoison.get!(@url, [{"Authorization", "Basic credentials"}]).body
+      assert body == "test_response"
+    end
+
+    ExVCR.Config.filter_sensitive_data(nil)
+  end
+
   test "replace sensitive data in request options" do
     ExVCR.Config.filter_request_options("basic_auth")
     use_cassette "sensitive_data_in_request_options" do
