@@ -20,13 +20,19 @@ defmodule ExVCR.Adapter.Hackney.Converter do
     response
   end
 
-  defp request_to_string([method, url, headers, body, options]) do
+  defp request_to_string(request) do
+    method  = Enum.fetch!(request, 0) |> to_string()
+    url     = Enum.fetch!(request, 1) |> parse_url()
+    headers = Enum.at(request, 2, []) |> parse_headers()
+    body    = Enum.at(request, 3, "") |> parse_request_body()
+    options = Enum.at(request, 4, []) |> sanitize_options() |> parse_options()
+
     %ExVCR.Request{
-      url: parse_url(url),
-      headers: parse_headers(headers),
-      method: to_string(method),
-      body: parse_request_body(body),
-      options: parse_options(sanitize_options(options))
+      url: url,
+      headers: headers,
+      method: method,
+      body: body,
+      options: options
     }
   end
 

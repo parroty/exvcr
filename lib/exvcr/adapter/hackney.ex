@@ -28,19 +28,25 @@ defmodule ExVCR.Adapter.Hackney do
   Returns list of the mock target methods with function name and callback.
   """
   def target_methods(recorder) do
-    [ {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])},
-      {:body,    &handle_body_request(recorder, [&1])},
-      {:body,    &handle_body_request(recorder, [&1,&2])} ]
+    [
+      {:request, &ExVCR.Recorder.request(recorder, [&1, &2, &3, &4, &5])},
+      {:request, &ExVCR.Recorder.request(recorder, [&1, &2, &3, &4])},
+      {:request, &ExVCR.Recorder.request(recorder, [&1, &2, &3])},
+      {:request, &ExVCR.Recorder.request(recorder, [&1, &2])},
+      {:request, &ExVCR.Recorder.request(recorder, [&1])},
+      {:body, &handle_body_request(recorder, [&1])},
+      {:body, &handle_body_request(recorder, [&1, &2])}
+    ]
   end
 
   @doc """
   Generate key for searching response.
   """
   def generate_keys_for_request(request) do
-    url    = Enum.fetch!(request, 1)
-    method = Enum.fetch!(request, 0)
+    url          = Enum.fetch!(request, 1)
+    method       = Enum.fetch!(request, 0)
     request_body = Enum.fetch(request, 3) |> parse_request_body
-    headers = Enum.fetch!(request, 2) |> Util.stringify_keys
+    headers      = Enum.at(request, 2, []) |> Util.stringify_keys()
 
     [url: url, method: method, request_body: request_body, headers: headers]
   end
