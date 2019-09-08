@@ -1,3 +1,8 @@
+0.10.4
+------
+#### Changes
+* Enforce match on :hackney.request/1, /2, /3 and /4 (#145).
+
 0.10.3
 ------
 #### Changes
