@@ -40,6 +40,14 @@ defmodule ExVCR.Config do
   end
 
   @doc """
+  Replace the specified list of request headers with placeholder.
+  It can be used to remove sensitive data from the casette file.
+  """
+  def filter_request_headers(headers) when is_list(headers) do
+    headers |> Enum.each(& Setting.append(:filter_request_headers, &1))
+  end
+
+  @doc """
   Replace the specified request header with placeholder.
   It can be used to remove sensitive data from the casette file.
   """
