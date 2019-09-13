@@ -264,6 +264,33 @@ test "matching request body with match_requests_on params" do
 end
 ```
 
+##### matching against custom parameters
+You can define and use your own matchers for cases not covered by the build-in matchers. To do this you can specify `custom_matchers: [func_one, func_two, ...]` for `use_cassette` call.
+
+```elixir
+test "matching special header with custom_matchers" do
+  matches_special_header = fn response, keys, _recorder_options ->
+    recorded_headers = always_map(response.request.headers)
+    expected_value = recorded_headers["X-Special-Header"]
+    keys[:headers]
+    |> Enum.any?(&(match?({"X-Special-Header", ^expected_value}, &1)))
+  end
+
+  use_cassette "special_header_match", custom_matchers: [matches_special_header] do
+    # These two requests will match with each other since our custom matcher matches (even if without matching all headers)
+    assert HTTPotion.post("http://localhost/server",
+        [headers: ["User-Agent": "My App", "X-Special-Header": "Value One"]]).body =~ ~r/test_response_one/
+    assert HTTPotion.post("http://localhost/server",
+        [headers: ["User-Agent": "Other App", "X-Special-Header": "Value One"]]).body =~ ~r/test_response_one/
+
+    # This will not match since the header has a different value:
+    assert HTTPotion.post("http://localhost/server",
+        [headers: ["User-Agent": "My App", "X-Special-Header": "Value Two"]]).body =~ ~r/test_response_two/
+  end
+end
+```
+
+
 ### Default Configs
 Default parameters for `ExVCR.Config` module can be specified in `config\config.exs` as follows.
 

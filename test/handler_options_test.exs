@@ -88,5 +88,79 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
         HttpServer.stop(@port)
       end
     end
+
+    defp always_map(headers) do
+      # When a request is first recorded then the request headers are stored
+      # as a List, but when it's fetched from storage then they are a Map...
+      if(is_list(headers), do: Enum.into(headers, %{}), else: headers)
+    end
+
+    test "specifying custom_matchers matches using user-defined functions" do
+      matches_special_header = fn response, keys, _recorder_options ->
+        recorded_headers = always_map(response.request.headers)
+        expected_value = recorded_headers["X-Special-Header"]
+        keys[:headers]
+        |> Enum.any?(&(match?({"X-Special-Header", ^expected_value}, &1)))
+      end
+      # This will always return true, but just so we can show you can pass an arbitrary
+      # number of functions
+      always_true = fn _, _, _ -> true end
+
+      use_cassette "user_defined_matchers_matching",
+        custom_matchers: [always_true, matches_special_header] do
+        HttpServer.start(path: "/server", port: @port, response: "test_response_before")
+
+        assert HTTPotion.post(@url,
+                 body: "p=3",
+                 headers: ["User-Agent": "My App", "X-Special-Header": "Value One"]
+               ).body =~ ~r/test_response_before/
+
+        HttpServer.stop(@port)
+
+        # this method call should be mocked as previous "test_response_before" response
+        HttpServer.start(path: "/server", port: @port, response: "test_response_after")
+
+        assert HTTPotion.post(@url,
+                 body: "p=4",
+                 headers: ["User-Agent": "Other App", "X-Special-Header": "Value One"]
+               ).body =~ ~r/test_response_before/
+
+        HttpServer.stop(@port)
+      end
+    end
+
+    test "specifying custom_matchers does not match user-defined functions" do
+      matches_special_header = fn response, keys, _recorder_options ->
+        recorded_headers = always_map(response.request.headers)
+        expected_value = recorded_headers["X-Special-Header"]
+        keys[:headers]
+        |> Enum.any?(&(match?({"X-Special-Header", ^expected_value}, &1)))
+      end
+      # This will always return true, but just so we can show you can pass an arbitrary
+      # number of functions
+      always_true = fn _, _, _ -> true end
+
+      use_cassette "user_defined_matchers_not_matching",
+        custom_matchers: [always_true, matches_special_header] do
+        HttpServer.start(path: "/server", port: @port, response: "test_response_before")
+
+        assert HTTPotion.post(@url,
+                 body: "p=3",
+                 headers: ["User-Agent": "My App", "X-Special-Header": "Value One"]
+               ).body =~ ~r/test_response_before/
+
+        HttpServer.stop(@port)
+
+        # this method call NOT should be mocked as the custom header check won't match
+        HttpServer.start(path: "/server", port: @port, response: "test_response_after")
+
+        assert HTTPotion.post(@url,
+                 body: "p=4",
+                 headers: ["User-Agent": "Other App", "X-Special-Header": "Value Two"]
+               ).body =~ ~r/test_response_after/
+
+        HttpServer.stop(@port)
+      end
+    end
   end
 end

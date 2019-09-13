@@ -1,0 +1,26 @@
+[
+  {
+    "request": {
+      "body": "p=3",
+      "headers": {
+        "User-Agent": "My App",
+        "X-Special-Header": "Value One"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "http://localhost:34006/server"
+    },
+    "response": {
+      "binary": false,
+      "body": "test_response_before",
+      "headers": {
+        "server": "Cowboy",
+        "date": "Fri, 13 Sep 2019 13:02:19 GMT",
+        "content-length": "20"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
