@@ -80,6 +80,28 @@ defmodule ExVCR.RecorderHttpcTest do
 
     ExVCR.Config.filter_request_headers(nil)
   end
+
+  test "replace sensitive data in matching request header" do
+    ExVCR.Config.filter_sensitive_data("Basic [a-z]+", "Basic ***")
+
+    use_cassette "sensitive_data_matches_in_request_headers", match_requests_on: [:headers] do
+      {:ok, {_, _, body}} = :httpc.request(:get, {@url_with_query, [{'Authorization', 'Basic credentials'}]}, [], [])
+      assert body =~ ~r/test_response/
+    end
+
+    # The recorded cassette should contain replaced data.
+    cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_matches_in_request_headers.json")
+    assert cassette =~ "\"Authorization\": \"Basic ***\""
+
+    # Attempt another request should match on filtered header
+    use_cassette "sensitive_data_matches_in_request_headers", match_requests_on: [:headers] do
+      {:ok, {_, _, body}} = :httpc.request(:get, {@url_with_query, [{'Authorization', 'Basic credentials'}]}, [], [])
+      assert body =~ ~r/test_response/
+    end
+
+    ExVCR.Config.filter_sensitive_data(nil)
+  end
+
   test "filter url param flag removes url params when recording cassettes" do
     ExVCR.Config.filter_url_params(true)
     use_cassette "example_ignore_url_params" do

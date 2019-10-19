@@ -104,10 +104,22 @@ defmodule ExVCR.Handler do
 
   defp match_by_headers(response, keys, options) do
     if has_match_requests_on(:headers, options) do
-      response[:request].headers
-      |> Enum.to_list
-      |> Util.stringify_keys
-      |> Keyword.equal?(keys[:headers])
+      request_headers =
+        keys[:headers]
+        |> Util.stringify_keys()
+        |> Enum.map(fn {key, value} ->
+          replaced_value = ExVCR.Filter.filter_sensitive_data(value)
+          replaced_value = ExVCR.Filter.filter_request_header(key, replaced_value)
+
+          {key, replaced_value}
+        end)
+
+      response_headers =
+        response[:request].headers
+        |> Enum.to_list()
+        |> Util.stringify_keys()
+
+      Keyword.equal?(request_headers, response_headers)
     else
       true
     end
