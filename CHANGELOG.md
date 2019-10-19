@@ -1,3 +1,11 @@
+0.11.0
+------
+#### Enhancements
+* Add support for custom matcher functions (#147).
+
+#### Changes
+* Filter request headers before attempting to match with cassette (#143).
+
 0.10.4
 ------
 #### Changes
