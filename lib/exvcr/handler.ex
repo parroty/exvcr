@@ -73,6 +73,14 @@ defmodule ExVCR.Handler do
       and match_by_method(response, keys)
       and match_by_request_body(response, keys, recorder_options)
       and match_by_headers(response, keys, recorder_options)
+      and match_by_custom_matchers(response, keys, recorder_options)
+  end
+
+  defp match_by_custom_matchers(response, keys, recorder_options) do
+    custom_matchers = recorder_options[:custom_matchers] || []
+    Enum.reduce_while(custom_matchers, true, fn matcher, _acc ->
+      if matcher.(response, keys, recorder_options), do: {:cont, true}, else: {:halt, false}
+    end)
   end
 
   defp match_by_url(response, keys, recorder_options) do
