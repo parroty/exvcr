@@ -14,7 +14,7 @@ defmodule Mix.Tasks.Vcr do
 
   @doc "Entry point for [mix vcr] task"
   def run(args) do
-    {options, _, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom, h: :help])
+    {options, _, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom, h: :help], switches: [dir: :string, custom: :string, help: :boolean])
     if options[:help] do
       ExVCR.Task.Util.print_help_message
     else
