@@ -56,7 +56,7 @@ defmodule Mix.Tasks.Vcr do
 
     @doc "Entry point for [mix vcr.check] task."
     def run(args) do
-      {options, _files, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom])
+      {options, _files, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom], switches: [dir: :string, custom: :string])
       dirs = ExVCR.Task.Util.parse_basic_options(options)
       ExVCR.Checker.start(%ExVCR.Checker.Results{dirs: dirs})
 
