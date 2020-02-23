@@ -10,5 +10,6 @@ config :exvcr, [
   filter_request_headers: [],
   response_headers_blacklist: [],
   ignore_localhost: false,
-  enable_global_settings: false
+  enable_global_settings: false,
+  strict_mode: false
 ]

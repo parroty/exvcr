@@ -56,5 +56,9 @@ defmodule ExVCR.ConfigLoader do
     if env[:ignore_localhost] != nil do
       Config.ignore_localhost(env[:ignore_localhost])
     end
+
+    if env[:strict_mode] != nil do
+      Config.strict_mode(env[:strict_mode])
+    end
   end
 end

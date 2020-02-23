@@ -14,7 +14,9 @@ defmodule ExVCR.Handler do
     if ignore_request?(request, recorder) do
       get_response_from_server(request, recorder, false)
     else
-      get_response_from_cache(request, recorder) || get_response_from_server(request, recorder, true)
+      get_response_from_cache(request, recorder) ||
+      ignore_server_fetch!(request, recorder) ||
+      get_response_from_server(request, recorder, true)
     end
   end
 
@@ -180,6 +182,21 @@ defmodule ExVCR.Handler do
     else
       false
     end
+  end
+
+  defp ignore_server_fetch!(request, recorder) do
+    strict_mode = ExVCR.Recorder.options(recorder)[:strict_mode] || ExVCR.Setting.get(:strict_mode)
+    if strict_mode do
+      message = """
+      A matching cassette was not found for this request.
+
+      An error was raised, rather than recording a cassette, because the option `strict_mode` is turned on.
+
+      Request: #{inspect(request)}
+      """
+      throw(message)
+    end
+    false
   end
 
   defp raise_error_if_cassette_already_exists(recorder, request_description) do

@@ -84,4 +84,11 @@ defmodule ExVCR.Config do
   def ignore_localhost(value) do
     Setting.set(:ignore_localhost, value)
   end
+
+  @doc """
+  Throw error if there is no matching cassette for an HTTP request
+  """
+  def strict_mode(value) do
+    Setting.set(:strict_mode, value)
+  end
 end
