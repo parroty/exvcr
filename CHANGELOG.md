@@ -1,3 +1,11 @@
+0.11.1
+------
+#### Enhancements
+* Add strict_mode option to ensure HTTP calls DO NOT get made (#152).
+
+#### Changes
+* Fix warnings from OptionParser in exvcr mix tasks (#149).
+
 0.11.0
 ------
 #### Enhancements
