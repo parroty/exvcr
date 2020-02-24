@@ -14,7 +14,7 @@ defmodule Mix.Tasks.Vcr do
 
   @doc "Entry point for [mix vcr] task"
   def run(args) do
-    {options, _, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom, h: :help])
+    {options, _, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom, h: :help], switches: [dir: :string, custom: :string, help: :boolean])
     if options[:help] do
       ExVCR.Task.Util.print_help_message
     else
@@ -56,7 +56,7 @@ defmodule Mix.Tasks.Vcr do
 
     @doc "Entry point for [mix vcr.check] task."
     def run(args) do
-      {options, _files, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom])
+      {options, _files, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom], switches: [dir: :string, custom: :string])
       dirs = ExVCR.Task.Util.parse_basic_options(options)
       ExVCR.Checker.start(%ExVCR.Checker.Results{dirs: dirs})
 
@@ -76,7 +76,7 @@ defmodule Mix.Tasks.Vcr do
 
     @doc "Entry point for [mix vcr.show] task."
     def run(args) do
-      {_options, files, _} = OptionParser.parse(args, aliases: [])
+      {_options, files, _} = OptionParser.parse(args, aliases: [], switches: [])
       ExVCR.Task.Show.run(files)
     end
   end
