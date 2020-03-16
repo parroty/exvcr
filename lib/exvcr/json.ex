@@ -10,8 +10,7 @@ defmodule ExVCR.JSON do
     json = recordings
     |> Enum.map(&encode_binary_data/1)
     |> Enum.reverse()
-    |> JSX.encode!()
-    |> JSX.prettify!()
+    |> ExVCR.JsonAdapter.encode!()
 
     unless File.exists?(path = Path.dirname(file_name)), do: File.mkdir_p!(path)
     File.write!(file_name, json)
@@ -48,7 +47,7 @@ defmodule ExVCR.JSON do
   def read_json_file(file_name) do
     file_name
     |> File.read!()
-    |> JSX.decode!()
+    |> ExVCR.JsonAdapter.decode!()
     |> Enum.map(&load_binary_data/1)
   end
 
