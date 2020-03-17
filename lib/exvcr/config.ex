@@ -91,4 +91,8 @@ defmodule ExVCR.Config do
   def strict_mode(value) do
     Setting.set(:strict_mode, value)
   end
+
+  def json_toolkit(json_toolkit) do
+    Setting.set(:json_toolkit, json_toolkit)
+  end
 end

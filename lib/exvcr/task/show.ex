@@ -16,7 +16,7 @@ defmodule ExVCR.Task.Show do
       IO.puts "\e[32mShowing #{file}\e[m"
       IO.puts "\e[32m**************************************\e[m"
       json = File.read!(file)
-      IO.puts json |> JSX.prettify! |> String.replace(~r/\\n/, "\n")
+      IO.puts json |> ExVCR.JsonAdapter.prettify! |> String.replace(~r/\\n/, "\n")
       display_parsed_body(json)
       IO.puts "\e[32m**************************************\e[m"
     else

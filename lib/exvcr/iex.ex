@@ -27,8 +27,8 @@ defmodule ExVCR.IEx do
             :meck.unload(unquote(adapter.module_name))
             ExVCR.MockLock.release_lock()
             Recorder.get(recorder)
-            |> JSX.encode!
-            |> JSX.prettify!
+            |> ExVCR.JsonAdapter.encode!()
+            |> ExVCR.JsonAdapter.prettify!()
             |> IO.puts
           end
           :ok

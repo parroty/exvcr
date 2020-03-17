@@ -11,6 +11,7 @@ defmodule ExVCR.JSON do
     |> Enum.map(&encode_binary_data/1)
     |> Enum.reverse()
     |> ExVCR.JsonAdapter.encode!()
+    |> ExVCR.JsonAdapter.prettify!()
 
     unless File.exists?(path = Path.dirname(file_name)), do: File.mkdir_p!(path)
     File.write!(file_name, json)

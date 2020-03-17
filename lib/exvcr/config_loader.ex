@@ -60,5 +60,17 @@ defmodule ExVCR.ConfigLoader do
     if env[:strict_mode] != nil do
       Config.strict_mode(env[:strict_mode])
     end
+    
+    config_json_toolkit = env[:json_toolkit] 
+    
+    if config_json_toolkit != nil && Code.ensure_loaded?(config_json_toolkit) do
+      Config.json_toolkit(config_json_toolkit)
+    else
+      cond do
+        Code.ensure_loaded?(JSX) -> Config.json_toolkit(ExVCR.JsonAdapter.JSXAdapter)
+        Code.ensure_loaded?(Jason) -> Config.json_toolkit(ExVCR.JsonAdapter.JasonAdapter)
+        true -> raise "no json toolkit"
+      end
+    end
   end
 end
