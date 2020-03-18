@@ -25,7 +25,7 @@ defmodule ExVCR.Task.Show do
   end
 
   defp display_parsed_body(json) do
-    case extract_body(json) |> JSX.prettify do
+    case extract_body(json) |> ExVCR.JsonAdapter.prettify do
       {:ok, body_json } ->
         IO.puts "\n\e[33m[Showing parsed JSON body]\e[m"
         IO.puts body_json
@@ -35,7 +35,7 @@ defmodule ExVCR.Task.Show do
 
   defp extract_body(json) do
     json
-    |> JSX.decode!()
+    |> ExVCR.JsonAdapter.decode!()
     |> List.first()
     |> Enum.into(%{})
     |> get_in(["responce", "body"])

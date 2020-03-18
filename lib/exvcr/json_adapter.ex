@@ -2,6 +2,8 @@ defmodule ExVCR.JsonAdapter do
   def encode!(input), do: ExVCR.Setting.get(:json_toolkit).encode!(input)
   def decode!(input), do: ExVCR.Setting.get(:json_toolkit).decode!(input)
 
+  def prettify(input), do: ExVCR.Setting.get(:json_toolkit).prettify(input)
+
   def prettify!(input), do: ExVCR.Setting.get(:json_toolkit).prettify!(input)
 
   if Code.ensure_loaded?(Jason) do
@@ -38,6 +40,10 @@ defmodule ExVCR.JsonAdapter do
       def prettify!(input) do
         Jason.Formatter.pretty_print(input)
       end
+
+      def prettify(input) do
+        Jason.Formatter.pretty_print(input)
+      end
     end
   end
 
@@ -45,6 +51,8 @@ defmodule ExVCR.JsonAdapter do
     defmodule JSXAdapter do
       def decode!(input), do: JSX.decode!(input)
       def encode!(input), do: JSX.encode!(input)
+
+      def prettify(input), do: JSX.prettify(input)
 
       def prettify!(input), do: JSX.prettify!(input)
     end

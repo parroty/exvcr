@@ -2,7 +2,8 @@ defmodule ExVCR.Mixfile do
   use Mix.Project
 
   def project do
-    [ app: :exvcr,
+    [
+      app: :exvcr,
       version: "0.11.1",
       elixir: "~> 1.3",
       deps: deps(),
@@ -15,7 +16,7 @@ defmodule ExVCR.Mixfile do
 
   # Configuration for the OTP application
   def application do
-    [applications: [:meck, :exactor, :exjsx]]
+    [applications: [:meck, :exactor | if(Code.ensure_loaded?(JSX), do: [:exjsx], else: [])]]
   end
 
   # Returns the list of dependencies in the format:
@@ -42,8 +43,10 @@ defmodule ExVCR.Mixfile do
   end
 
   defp package do
-    [ maintainers: ["parroty"],
+    [
+      maintainers: ["parroty"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/parroty/exvcr"} ]
+      links: %{"GitHub" => "https://github.com/parroty/exvcr"}
+    ]
   end
 end
