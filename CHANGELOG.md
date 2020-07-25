@@ -1,3 +1,8 @@
+0.11.2
+------
+#### Changes
+* Fix for ExVCR.IEx not working with adapter: ExVCR.Adapter.Hackney (#156, #157)
+
 0.11.1
 ------
 #### Enhancements
