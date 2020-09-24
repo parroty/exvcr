@@ -47,4 +47,17 @@ defmodule ExVCR.Actor do
     defcast set(x), do: new_state(x)
     defcall get, state: state, do: reply(state)
   end
+
+  defmodule CurrentRecorder do
+    @moduledoc """
+    Stores current recorder to be able to fetch it inside of mocked versio of adapter.
+    """
+
+    use ExActor.GenServer, export: __MODULE__
+
+    defstart(start_link(arg), do: initial_state(arg))
+
+    defcast(set(x), do: new_state(x))
+    defcall(get, state: state, do: reply(state))
+  end
 end

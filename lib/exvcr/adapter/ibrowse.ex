@@ -24,11 +24,11 @@ defmodule ExVCR.Adapter.IBrowse do
   @doc """
   Returns list of the mock target methods with function name and callback.
   """
-  def target_methods(recorder) do
-    [ {:send_req, &ExVCR.Recorder.request(recorder, [&1,&2,&3])},
-      {:send_req, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4])},
-      {:send_req, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])},
-      {:send_req, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5,&6])} ]
+  def target_methods() do
+    [ {:send_req, &ExVCR.Recorder.request([&1,&2,&3])},
+      {:send_req, &ExVCR.Recorder.request([&1,&2,&3,&4])},
+      {:send_req, &ExVCR.Recorder.request([&1,&2,&3,&4,&5])},
+      {:send_req, &ExVCR.Recorder.request([&1,&2,&3,&4,&5,&6])} ]
   end
 
   @doc """

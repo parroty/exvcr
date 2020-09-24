@@ -14,8 +14,8 @@ defmodule ExVCR.Adapter do
       @doc """
       Returns list of the mock target methods with function name and callback.
       """
-      def target_methods(recorder), do: raise ExVCR.ImplementationMissingError
-      defoverridable [target_methods: 1]
+      def target_methods(), do: raise ExVCR.ImplementationMissingError
+      defoverridable [target_methods: 0]
 
       @doc """
       Generate key for searching response.

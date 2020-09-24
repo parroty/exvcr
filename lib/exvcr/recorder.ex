@@ -30,8 +30,9 @@ defmodule ExVCR.Recorder do
   Provides entry point to be called from :meck library. HTTP request arguments are specified as args parameter.
   If response is not found in the cache, access to the server.
   """
-  def request(recorder, request) do
-    Handler.get_response(recorder, request)
+  def request(args) do
+    ExVCR.Actor.CurrentRecorder.get()
+    |> Handler.get_response(args)
   end
 
   @doc """

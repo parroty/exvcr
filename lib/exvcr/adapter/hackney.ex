@@ -27,17 +27,18 @@ defmodule ExVCR.Adapter.Hackney do
   @doc """
   Returns list of the mock target methods with function name and callback.
   """
-  def target_methods(recorder) do
+  def target_methods() do
     [
-      {:request, &ExVCR.Recorder.request(recorder, [&1, &2, &3, &4, &5])},
-      {:request, &ExVCR.Recorder.request(recorder, [&1, &2, &3, &4])},
-      {:request, &ExVCR.Recorder.request(recorder, [&1, &2, &3])},
-      {:request, &ExVCR.Recorder.request(recorder, [&1, &2])},
-      {:request, &ExVCR.Recorder.request(recorder, [&1])},
-      {:body, &handle_body_request(recorder, [&1])},
-      {:body, &handle_body_request(recorder, [&1, &2])}
+      {:request, &ExVCR.Recorder.request([&1, &2, &3, &4, &5])},
+      {:request, &ExVCR.Recorder.request([&1, &2, &3, &4])},
+      {:request, &ExVCR.Recorder.request([&1, &2, &3])},
+      {:request, &ExVCR.Recorder.request([&1, &2])},
+      {:request, &ExVCR.Recorder.request([&1])},
+      {:body, &handle_body_request([&1])},
+      {:body, &handle_body_request([&1, &2])}
     ]
   end
+
 
   @doc """
   Generate key for searching response.
@@ -87,6 +88,11 @@ defmodule ExVCR.Adapter.Hackney do
       Store.set(client_key_atom, body)
       %{response | body: client}
     end
+  end
+
+  defp handle_body_request(args) do
+    ExVCR.Actor.CurrentRecorder.get()
+    |> handle_body_request(args)
   end
 
   defp handle_body_request(recorder, [client]) do
