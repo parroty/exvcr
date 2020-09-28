@@ -39,7 +39,6 @@ defmodule ExVCR.Adapter.Hackney do
     ]
   end
 
-
   @doc """
   Generate key for searching response.
   """
