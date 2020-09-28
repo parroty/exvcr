@@ -38,6 +38,7 @@ defmodule ExVCR.Mock do
         [do: return_value] = unquote(test)
         return_value
       after
+        ExVCR.Actor.CurrentRecorder.set(nil)
         ExVCR.MockLock.release_lock()
       end
     end
@@ -66,6 +67,7 @@ defmodule ExVCR.Mock do
       after
         recorder_result = Recorder.save(recorder)
 
+        ExVCR.Actor.CurrentRecorder.set(nil)
         ExVCR.MockLock.release_lock()
 
         recorder_result

@@ -10,6 +10,9 @@ defmodule ExVCR.Handler do
   @doc """
   Get response from either server or cache.
   """
+  def get_response(nil, request) do
+    :meck.passthrough(request)
+  end
   def get_response(recorder, request) do
     if ignore_request?(request, recorder) do
       get_response_from_server(request, recorder, false)
