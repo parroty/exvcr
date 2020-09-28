@@ -50,7 +50,7 @@ defmodule ExVCR.Actor do
 
   defmodule CurrentRecorder do
     @moduledoc """
-    Stores current recorder to be able to fetch it inside of mocked versio of adapter.
+    Stores current recorder to be able to fetch it inside of the mocked version of the adapter.
     """
 
     use ExActor.GenServer, export: __MODULE__
