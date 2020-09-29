@@ -2,11 +2,28 @@ defmodule ExVCR.Adapter.IBrowseTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock
 
+  @port 34011
+
   setup_all do
-    HTTPotion.start
+    HttpServer.start(path: "/server", port: @port, response: "test_response")
     Application.ensure_started(:ibrowse)
+    on_exit fn ->
+      HttpServer.stop(@port)
+    end
     :ok
   end
+
+
+  test "passthrough works after cassette has been used" do
+    url = "http://localhost:#{@port}/server" |> to_char_list()
+    use_cassette "ibrowse_get_localhost" do
+      {:ok, status_code, _headers, _body} = :ibrowse.send_req(url, [], :get)
+      assert status_code == '200'
+    end
+    {:ok, status_code, _headers, _body} = :ibrowse.send_req(url, [], :get)
+    assert status_code == '200'
+  end
+
 
   test "example single request" do
     use_cassette "example_ibrowse" do

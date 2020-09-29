@@ -1,0 +1,23 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "http://localhost:34011/server"
+    },
+    "response": {
+      "binary": false,
+      "body": "test_response",
+      "headers": {
+        "server": "Cowboy",
+        "date": "Tue, 29 Sep 2020 11:56:58 GMT",
+        "content-length": "13"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

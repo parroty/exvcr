@@ -2,9 +2,25 @@ defmodule ExVCR.Adapter.HackneyTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
+  @port 34009
+
   setup_all do
+    HttpServer.start(path: "/server", port: @port, response: "test_response")
     {:ok, _} = HTTPoison.start
+    on_exit fn ->
+      HttpServer.stop(@port)
+    end
     :ok
+  end
+
+  test "passthrough works after cassette has been used" do
+    url = "http://localhost:#{@port}/server"
+    use_cassette "hackney_get_localhost" do
+      {:ok, status_code, _headers, _body} = :hackney.request(:get, url, [], [], [with_body: true])
+      assert status_code == 200
+    end
+    {:ok, status_code, _headers, _body} = :hackney.request(:get, url, [], [], [with_body: true])
+    assert status_code == 200
   end
 
   test "hackney request" do
