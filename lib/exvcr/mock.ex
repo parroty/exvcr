@@ -38,8 +38,7 @@ defmodule ExVCR.Mock do
         [do: return_value] = unquote(test)
         return_value
       after
-        module_name = adapter_method().module_name
-        :meck.unload(module_name)
+        ExVCR.Actor.CurrentRecorder.set(nil)
         ExVCR.MockLock.release_lock()
       end
     end
@@ -68,8 +67,7 @@ defmodule ExVCR.Mock do
       after
         recorder_result = Recorder.save(recorder)
 
-        module_name = adapter_method().module_name
-        :meck.unload(module_name)
+        ExVCR.Actor.CurrentRecorder.set(nil)
         ExVCR.MockLock.release_lock()
 
         recorder_result
@@ -89,19 +87,14 @@ defmodule ExVCR.Mock do
   @doc """
   Mock methods pre-defined for the specified adapter.
   """
-  def mock_methods(recorder, adapter) do
-    target_methods = adapter.target_methods(recorder)
-    module_name    = adapter.module_name
-
+  def mock_methods(recorder, _adapter) do
     parent_pid = self()
     Task.async(fn ->
       ExVCR.MockLock.ensure_started
       ExVCR.MockLock.request_lock(self(), parent_pid)
       receive do
         :lock_granted ->
-          Enum.each(target_methods, fn({function, callback}) ->
-            :meck.expect(module_name, function, callback)
-          end)
+          ExVCR.Actor.CurrentRecorder.set(recorder)
       end
     end)
     |> Task.await(:infinity)

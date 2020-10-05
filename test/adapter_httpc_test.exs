@@ -2,9 +2,27 @@ defmodule ExVCR.Adapter.HttpcTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
+  @port 34010
+
   setup_all do
+    HttpServer.start(path: "/server", port: @port, response: "test_response")
     Application.ensure_started(:inets)
+    on_exit fn ->
+      HttpServer.stop(@port)
+    end
     :ok
+  end
+
+  test "passthrough works after cassette has been used" do
+    url = "http://localhost:#{@port}/server" |> to_char_list()
+    use_cassette "httpc_get_localhost" do
+      {:ok, result} = :httpc.request(url)
+      {{_http_version, status_code, _reason_phrase}, _headers, _body} = result
+      assert status_code == 200
+    end
+    {:ok, result} = :httpc.request(url)
+    {{_http_version, status_code, _reason_phrase}, _headers, _body} = result
+    assert status_code == 200
   end
 
   test "example httpc request/1" do

@@ -22,6 +22,7 @@ It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide 
 
 ### Notes
 - ExVCR.Config functions must be called from setup or test. Calls outside of test process, such as in setup_all will not work.
+- ExVCR implements global mock, which means that all HTTP client calls outside of `use_cassette` go through `meck.passthough/1`.
 
 ### Install
 Add `:exvcr` to `deps` section of `mix.exs`.

@@ -24,7 +24,6 @@ defmodule ExVCR.IEx do
             ExVCR.Mock.mock_methods(recorder, unquote(adapter))
             unquote(test)
           after
-            :meck.unload(unquote(adapter).module_name)
             ExVCR.MockLock.release_lock()
             Recorder.get(recorder)
             |> JSX.encode!
