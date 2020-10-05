@@ -1,3 +1,10 @@
+0.12.0
+------
+#### Enhancements
+* Fix for the following points.
+   - Slow (#107).
+   - Use global mock in adapters (#158).
+
 0.11.2
 ------
 #### Changes
