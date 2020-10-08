@@ -1,3 +1,8 @@
+0.12.1
+------
+#### Changes
+* Make global mock experimental feature and disable it by default (#159, #160).
+
 0.12.0
 ------
 #### Enhancements
@@ -8,7 +13,7 @@
 0.11.2
 ------
 #### Changes
-* Fix for ExVCR.IEx not working with adapter: ExVCR.Adapter.Hackney (#156, #157)
+* Fix for ExVCR.IEx not working with adapter: ExVCR.Adapter.Hackney (#156, #157).
 
 0.11.1
 ------
