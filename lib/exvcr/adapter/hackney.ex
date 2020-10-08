@@ -26,6 +26,7 @@ defmodule ExVCR.Adapter.Hackney do
 
   @doc """
   Returns list of the mock target methods with function name and callback.
+  Implementation for global mock.
   """
   def target_methods() do
     [
@@ -36,6 +37,21 @@ defmodule ExVCR.Adapter.Hackney do
       {:request, &ExVCR.Recorder.request([&1])},
       {:body, &handle_body_request([&1])},
       {:body, &handle_body_request([&1, &2])}
+    ]
+  end
+
+  @doc """
+  Returns list of the mock target methods with function name and callback.
+  """
+  def target_methods(recorder) do
+    [
+      {:request, &ExVCR.Recorder.request(recorder, [&1, &2, &3, &4, &5])},
+      {:request, &ExVCR.Recorder.request(recorder, [&1, &2, &3, &4])},
+      {:request, &ExVCR.Recorder.request(recorder, [&1, &2, &3])},
+      {:request, &ExVCR.Recorder.request(recorder, [&1, &2])},
+      {:request, &ExVCR.Recorder.request(recorder, [&1])},
+      {:body, &handle_body_request(recorder, [&1])},
+      {:body, &handle_body_request(recorder, [&1, &2])}
     ]
   end
 

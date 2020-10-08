@@ -9,5 +9,9 @@ otp_release:
   - 19.3
   - 20.3
 
+env:
+  - GLOBAL_MOCK=true
+  - GLOBAL_MOCK=false
+
 script:
   - "MIX_ENV=test mix do deps.get, compile, coveralls.travis"

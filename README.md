@@ -21,11 +21,10 @@ It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide 
     - The JSON file can be recorded automatically (vcr_cassettes) or manually updated (custom_cassettes)
 
 ### Notes
+
 - ExVCR.Config functions must be called from setup or test. Calls outside of test process, such as in setup_all will not work.
-- ExVCR implements global mock, which means that all HTTP client calls outside of `use_cassette` go through `meck.passthough/1`.
 
 ### Install
-Add `:exvcr` to `deps` section of `mix.exs`.
 
 ```elixir
   def deps do
@@ -311,6 +310,39 @@ config :exvcr, [
 ```
 
 If `exvcr` is defined as test-only dependency, describe the above statement in test-only config file (ex. `config\test.exs`) or make it conditional (ex. wrap with `if Mix.env == :test`).
+
+### Global mock experimental feature
+
+The global mock is an attempt to address a general issue with **exvcr being slow**, see [#107](https://github.com/parroty/exvcr/issues/107)
+
+In general, every use_cassette takes around 500 ms so if you extensively use cassettes it could spend minutes doing `:meck.expect/2` and `:meck.unload/1`. Even `exvcr` tests  need 40 seconds versus 1 second when global mock is used.
+
+Since feature is **experimental** be careful when using it. Please note the following:
+
+- ExVCR implements global mock, which means that all HTTP client calls outside of `use_cassette` go through `meck.passthough/1`.
+- There are some report that the feature doesn't work in some case, see [the issue](https://github.com/parroty/exvcr/issues/159).
+- By default, the global mocking disabled, to enabled it set the following in config:
+
+```elixir
+use Mix.Config
+
+config :exvcr, [
+  global_mock: true
+]
+```
+
+All tests that are written for `exvcr` could also be running in global mocking mode:
+
+```
+$ GLOBAL_MOCK=true mix test
+
+.........................................................
+
+Finished in 1.3 seconds
+141 tests, 0 failures
+
+Randomized with seed 905427
+```
 
 ### Mix Tasks
 The following tasks are added by including exvcr package.
