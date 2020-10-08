@@ -23,6 +23,7 @@ defmodule ExVCR.Adapter.Httpc do
 
   @doc """
   Returns list of the mock target methods with function name and callback.
+  Implementation for global mock.
     TODO:
       {:request, &ExVCR.Recorder.request(recorder, [&1,&2])}
       {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])}
@@ -31,6 +32,18 @@ defmodule ExVCR.Adapter.Httpc do
     [ {:request, &ExVCR.Recorder.request([&1])},
       {:request, &ExVCR.Recorder.request([&1,&2,&3,&4])} ]
   end
+
+  @doc """
+  Returns list of the mock target methods with function name and callback.
+    TODO:
+      {:request, &ExVCR.Recorder.request(recorder, [&1,&2])}
+      {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])}
+  """
+  def target_methods(recorder) do
+    [ {:request, &ExVCR.Recorder.request(recorder, [&1])},
+      {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4])} ]
+  end
+
 
   @doc """
   Generate key for searching response.
