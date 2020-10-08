@@ -110,6 +110,10 @@ defmodule ExVCR.Adapter.Hackney do
     |> handle_body_request(args)
   end
 
+  defp handle_body_request(nil, args) do
+    :meck.passthrough(args)
+  end
+
   defp handle_body_request(recorder, [client]) do
     handle_body_request(recorder, [client, :infinity])
   end
