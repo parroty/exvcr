@@ -102,7 +102,8 @@ defmodule ExVCR.Mock do
   @doc false
   def unload(module_name) do
     if ExVCR.Application.global_mock_enabled?() do
-      ExVCR.Actor.CurrentRecorder.set(nil)
+      ExVCR.Actor.CurrentRecorder.default_state()
+      |> ExVCR.Actor.CurrentRecorder.set()
     else
       :meck.unload(module_name)
     end

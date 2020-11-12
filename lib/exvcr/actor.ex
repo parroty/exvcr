@@ -55,9 +55,11 @@ defmodule ExVCR.Actor do
 
     use ExActor.GenServer, export: __MODULE__
 
-    defstart(start_link(arg), do: initial_state(arg))
+    defstart(start_link(_arg), do: default_state() |> initial_state())
 
     defcast(set(x), do: new_state(x))
     defcall(get, state: state, do: reply(state))
+
+    def default_state(), do: nil
   end
 end

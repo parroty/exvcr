@@ -13,6 +13,15 @@ defmodule ExVCR.Adapter.IBrowseTest do
     :ok
   end
 
+  test "passthrough works when CurrentRecorder has an initial state" do
+    if ExVCR.Application.global_mock_enabled?() do
+      ExVCR.Actor.CurrentRecorder.default_state()
+      |> ExVCR.Actor.CurrentRecorder.set()
+    end
+    url = "http://localhost:#{@port}/server" |> to_char_list()
+    {:ok, status_code, _headers, _body} = :ibrowse.send_req(url, [], :get)
+    assert status_code == '200'
+  end
 
   test "passthrough works after cassette has been used" do
     url = "http://localhost:#{@port}/server" |> to_char_list()
