@@ -117,7 +117,7 @@ defmodule ExVCR.RecorderHttpcTest do
     ExVCR.Config.response_headers_blacklist(["Date"])
     use_cassette "remove_blacklisted_headers" do
       {:ok, {_, headers, _}} = :httpc.request(@url)
-      assert headers == [{'server', 'Cowboy'}, {'content-length', '13'}]
+      assert Enum.sort(headers) == Enum.sort([{'server', 'Cowboy'}, {'content-length', '13'}])
     end
     ExVCR.Config.response_headers_blacklist([])
   end
