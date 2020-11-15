@@ -18,13 +18,13 @@ defmodule ExVCR.Adapter.IBrowseTest do
       ExVCR.Actor.CurrentRecorder.default_state()
       |> ExVCR.Actor.CurrentRecorder.set()
     end
-    url = "http://localhost:#{@port}/server" |> to_char_list()
+    url = "http://localhost:#{@port}/server" |> to_charlist()
     {:ok, status_code, _headers, _body} = :ibrowse.send_req(url, [], :get)
     assert status_code == '200'
   end
 
   test "passthrough works after cassette has been used" do
-    url = "http://localhost:#{@port}/server" |> to_char_list()
+    url = "http://localhost:#{@port}/server" |> to_charlist()
     use_cassette "ibrowse_get_localhost" do
       {:ok, status_code, _headers, _body} = :ibrowse.send_req(url, [], :get)
       assert status_code == '200'
