@@ -1,3 +1,9 @@
+0.12.2
+------
+#### Changes
+* Misc HTML doc generation changes (#161).
+* Fix CurrentRecorder initial state (#163).
+
 0.12.1
 ------
 #### Changes
