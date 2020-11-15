@@ -1,11 +1,17 @@
 defmodule ExVCR.Mixfile do
   use Mix.Project
 
+  @source_url "https://github.com/parroty/exvcr"
+  @version "0.12.1"
+
   def project do
-    [ app: :exvcr,
-      version: "0.12.1",
+    [
+      app: :exvcr,
+      version: @version,
+      source_url: @source_url,
       elixir: "~> 1.3",
       deps: deps(),
+      docs: docs(),
       description: description(),
       package: package(),
       test_coverage: [tool: ExCoveralls],
@@ -13,14 +19,10 @@ defmodule ExVCR.Mixfile do
     ]
   end
 
-  # Configuration for the OTP application
   def application do
-    [applications: [:meck, :exactor, :exjsx],
-     mod: {ExVCR.Application, []}]
+    [applications: [:meck, :exactor, :exjsx], mod: {ExVCR.Application, []}]
   end
 
-  # Returns the list of dependencies in the format:
-  # { :foobar, "~> 0.1", git: "https://github.com/elixir-lang/foobar.git" }
   def deps do
     [
       {:meck, "~> 0.8"},
@@ -42,8 +44,25 @@ defmodule ExVCR.Mixfile do
   end
 
   defp package do
-    [ maintainers: ["parroty"],
+    [
+      maintainers: ["parroty"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/parroty/exvcr"} ]
+      links: %{
+        "GitHub" => @source_url,
+        "Changelog" => "#{@source_url}/blob/master/CHANGELOG.md"
+      }
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      source_ref: "v#{@version}",
+      source_url: @source_url,
+      extras: [
+        "CHANGELOG.md",
+        "README.md"
+      ]
+    ]
   end
 end

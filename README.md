@@ -1,53 +1,67 @@
-# ExVCR [![Build Status](https://secure.travis-ci.org/parroty/exvcr.png?branch=master "Build Status")](https://travis-ci.org/parroty/exvcr) [![Coverage Status](https://coveralls.io/repos/parroty/exvcr/badge.png?branch=master)](https://coveralls.io/r/parroty/exvcr?branch=master) [![hex.pm version](https://img.shields.io/hexpm/v/exvcr.svg)](https://hex.pm/packages/exvcr) [![hex.pm downloads](https://img.shields.io/hexpm/dt/exvcr.svg)](https://hex.pm/packages/exvcr) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+# ExVCR
 
+[![Build Status](https://img.shields.io/travis/parroty/exvcr/master)](https://travis-ci.org/parroty/exvcr)
+[![Coverage Status](https://img.shields.io/coveralls/github/parroty/exvcr)](https://coveralls.io/r/parroty/exvcr?branch=master)
+[![hex.pm version](https://img.shields.io/hexpm/v/exvcr.svg)](https://hex.pm/packages/exvcr)
+[![hex.pm downloads](https://img.shields.io/hexpm/dt/exvcr.svg)](https://hex.pm/packages/exvcr)
+[![License](https://img.shields.io/hexpm/l/exvcr.svg)](http://opensource.org/licenses/MIT)
 
-Record and replay HTTP interactions library for elixir.
-It's inspired by Ruby's VCR (https://github.com/vcr/vcr), and trying to provide similar functionalities.
+Record and replay HTTP interactions library for Elixir.  It's inspired by
+Ruby's VCR (https://github.com/vcr/vcr), and trying to provide similar
+functionalities.
 
 ### Basics
 
-- The following HTTP libraries can be applied.
-    - <a href="https://github.com/cmullaparthi/ibrowse" target="_blank">ibrowse</a>-based libraries.
-        - <a href="https://github.com/myfreeweb/httpotion" target="_blank">HTTPotion</a>
-    - <a href="https://github.com/benoitc/hackney" target="_blank">hackney</a>-based libraries.
-        - <a href="https://github.com/edgurgel/httpoison" target="_blank">HTTPoison</a>
-        - support is very limited, and tested only with sync request of HTTPoison yet.
-    - <a href="http://erlang.org/doc/man/httpc.html" target="_blank">httpc</a>-based libraries.
-        - <a href="https://github.com/tim/erlang-oauth/" target="_blank">erlang-oauth</a>
-        - <a href="https://github.com/Zatvobor/tirexs" target="_blank">tirexs</a>
-        - support is very limited, and tested only with :httpc.request/1 and :httpc.request/4
+The following HTTP libraries can be applied.
 
-- HTTP interactions are recorded as JSON file.
-    - The JSON file can be recorded automatically (vcr_cassettes) or manually updated (custom_cassettes)
+  - <a href="https://github.com/cmullaparthi/ibrowse" target="_blank">ibrowse</a>-based libraries.
+    - <a href="https://github.com/myfreeweb/httpotion" target="_blank">HTTPotion</a>
+  - <a href="https://github.com/benoitc/hackney" target="_blank">hackney</a>-based libraries.
+    - <a href="https://github.com/edgurgel/httpoison" target="_blank">HTTPoison</a>
+    - support is very limited, and tested only with sync request of HTTPoison yet.
+  - <a href="http://erlang.org/doc/man/httpc.html" target="_blank">httpc</a>-based libraries.
+    - <a href="https://github.com/tim/erlang-oauth/" target="_blank">erlang-oauth</a>
+    - <a href="https://github.com/Zatvobor/tirexs" target="_blank">tirexs</a>
+    - support is very limited, and tested only with `:httpc.request/1` and `:httpc.request/4`.
+
+HTTP interactions are recorded as JSON file. The JSON file can be recorded
+automatically (`vcr_cassettes`) or manually updated (`custom_cassettes`).
 
 ### Notes
 
-- ExVCR.Config functions must be called from setup or test. Calls outside of test process, such as in setup_all will not work.
+- `ExVCR.Config` functions must be called from `setup` or `test`. Calls outside
+  of test process, such as in `setup_all` will not work.
 
 ### Install
 
+Add `:exvcr` to `deps` section of `mix.exs`.
+
 ```elixir
-  def deps do
-    [ {:exvcr, "~> 0.11", only: :test} ]
-  end
+def deps do
+  [ {:exvcr, "~> 0.11", only: :test} ]
+end
 ```
 
-Optionally, `preferred_cli_env: [vcr: :test]` can be specified for running `mix vcr` in `:test` env by default.
+Optionally, `preferred_cli_env: [vcr: :test]` can be specified for running `mix
+vcr` in `:test` env by default.
 
 ```elixir
-  def project do
-    [ ...
-      preferred_cli_env: [
-        vcr: :test, "vcr.delete": :test, "vcr.check": :test, "vcr.show": :test
-      ],
-      ...
-  end
+def project do
+  [ ...
+    preferred_cli_env: [
+      vcr: :test, "vcr.delete": :test, "vcr.check": :test, "vcr.show": :test
+    ],
+    ...
+end
 ```
 
 ### Usage
-- Add `use ExVCR.Mock` to the test module. This mocks ibrowse by default. For using hackney, specify `adapter: ExVCR.Adapter.Hackney` options as follows.
+
+Add `use ExVCR.Mock` to the test module. This mocks `ibrowse` by default. For
+using `hackney`, specify `adapter: ExVCR.Adapter.Hackney` options as follows.
 
 ##### Example with ibrowse
+
 ```Elixir
 defmodule ExVCR.Adapter.IBrowseTest do
   use ExUnit.Case, async: true
@@ -77,6 +91,7 @@ end
 ```
 
 ##### Example with hackney
+
 ```Elixir
 defmodule ExVCR.Adapter.HackneyTest do
   use ExUnit.Case, async: true
@@ -95,6 +110,7 @@ end
 ```
 
 ##### Example with httpc
+
 ```Elixir
 defmodule ExVCR.Adapter.HttpcTest do
   use ExUnit.Case, async: true
@@ -114,9 +130,17 @@ defmodule ExVCR.Adapter.HttpcTest do
 ```
 
 #### Custom Cassettes
-You can manually define custom cassette json file for more flexible response control rather than just recoding the actual server response.
-- Optional 2nd parameter of `ExVCR.Config.cassette_library_dir` method specifies the custom cassette directory. The directory is separated from vcr cassette one for avoiding mistakenly overwriting.
-- Adding `custom: true` option to `use_cassette` macro indicates to use the custom cassette, and it just returns the pre-defined json response, instead of requesting to server.
+
+You can manually define custom cassette JSON file for more flexible response
+control rather than just recoding the actual server response.
+
+- Optional 2nd parameter of `ExVCR.Config.cassette_library_dir` method
+  specifies the custom cassette directory. The directory is separated from vcr
+  cassette one for avoiding mistakenly overwriting.
+
+- Adding `custom: true` option to `use_cassette` macro indicates to use the
+  custom cassette, and it just returns the pre-defined JSON response, instead
+  of requesting to server.
 
 
 ```Elixir
@@ -136,7 +160,7 @@ defmodule ExVCR.MockTest do
   end
 ```
 
-The custom json file format is the same as vcr cassettes.
+The custom JSON file format is the same as vcr cassettes.
 
 **fixture/custom_cassettes/response_mocking.json**
 ```javascript
@@ -157,11 +181,18 @@ The custom json file format is the same as vcr cassettes.
 ```
 
 ### Recording VCR Cassettes
+
 #### Matching
-ExVCR uses url parameter to match request and cassettes. The "url" parameter in the json file is taken as regexp string.
+
+ExVCR uses URL parameter to match request and cassettes. The `url` parameter in
+the JSON file is taken as regexp string.
 
 #### Removing Sensitive Data
-`ExVCR.Config.filter_sensitive_data(pattern, placeholder)` method can be used to remove sensitive data. It searches for string matches with `pattern`, which is a string representing a regular expression, and replaces with `placeholder`. Replacements happen both in URLs and request and response bodies.
+
+`ExVCR.Config.filter_sensitive_data(pattern, placeholder)` method can be used
+to remove sensitive data. It searches for string matches with `pattern`, which
+is a string representing a regular expression, and replaces with `placeholder`.
+Replacements happen both in URLs and request and response bodies.
 
 ```elixir
 test "replace sensitive data" do
@@ -172,43 +203,49 @@ test "replace sensitive data" do
 end
 ```
 
-`ExVCR.Config.filter_request_headers(header)` and `ExVCR.Config.filter_request_options(option)` can be used to remove sensitive data in the request headers. It checks if the `header` is found in the request headers and blanks out it's value with `***`.
+`ExVCR.Config.filter_request_headers(header)` and
+`ExVCR.Config.filter_request_options(option)` can be used to remove sensitive
+data in the request headers. It checks if the `header` is found in the request
+headers and blanks out it's value with `***`.
+
 ```elixir
-  test "replace sensitive data in request header" do
-    ExVCR.Config.filter_request_headers("X-My-Secret-Token")
-    use_cassette "sensitive_data_in_request_header" do
-      body = HTTPoison.get!("http://localhost:34000/server?", ["X-My-Secret-Token": "my-secret-token"]).body
-      assert body == "test_response"
-    end
-
-    # The recorded cassette should contain replaced data.
-    cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_header.json")
-    assert cassette =~ "\"X-My-Secret-Token\": \"***\""
-    refute cassette =~  "\"X-My-Secret-Token\": \"my-secret-token\""
-
-    ExVCR.Config.filter_request_headers(nil)
+test "replace sensitive data in request header" do
+  ExVCR.Config.filter_request_headers("X-My-Secret-Token")
+  use_cassette "sensitive_data_in_request_header" do
+    body = HTTPoison.get!("http://localhost:34000/server?", ["X-My-Secret-Token": "my-secret-token"]).body
+    assert body == "test_response"
   end
+
+  # The recorded cassette should contain replaced data.
+  cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_header.json")
+  assert cassette =~ "\"X-My-Secret-Token\": \"***\""
+  refute cassette =~  "\"X-My-Secret-Token\": \"my-secret-token\""
+
+  ExVCR.Config.filter_request_headers(nil)
+end
 ```
 
 ```elixir
-  test "replace sensitive data in request options" do
-    ExVCR.Config.filter_request_options("basic_auth")
-    use_cassette "sensitive_data_in_request_options" do
-      body = HTTPoison.get!(@url, [], [hackney: [basic_auth: {"username", "password"}]]).body
-      assert body == "test_response"
-    end
-
-    # The recorded cassette should contain replaced data.
-    cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_options.json")
-    assert cassette =~ "\"basic_auth\": \"***\""
-    refute cassette =~  "\"basic_auth\": {\"username\", \"password\"}"
-
-    ExVCR.Config.filter_request_options(nil)
+test "replace sensitive data in request options" do
+  ExVCR.Config.filter_request_options("basic_auth")
+  use_cassette "sensitive_data_in_request_options" do
+    body = HTTPoison.get!(@url, [], [hackney: [basic_auth: {"username", "password"}]]).body
+    assert body == "test_response"
   end
+
+  # The recorded cassette should contain replaced data.
+  cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_options.json")
+  assert cassette =~ "\"basic_auth\": \"***\""
+  refute cassette =~  "\"basic_auth\": {\"username\", \"password\"}"
+
+  ExVCR.Config.filter_request_options(nil)
+end
 ```
 
-#### Ignoring query params in url
-If `ExVCR.Config.filter_url_params(true)` is specified, query params in url will be ignored when recording cassettes.
+#### Ignoring query params in URL
+
+If `ExVCR.Config.filter_url_params(true)` is specified, query params in URL
+will be ignored when recording cassettes.
 
 ```elixir
 test "filter url param flag removes url params when recording cassettes" do
@@ -222,26 +259,31 @@ test "filter url param flag removes url params when recording cassettes" do
 ```
 
 #### Removing headers from response
-If `ExVCR.Config.response_headers_blacklist(headers_blacklist)` is specified, the headers in the list will be removed from the response.
+
+If `ExVCR.Config.response_headers_blacklist(headers_blacklist)` is specified,
+the headers in the list will be removed from the response.
 
 ```elixir
-  test "remove blacklisted headers" do
-    use_cassette "original_headers" do
-      assert Map.has_key?(HTTPoison.get!(@url, []).headers, "connection") == true
-    end
-
-    ExVCR.Config.response_headers_blacklist(["Connection"])
-    use_cassette "remove_blacklisted_headers" do
-      assert Map.has_key?(HTTPoison.get!(@url, []).headers, "connection") == false
-    end
-
-    ExVCR.Config.response_headers_blacklist([])
+test "remove blacklisted headers" do
+  use_cassette "original_headers" do
+    assert Map.has_key?(HTTPoison.get!(@url, []).headers, "connection") == true
   end
+
+  ExVCR.Config.response_headers_blacklist(["Connection"])
+  use_cassette "remove_blacklisted_headers" do
+    assert Map.has_key?(HTTPoison.get!(@url, []).headers, "connection") == false
+  end
+
+  ExVCR.Config.response_headers_blacklist([])
+end
 ```
 
 #### Matching Options
-##### matching against query params
-By default, query params are not used for matching. In order to include query params, specify `match_requests_on: [:query]` for `use_cassette` call.
+
+##### Matching against query params
+
+By default, query params are not used for matching. In order to include query
+params, specify `match_requests_on: [:query]` for `use_cassette` call.
 
 ```elixir
 test "matching query params with match_requests_on params" do
@@ -252,8 +294,10 @@ test "matching query params with match_requests_on params" do
 end
 ```
 
-##### matching against request body
-By default, request body is not used for matching. In order to include request body, specify `match_requests_on: [:request_body]` for `use_cassette` call.
+##### Matching against request body
+
+By default, request body is not used for matching. In order to include request
+body, specify `match_requests_on: [:request_body]` for `use_cassette` call.
 
 ```elixir
 test "matching request body with match_requests_on params" do
@@ -264,8 +308,11 @@ test "matching request body with match_requests_on params" do
 end
 ```
 
-##### matching against custom parameters
-You can define and use your own matchers for cases not covered by the build-in matchers. To do this you can specify `custom_matchers: [func_one, func_two, ...]` for `use_cassette` call.
+##### Matching against custom parameters
+
+You can define and use your own matchers for cases not covered by the build-in
+matchers. To do this you can specify `custom_matchers: [func_one, func_two, ...]`
+for `use_cassette` call.
 
 ```elixir
 test "matching special header with custom_matchers" do
@@ -290,9 +337,10 @@ test "matching special header with custom_matchers" do
 end
 ```
 
+### Default Config
 
-### Default Configs
-Default parameters for `ExVCR.Config` module can be specified in `config\config.exs` as follows.
+Default parameters for `ExVCR.Config` module can be specified in
+`config\config.exs` as follows.
 
 ```elixir
 use Mix.Config
@@ -309,7 +357,9 @@ config :exvcr, [
 ]
 ```
 
-If `exvcr` is defined as test-only dependency, describe the above statement in test-only config file (ex. `config\test.exs`) or make it conditional (ex. wrap with `if Mix.env == :test`).
+If `exvcr` is defined as test-only dependency, describe the above statement in
+test-only config file (ex. `config\test.exs`) or make it conditional (ex. wrap
+with `if Mix.env == :test`).
 
 ### Global mock experimental feature
 
@@ -345,7 +395,9 @@ Randomized with seed 905427
 ```
 
 ### Mix Tasks
-The following tasks are added by including exvcr package.
+
+The following tasks are added by including `exvcr` package.
+
 - [mix vcr](#mix-vcr-show-cassettes)
 - [mix vcr.delete](#mix-vcrdelete-delete-cassettes)
 - [mix vcr.check](#mix-vcrcheck-check-cassettes)
@@ -353,7 +405,8 @@ The following tasks are added by including exvcr package.
 - [mix vcr --help](#mix-vcr-help-help)
 
 #### [mix vcr] Show cassettes
-```Shell
+
+```shell
 $ mix vcr
 Showing list of cassettes in [fixture/vcr_cassettes]
   [File Name]                              [Last Update]
@@ -373,15 +426,20 @@ Showing list of cassettes in [fixture/custom_cassettes]
 ```
 
 #### [mix vcr.delete] Delete cassettes
-The `mix vcr.delete` task deletes the cassettes that contains the specified pattern in the file name.
-```Shell
+
+The `mix vcr.delete` task deletes the cassettes that contains the specified
+pattern in the file name.
+
+```shell
 $ mix vcr.delete ibrowse
 Deleted example_ibrowse.json.
 Deleted example_ibrowse_multiple.json.
 ```
 
-If -i (--interactive) option is specified, it asks for confirmation before deleting each file.
-```Shell
+If `-i` (`--interactive`) option is specified, it asks for confirmation before
+deleting each file.
+
+```shell
 $ mix vcr.delete ibrowse -i
 delete example_ibrowse.json? y
 Deleted example_ibrowse.json.
@@ -389,12 +447,18 @@ delete example_ibrowse_multiple.json? y
 Deleted example_ibrowse_multiple.json.
 ```
 
-If -a (--all) option is specified, all the cassetes in the specified folder becomes the target for delete.
+If `-a` (`--all`) option is specified, all the cassettes in the specified folder
+becomes the target for delete.
 
 #### [mix vcr.check] Check cassettes
-The `mix vcr.check` shows how many times each cassette is applied while executing `mix test` tasks. It is intended for verifying  the cassettes are properly used. `[Cassette Counts]` indicates the count that the pre-recorded json cassettes are applied. `[Server Counts]` indicates the count that server access is performed.
 
-```Shell
+The `mix vcr.check` shows how many times each cassette is applied while
+executing `mix test` tasks. It is intended for verifying  the cassettes are
+properly used. `[Cassette Counts]` indicates the count that the pre-recorded
+JSON cassettes are applied. `[Server Counts]` indicates the count that server
+access is performed.
+
+```shell
 $ mix vcr.check
 ...............................
 31 tests, 0 failures
@@ -418,9 +482,10 @@ Showing hit counts of cassettes in [fixture/custom_cassettes]
   response_mocking_regex.json              1                    0
 ```
 
-The target test file can be limited by specifying test files, as similar as `mix test` tasks.
+The target test file can be limited by specifying test files, as similar as
+`mix test` tasks.
 
-```Shell
+```shell
 $ mix vcr.check test/exvcr_test.exs
 .............
 13 tests, 0 failures
@@ -432,9 +497,11 @@ Showing hit counts of cassettes in [fixture/vcr_cassettes]
 ```
 
 #### [mix vcr.show] Show cassettes
-The `mix vcr.show` task displays the contents of cassettes json file in the prettified format.
 
-```Shell
+The `mix vcr.show` task displays the contents of cassettes JSON file in the
+prettified format.
+
+```shell
 $ mix vcr.show fixture/vcr_cassettes/httpoison_get.json
 [
   {
@@ -449,9 +516,10 @@ $ mix vcr.show fixture/vcr_cassettes/httpoison_get.json
 ```
 
 #### [mix vcr --help] Help
+
 Displays helps for mix sub-tasks.
 
-```Shell
+```shell
 $ mix vcr --help
 Usage: mix vcr [options]
   Used to display the list of cassettes
@@ -479,12 +547,16 @@ Usage: mix vcr.show [cassete-file-names]
 
 ```
 
-
 ##### Notes
-If the cassette save directory is changed from the default, [-d, --dir] option (for vcr cassettes) and [-c, --custom] option (for custom cassettes) can be used to specify the directory.
+
+If the cassette save directory is changed from the default, [`-d`, `--dir`] option
+(for vcr cassettes) and [`-c`, `--custom`] option (for custom cassettes) can be
+used to specify the directory.
 
 ### IEx Helper
-`ExVCR.IEx` module provides simple helper functions to display the http request/response in json format, instead of recording in the cassette files.
+
+`ExVCR.IEx` module provides simple helper functions to display the HTTP
+request/response in JSON format, instead of recording in the cassette files.
 
 ```elixir
 % iex -S mix
@@ -510,7 +582,8 @@ iex(2)> ExVCR.IEx.print do
 ...
 ```
 
-The adapter option can be specified as `adapter` argument of print function, as follows.
+The adapter option can be specified as `adapter` argument of print function, as
+follows.
 
 ```elixir
 % iex -S mix
@@ -530,7 +603,9 @@ iex(2)> ExVCR.IEx.print(adapter: ExVCR.Adapter.Hackney) do
 ```
 
 ### Stubbing Response
-Specifing `:stub` as fixture name allows directly stubbing the response header/body information based on parameter.
+
+Specifying `:stub` as fixture name allows directly stubbing the response
+header/body information based on parameter.
 
 ```Elixir
 test "stub request works for HTTPotion" do
@@ -563,9 +638,11 @@ test "stub request works for httpc" do
 end
 ```
 
-If the specified `:url` parameter doesn't match requests called inside the `use_cassette` block, it raises `ExVCR.InvalidRequestError`.
+If the specified `:url` parameter doesn't match requests called inside the
+`use_cassette` block, it raises `ExVCR.InvalidRequestError`.
 
-The `:url` can be regular expression string. Please note that you should use the `~r` sigil with `/` as delimiters.
+The `:url` can be regular expression string. Please note that you should use
+the `~r` sigil with `/` as delimiters.
 
 ```Elixir
 test "match URL with regular expression" do
@@ -589,4 +666,5 @@ end
 ```
 
 ### TODO
+
 - Improve performance, as it's very slow.
