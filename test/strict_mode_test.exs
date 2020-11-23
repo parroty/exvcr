@@ -37,7 +37,7 @@ defmodule ExVCR.StrictModeTest do
        HTTPotion.get(@url, []).body =~ ~r/test_response/
        assert(false, "Shouldn't get here")
       catch
-        "A matching cassette was not found" <> _ -> assert(true)
+        "A matching cassette was not found" <> _ -> :ok
         _ -> assert(false, "Encountered unexpected `throw`")
       end
     end
