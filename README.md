@@ -1,6 +1,6 @@
 # ExVCR
 
-[![Build Status](https://github.com/parroty/extwitter/workflows/tests/badge.svg)](https://github.com/parroty/extwitter/actions)
+[![Build Status](https://github.com/parroty/exvcr/workflows/tests/badge.svg)](https://github.com/parroty/extwitter/actions)
 [![Coverage Status](https://img.shields.io/coveralls/github/parroty/exvcr)](https://coveralls.io/r/parroty/exvcr?branch=master)
 [![hex.pm version](https://img.shields.io/hexpm/v/exvcr.svg)](https://hex.pm/packages/exvcr)
 [![hex.pm downloads](https://img.shields.io/hexpm/dt/exvcr.svg)](https://hex.pm/packages/exvcr)
