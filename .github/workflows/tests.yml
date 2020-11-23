@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         otp: ['19.3', '20.3']
-        elixir: ['1.5', '1.10']
+        elixir: ['1.5', '1.9']
         global-mock: [true, false]
     env:
       MIX_ENV: test
