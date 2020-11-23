@@ -1,7 +1,6 @@
 name: tests
 
-on:
-  push:
+on: push
 
 jobs:
   tests:
@@ -9,14 +8,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        otp-version: ['19.3', '20.3']
-        elixir-version: ['1.5', '1.6', '1.7']
+        otp: ['19.3', '20.3']
+        elixir: ['1.5', '1.6', '1.7']
+    env:
+      MIX_ENV: test
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
         with:
-         otp-version: ${{ matrix.otp-version }}
-         elixir-version: ${{ matrix.elixir-version }}
+         otp-version: ${{ matrix.otp }}
+         elixir-version: ${{ matrix.elixir }}
       - uses: actions/cache@v1
         with:
          path: deps
@@ -24,4 +26,4 @@ jobs:
          restore-keys: |
            ${{ runner.os }}-mix-
       - run: mix deps.get
-      - run: mix test
+      - run: mix coveralls.github
