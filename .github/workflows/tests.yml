@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        otp: ['19.3', '20.3']
-        elixir: ['1.5', '1.7']
+        otp: ['20.3']
+        elixir: ['1.5', '1.8']
         global-mock: [true, false]
     env:
       MIX_ENV: test
