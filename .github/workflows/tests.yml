@@ -9,10 +9,12 @@ jobs:
     strategy:
       matrix:
         otp: ['19.3', '20.3']
-        elixir: ['1.5', '1.7']
+        elixir: ['1.5', '1.10']
+        global-mock: [true, false]
     env:
       MIX_ENV: test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GLOBAL_MOCK: ${{ matrix.global-mock }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
