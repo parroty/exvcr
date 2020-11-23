@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         otp: ['19.3', '20.3']
-        elixir: ['1.5', '1.6', '1.7']
+        elixir: ['1.5', '1.7']
     env:
       MIX_ENV: test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
