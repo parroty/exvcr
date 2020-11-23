@@ -15,8 +15,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
         with:
-         otp-version: {{ matrix.otp-version }}
-         elixir-version: {{ matrix.elixir-version }}
+         otp-version: ${{ matrix.otp-version }}
+         elixir-version: ${{ matrix.elixir-version }}
       - uses: actions/cache@v1
         with:
          path: deps
