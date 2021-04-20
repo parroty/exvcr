@@ -1,0 +1,25 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "User-Agent": "ExVCR"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "http://127.0.0.1:34006/server"
+    },
+    "response": {
+      "binary": false,
+      "body": "test_response_before",
+      "headers": {
+        "server": "Cowboy",
+        "date": "Tue, 20 Apr 2021 13:54:51 GMT",
+        "content-length": "20"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

@@ -175,13 +175,36 @@ defmodule ExVCR.Handler do
   end
 
   defp ignore_request?(request, recorder) do
+    ignore_localhost?(request, recorder) ||
+    ignore_urls?(request, recorder)
+  end
+
+  defp ignore_localhost?(request, recorder) do
     ignore_localhost = ExVCR.Recorder.options(recorder)[:ignore_localhost] || ExVCR.Setting.get(:ignore_localhost)
+
     if ignore_localhost do
       adapter = ExVCR.Recorder.options(recorder)[:adapter]
       params = adapter.generate_keys_for_request(request)
 
       url = to_string(params[:url])
       Regex.match?(~r[https?://localhost], url)
+    else
+      false
+    end
+  end
+
+  defp ignore_urls?(request, recorder) do
+    ignore_urls = ExVCR.Recorder.options(recorder)[:ignore_urls] || ExVCR.Setting.get(:ignore_urls)
+
+    if ignore_urls do
+      adapter = ExVCR.Recorder.options(recorder)[:adapter]
+      params = adapter.generate_keys_for_request(request)
+
+      url = to_string(params[:url])
+
+      Enum.any?(ignore_urls, fn r_url ->
+        Regex.match?(r_url, url)
+      end)
     else
       false
     end

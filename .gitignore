@@ -5,3 +5,7 @@ erl_crash.dump
 /tmp
 /_build
 /doc
+.dockerignore
+.devcontainer
+Dockerfile
+docker-compose.yml

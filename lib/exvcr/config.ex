@@ -86,6 +86,13 @@ defmodule ExVCR.Config do
   end
 
   @doc """
+  Skip recording cassettes for urls requests when set
+  """
+  def ignore_urls(value) do
+    Setting.set(:ignore_urls, value)
+  end
+
+  @doc """
   Throw error if there is no matching cassette for an HTTP request
   """
   def strict_mode(value) do
