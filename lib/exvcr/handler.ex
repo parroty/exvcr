@@ -3,9 +3,8 @@ defmodule ExVCR.Handler do
   Provide operations for request/response.
   """
 
-  alias ExVCR.Recorder
+  alias ExVCR.{Recorder, Setting, Util}
   alias ExVCR.Actor.Options
-  alias ExVCR.Util
 
   @doc """
   Get response from either server or cache.
@@ -180,7 +179,8 @@ defmodule ExVCR.Handler do
   end
 
   defp ignore_localhost?(request, recorder) do
-    ignore_localhost = ExVCR.Recorder.options(recorder)[:ignore_localhost] || ExVCR.Setting.get(:ignore_localhost)
+    ignore_localhost =
+      Keyword.get(Recorder.options(recorder), :ignore_localhost, Setting.get(:ignore_localhost))
 
     if ignore_localhost do
       adapter = ExVCR.Recorder.options(recorder)[:adapter]
@@ -211,7 +211,9 @@ defmodule ExVCR.Handler do
   end
 
   defp ignore_server_fetch!(request, recorder) do
-    strict_mode = ExVCR.Recorder.options(recorder)[:strict_mode] || ExVCR.Setting.get(:strict_mode)
+    strict_mode =
+      Keyword.get(Recorder.options(recorder), :strict_mode, Setting.get(:strict_mode))
+
     if strict_mode do
       message = """
       A matching cassette was not found for this request.

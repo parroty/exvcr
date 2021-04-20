@@ -52,4 +52,22 @@ defmodule ExVCR.StrictModeTest do
       assert HTTPotion.get(@url, []).body =~ ~r/test_response/
     end
   end
+
+  test "it does not uses a cassette when override the defaut config" do
+    ExVCR.Setting.set(:strict_mode, true)
+
+    use_cassette "strict_mode_cassette", strict_mode: false do
+      assert HTTPotion.get(@url, []).body =~ ~r/test_response/
+    end
+
+    use_cassette "strict_mode_cassette" do
+      assert HTTPotion.get(@url, []).body =~ ~r/test_response/
+    end
+
+    use_cassette "strict_mode_cassette", strict_mode: true do
+      assert HTTPotion.get(@url, []).body =~ ~r/test_response/
+    end
+
+    ExVCR.Setting.set(:strict_mode, false)
+  end
 end
