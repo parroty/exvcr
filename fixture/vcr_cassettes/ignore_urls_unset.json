@@ -1,0 +1,44 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "http://localhost:34006/server"
+    },
+    "response": {
+      "binary": false,
+      "body": "test_response_before",
+      "headers": {
+        "server": "Cowboy",
+        "date": "Sun, 08 Apr 2018 12:50:46 GMT",
+        "content-length": "20"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "http://127.0.0.1:34006/server"
+    },
+    "response": {
+      "binary": false,
+      "body": "test_response_before",
+      "headers": {
+        "server": "Cowboy",
+        "date": "Sun, 08 Apr 2018 12:50:46 GMT",
+        "content-length": "20"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
