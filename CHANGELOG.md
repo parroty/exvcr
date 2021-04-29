@@ -1,3 +1,11 @@
+0.12.3
+------
+#### Enhancements
+* Add support to ignore_urls (#168).
+
+#### Changes
+* Fix sanitize options function in hackney adapter converter (#169).
+
 0.12.2
 ------
 #### Changes
