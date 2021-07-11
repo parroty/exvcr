@@ -1,3 +1,8 @@
+0.13.0
+------
+#### Changes
+* Update meck to fix failing tests (#173).
+
 0.12.3
 ------
 #### Enhancements
