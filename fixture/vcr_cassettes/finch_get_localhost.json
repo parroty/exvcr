@@ -1,0 +1,23 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "http://localhost:34008/server"
+    },
+    "response": {
+      "binary": false,
+      "body": "test_response",
+      "headers": {
+        "server": "Cowboy",
+        "date": "Tue, 13 Jul 2021 18:44:24 GMT",
+        "content-length": "13"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
