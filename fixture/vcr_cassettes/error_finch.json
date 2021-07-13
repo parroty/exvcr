@@ -1,0 +1,19 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "http://invalid_url/"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"__exception__\":true,\"__original_struct__\":\"Elixir.Mint.TransportError\",\"reason\":\"nxdomain\"}",
+      "headers": [],
+      "status_code": null,
+      "type": "error"
+    }
+  }
+]

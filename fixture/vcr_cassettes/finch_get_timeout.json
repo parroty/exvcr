@@ -1,0 +1,21 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": {
+        "receive_timeout": 1
+      },
+      "request_body": "",
+      "url": "http://example.com/"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"__exception__\":true,\"__original_struct__\":\"Elixir.Mint.TransportError\",\"reason\":\"timeout\"}",
+      "headers": [],
+      "status_code": null,
+      "type": "error"
+    }
+  }
+]
