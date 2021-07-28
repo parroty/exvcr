@@ -12,7 +12,7 @@
     },
     "response": {
       "binary": false,
-      "body": "{\"__exception__\":true,\"__original_struct__\":\"Elixir.Mint.TransportError\",\"reason\":\"timeout\"}",
+      "body": "%Mint.TransportError{reason: :timeout}",
       "headers": [],
       "status_code": null,
       "type": "error"

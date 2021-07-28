@@ -13,7 +13,7 @@
       "body": "test_response",
       "headers": {
         "server": "Cowboy",
-        "date": "Tue, 13 Jul 2021 18:44:24 GMT",
+        "date": "Wed, 28 Jul 2021 19:21:32 GMT",
         "content-length": "13"
       },
       "status_code": 200,

@@ -33,51 +33,8 @@ defmodule ExVCR.Adapter.Finch.Converter do
   end
 
   defp string_to_error_reason(reason) do
-    error = JSX.decode!(reason)
-    struct_name = error["__original_struct__"]
-
-    if struct_name do
-      # convert back into the original struct
-      module = String.to_existing_atom(struct_name)
-      Enum.map(error, fn {k, v} ->
-        if is_binary(k), do: {String.to_atom(k), v}, else: {k, v}
-      end)
-      |> Enum.into(%{})
-      |> normalize_reason(module)
-      |> Map.put(:__struct__, module)
-      |> Map.delete(:__original_struct__)
-    else
-      normalize_reason(error)
-    end
-  end
-
-  defp normalize_reason(%{} = reason, module) when module in [Finch.Error, Mint.TransportError, Mint.HTTPError] do
-    Enum.map(reason, fn {k, v} ->
-      val = cond do
-        is_atom(v) -> v
-        module == Mint.HTTPError && k == :module ->
-          if is_binary(v), do: String.to_existing_atom(v), else: v
-        is_binary(v) -> String.to_atom(v)
-        is_tuple(v) ->
-          first_elem = elem(v, 0)
-          first_elem = if is_binary(first_elem), do: String.to_atom(first_elem), else: first_elem
-          Tuple.delete_at(v, 0) |> Tuple.insert_at(0, first_elem)
-        true -> v
-      end
-
-      {k, val}
-    end) |> Enum.into(%{})
-  end
-
-  defp normalize_reason(%{} = reason) do
-    Enum.map(reason, fn {k, v} ->
-      # special case according to Finch tests, might not cover all cases properly
-      case {k, v} do
-        {"reason", "timeout"} -> {:reason, :timeout}
-        {"reason", some} -> {:reason, some}
-        other -> other
-      end
-    end) |> Enum.into(%{})
+    {reason_struct, _} = Code.eval_string(reason)
+    reason_struct
   end
 
   defp request_to_string([request, finch_module]) do
@@ -123,11 +80,5 @@ defmodule ExVCR.Adapter.Finch.Converter do
     }
   end
 
-  defp error_reason_to_string(reason) when is_struct(reason) do
-    # JSX strips the __struct__ field so we add our own field
-    # to be able to decode back into the same struct
-    Map.put(reason, :__original_struct__, reason.__struct__) |> JSX.encode!()
-  end
-
-  defp error_reason_to_string(reason), do: JSX.encode!(reason)
+  defp error_reason_to_string(reason), do: Macro.to_string(reason)
 end

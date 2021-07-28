@@ -81,6 +81,13 @@ defmodule ExVCR.Adapter.FinchTest do
     end
   end
 
+  test "request with tuple error" do
+    use_cassette "finch_tuple_transport_error", custom: true do
+      {:error, response} = Finch.build(:get, "http://example.com/") |> Finch.request(ExVCRFinch)
+      assert response == %Mint.TransportError{reason: {:bad_alpn_protocol, "h3"}}
+    end
+  end
+
   test "post method" do
     use_cassette "finch_post" do
       assert_response Finch.build(:post, "http://httpbin.org/post", [], "test") |> Finch.request(ExVCRFinch)

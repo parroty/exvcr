@@ -10,7 +10,7 @@
     },
     "response": {
       "binary": false,
-      "body": "{\"__exception__\":true,\"module\":\"Elixir.Mint.HTTP2\",\"__original_struct__\":\"Elixir.Mint.HTTPError\",\"reason\":\"too_many_concurrent_requests\"}",
+      "body": "%Mint.HTTPError{module: Mint.HTTP2, reason: :too_many_concurrent_requests}",
       "headers": [],
       "status_code": null,
       "type": "error"

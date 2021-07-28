@@ -10,7 +10,7 @@
     },
     "response": {
       "binary": false,
-      "body": "{\"reason\":\"timeout\"}",
+      "body": "%{reason: :timeout}",
       "headers": [],
       "status_code": null,
       "type": "error"

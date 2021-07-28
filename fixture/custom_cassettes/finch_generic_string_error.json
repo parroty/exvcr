@@ -10,7 +10,7 @@
     },
     "response": {
       "binary": false,
-      "body": "{\"reason\":\"some made up error which could happen, in theory\"}",
+      "body": "%{reason: \"some made up error which could happen, in theory\"}",
       "headers": [],
       "status_code": null,
       "type": "error"
