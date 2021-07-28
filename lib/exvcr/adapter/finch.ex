@@ -27,7 +27,6 @@ defmodule ExVCR.Adapter.Finch do
   Implementation for global mock.
   """
   def target_methods() do
-    # TODO support deprecated method
     [
       {:request, &ExVCR.Recorder.request([&1,&2])},
       {:request, &ExVCR.Recorder.request([&1,&2,&3])}
@@ -38,7 +37,6 @@ defmodule ExVCR.Adapter.Finch do
   Returns list of the mock target methods with function name and callback.
   """
   def target_methods(recorder) do
-    # TODO support deprecated method
     [
       {:request, &ExVCR.Recorder.request(recorder, [&1,&2])},
       {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3])}
