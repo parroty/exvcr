@@ -1,0 +1,19 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "http://invalid_url/"
+    },
+    "response": {
+      "binary": false,
+      "body": "%Mint.TransportError{reason: :nxdomain}",
+      "headers": [],
+      "status_code": null,
+      "type": "error"
+    }
+  }
+]

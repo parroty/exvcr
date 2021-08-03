@@ -23,6 +23,8 @@ The following HTTP libraries can be applied.
     - <a href="https://github.com/tim/erlang-oauth/" target="_blank">erlang-oauth</a>
     - <a href="https://github.com/Zatvobor/tirexs" target="_blank">tirexs</a>
     - support is very limited, and tested only with `:httpc.request/1` and `:httpc.request/4`.
+  - <a href="https://github.com/keathley/finch" target="_blank">Finch</a>
+    - the deprecated `Finch.request/6` functions is not supported
 
 HTTP interactions are recorded as JSON file. The JSON file can be recorded
 automatically (`vcr_cassettes`) or manually updated (`custom_cassettes`).
@@ -99,6 +101,7 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   setup_all do
     HTTPoison.start
+    :ok
   end
 
   test "get request" do
@@ -118,6 +121,7 @@ defmodule ExVCR.Adapter.HttpcTest do
 
   setup_all do
     :inets.start
+    :ok
   end
 
   test "get request" do
@@ -127,6 +131,30 @@ defmodule ExVCR.Adapter.HttpcTest do
       assert to_string(body) =~ ~r/Example Domain/
     end
   end
+end
+```
+
+##### Example with Finch
+
+```Elixir
+defmodule ExVCR.Adapter.FinchTest do
+  use ExUnit.Case, async: true
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Finch
+
+  setup_all do
+    Finch.start_link(name: MyFinch)
+    :ok
+  end
+
+  test "get request" do
+    use_cassette "example_finch_request" do
+      {:ok, response} = Finch.build(:get, "http://example.com/") |> Finch.request(MyFinch)
+      assert response.status == 200
+      assert Map.new(response.headers)["content-type"] == "text/html; charset=UTF-8"
+      assert response.body =~ ~r/Example Domain/
+    end
+  end
+end
 ```
 
 #### Custom Cassettes

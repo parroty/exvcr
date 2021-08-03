@@ -1,0 +1,29 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "delete",
+      "options": {
+        "receive_timeout": 10000
+      },
+      "request_body": "",
+      "url": "http://httpbin.org/delete"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\n  \"args\": {}, \n  \"data\": \"\", \n  \"files\": {}, \n  \"form\": {}, \n  \"headers\": {\n    \"Host\": \"httpbin.org\", \n    \"User-Agent\": \"mint/1.3.0\", \n    \"X-Amzn-Trace-Id\": \"Root=1-6101ae3f-0ad32f626360baed57e12388\"\n  }, \n  \"json\": null, \n  \"origin\": \"31.217.26.129\", \n  \"url\": \"http://httpbin.org/delete\"\n}\n",
+      "headers": {
+        "date": "Wed, 28 Jul 2021 19:21:35 GMT",
+        "content-type": "application/json",
+        "content-length": "297",
+        "connection": "keep-alive",
+        "server": "gunicorn/19.9.0",
+        "access-control-allow-origin": "*",
+        "access-control-allow-credentials": "true"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

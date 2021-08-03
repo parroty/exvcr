@@ -1,0 +1,19 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "http://example.com/"
+    },
+    "response": {
+      "binary": false,
+      "body": "%Mint.TransportError{reason: {:bad_alpn_protocol, \"h3\"}}",
+      "headers": [],
+      "status_code": null,
+      "type": "error"
+    }
+  }
+]

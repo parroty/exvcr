@@ -14,7 +14,7 @@ defmodule ExVCR.Application do
   end
 
   defp globally_mock_adapters do
-    for app <- [:hackney, :ibrowse, :httpc], true == Code.ensure_loaded?(app) do
+    for app <- [:hackney, :ibrowse, :httpc, Finch], true == Code.ensure_loaded?(app) do
       app
       |> target_methods()
       |> Enum.each(fn {function, callback} ->
@@ -23,10 +23,10 @@ defmodule ExVCR.Application do
     end
   end
 
-
   defp target_methods(:hackney), do: ExVCR.Adapter.Hackney.target_methods()
   defp target_methods(:ibrowse), do: ExVCR.Adapter.IBrowse.target_methods()
   defp target_methods(:httpc), do: ExVCR.Adapter.Httpc.target_methods()
+  defp target_methods(Finch), do: ExVCR.Adapter.Finch.target_methods()
 
   def global_mock_enabled? do
     Application.get_env(:exvcr, :global_mock, false)

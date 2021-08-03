@@ -1,0 +1,19 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "http://example.com/"
+    },
+    "response": {
+      "binary": false,
+      "body": "%{reason: :timeout}",
+      "headers": [],
+      "status_code": null,
+      "type": "error"
+    }
+  }
+]

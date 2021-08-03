@@ -1,0 +1,27 @@
+[
+  {
+    "request": {
+      "body": "test",
+      "headers": [],
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "http://httpbin.org/post"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\n  \"args\": {}, \n  \"data\": \"test\", \n  \"files\": {}, \n  \"form\": {}, \n  \"headers\": {\n    \"Content-Length\": \"4\", \n    \"Host\": \"httpbin.org\", \n    \"User-Agent\": \"mint/1.3.0\", \n    \"X-Amzn-Trace-Id\": \"Root=1-6101ae3e-4a7c047e3875c515671fa9a9\"\n  }, \n  \"json\": null, \n  \"origin\": \"31.217.26.129\", \n  \"url\": \"http://httpbin.org/post\"\n}\n",
+      "headers": {
+        "date": "Wed, 28 Jul 2021 19:21:34 GMT",
+        "content-type": "application/json",
+        "content-length": "327",
+        "connection": "keep-alive",
+        "server": "gunicorn/19.9.0",
+        "access-control-allow-origin": "*",
+        "access-control-allow-credentials": "true"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
