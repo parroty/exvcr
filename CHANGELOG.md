@@ -1,3 +1,8 @@
+0.13.1
+------
+#### Enhancements
+* Add Finch support (#175).
+
 0.13.0
 ------
 #### Changes
