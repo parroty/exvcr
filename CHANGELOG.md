@@ -1,3 +1,9 @@
+0.13.2
+------
+#### Changes
+* Fix for Finch support.
+    - Define Finch adapter conditionally to fix compile error (#178).
+
 0.13.1
 ------
 #### Enhancements
