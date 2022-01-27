@@ -1,3 +1,9 @@
+0.13.3
+------
+#### Changes
+* Update dependency.
+    - Relax dependency constraint on Finch (#182).
+
 0.13.2
 ------
 #### Changes
