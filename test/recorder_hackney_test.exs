@@ -3,7 +3,7 @@ defmodule ExVCR.RecorderHackneyTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_hackney"
-  @port 34002
+  @port 35002
   @url "http://localhost:#{@port}/server"
   @url_with_query "http://localhost:#{@port}/server?password=sample"
 

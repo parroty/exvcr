@@ -3,7 +3,7 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
     use ExVCR.Mock
     use ExUnit.Case, async: false
 
-    @port 34006
+    @port 35006
     @url "http://localhost:#{@port}/server"
 
     setup_all do

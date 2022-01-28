@@ -3,7 +3,7 @@ defmodule ExVCR.RecorderHttpcTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_httpc"
-  @port 34001
+  @port 35001
   @url 'http://localhost:#{@port}/server'
   @url_with_query 'http://localhost:#{@port}/server?password=sample'
 

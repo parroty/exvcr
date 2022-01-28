@@ -2,7 +2,7 @@ defmodule ExVCR.IgnoreUrlsTest do
   use ExVCR.Mock
   use ExUnit.Case, async: false
 
-  @port 34013
+  @port 35013
   @url "http://localhost:#{@port}/server"
   @ignore_urls [
     ~r/http:\/\/localhost.*/,

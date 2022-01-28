@@ -3,7 +3,7 @@ defmodule ExVCR.RecorderFinchTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Finch
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_finch"
-  @port 34003
+  @port 35003
   @url "http://localhost:#{@port}/server"
   @url_with_query "http://localhost:#{@port}/server?password=sample"
 

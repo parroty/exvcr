@@ -3,7 +3,7 @@ defmodule ExVCR.IExTest do
   import ExUnit.CaptureIO
   require ExVCR.IEx
 
-  @port 34005
+  @port 35005
 
   setup_all do
     :ibrowse.start
@@ -17,7 +17,7 @@ defmodule ExVCR.IExTest do
   test "print request/response" do
     assert capture_io(fn ->
       ExVCR.IEx.print do
-        :ibrowse.send_req('http://localhost:34005/server', [], :get)
+        :ibrowse.send_req('http://localhost:35005/server', [], :get)
       end
     end) =~ ~r/\"body\": \"test_response\"/
   end
