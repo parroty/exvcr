@@ -11,10 +11,6 @@ jobs:
         otp: ['21','23']
         elixir: ['1.10', '1.11']
         global-mock: [true, false]
-      max-parallel: 1
-    concurrency:
-      group: ${{ github.ref }}
-      cancel-in-progress: true
     env:
       MIX_ENV: test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -25,11 +21,18 @@ jobs:
         with:
          otp-version: ${{ matrix.otp }}
          elixir-version: ${{ matrix.elixir }}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
-         path: deps
-         key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-         restore-keys: |
-           ${{ runner.os }}-mix-
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
       - run: mix deps.get
-      - run: mix coveralls.github
+      - uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 3
+          max_attempts: 3
+          shell: bash
+          command: mix coveralls.github
