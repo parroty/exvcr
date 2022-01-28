@@ -8,6 +8,9 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
 
     setup_all do
       HTTPotion.start
+      on_exit fn ->
+        HttpServer.stop(@port)
+      end
       :ok
     end
 
