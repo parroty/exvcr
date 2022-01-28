@@ -2,7 +2,7 @@ defmodule ExVCR.Adapter.FinchTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Finch
 
-  @port 35008
+  @port 15008
 
   setup_all do
     HttpServer.start(path: "/server", port: @port, response: "test_response")

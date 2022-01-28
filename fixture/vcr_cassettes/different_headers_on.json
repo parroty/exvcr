@@ -8,7 +8,7 @@
       "method": "post",
       "options": [],
       "request_body": "",
-      "url": "http://localhost:35006/server"
+      "url": "http://localhost:15006/server"
     },
     "response": {
       "body": "test_response_before",
@@ -31,7 +31,7 @@
       "method": "post",
       "options": [],
       "request_body": "",
-      "url": "http://localhost:35006/server"
+      "url": "http://localhost:15006/server"
     },
     "response": {
       "body": "test_response_after",

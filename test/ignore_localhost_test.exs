@@ -2,7 +2,7 @@ defmodule ExVCR.IgnoreLocalhostTest do
   use ExVCR.Mock
   use ExUnit.Case, async: false
 
-  @port 35012
+  @port 15012
   @url "http://localhost:#{@port}/server"
 
   setup_all do

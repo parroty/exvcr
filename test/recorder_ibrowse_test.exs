@@ -3,7 +3,7 @@ defmodule ExVCR.RecorderIBrowseTest do
   use ExVCR.Mock
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_ibrowse"
-  @port 35000
+  @port 15000
   @url "http://localhost:#{@port}/server"
   @url_with_query "http://localhost:#{@port}/server?password=sample"
 

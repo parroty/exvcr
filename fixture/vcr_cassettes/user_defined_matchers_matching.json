@@ -9,7 +9,7 @@
       "method": "post",
       "options": [],
       "request_body": "",
-      "url": "http://localhost:35006/server"
+      "url": "http://localhost:15006/server"
     },
     "response": {
       "binary": false,
