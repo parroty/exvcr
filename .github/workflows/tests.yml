@@ -30,4 +30,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-mix-
       - run: mix deps.get
-      - run: mix coveralls.github
+      - uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 3
+          max_attempts: 3
+          shell: bash
+          command: mix coveralls.github
