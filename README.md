@@ -240,7 +240,7 @@ headers and blanks out it's value with `***`.
 test "replace sensitive data in request header" do
   ExVCR.Config.filter_request_headers("X-My-Secret-Token")
   use_cassette "sensitive_data_in_request_header" do
-    body = HTTPoison.get!("http://localhost:15000/server?", ["X-My-Secret-Token": "my-secret-token"]).body
+    body = HTTPoison.get!("http://localhost:34000/server?", ["X-My-Secret-Token": "my-secret-token"]).body
     assert body == "test_response"
   end
 
@@ -280,7 +280,7 @@ test "filter url param flag removes url params when recording cassettes" do
   ExVCR.Config.filter_url_params(true)
   use_cassette "example_ignore_url_params" do
     assert HTTPotion.get(
-      "http://localhost:15000/server?should_not_be_contained", []).body =~ ~r/test_response/
+      "http://localhost:34000/server?should_not_be_contained", []).body =~ ~r/test_response/
   end
   json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
   refute String.contains?(json, "should_not_be_contained")

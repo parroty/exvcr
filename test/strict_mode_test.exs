@@ -3,7 +3,7 @@ defmodule ExVCR.StrictModeTest do
   use ExUnit.Case, async: false
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_strict_mode"
-  @port 15007
+  @port 34007
   @url "http://localhost:#{@port}/server"
   @http_server_opts [path: "/server", port: @port, response: "test_response"]
 

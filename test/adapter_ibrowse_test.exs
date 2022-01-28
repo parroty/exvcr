@@ -2,7 +2,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock
 
-  @port 15011
+  @port 34011
 
   setup_all do
     HttpServer.start(path: "/server", port: @port, response: "test_response")

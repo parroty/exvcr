@@ -5,7 +5,7 @@
       "headers": [],
       "method": "get",
       "options": [],
-      "url": "http://localhost:15004/server"
+      "url": "http://localhost:34004/server"
     },
     "response": {
       "body": "test_response1",

@@ -2,7 +2,7 @@ defmodule ExVCR.Adapter.HackneyTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
-  @port 15009
+  @port 34009
 
   setup_all do
     HttpServer.start(path: "/server", port: @port, response: "test_response")
