@@ -270,6 +270,22 @@ test "replace sensitive data in request options" do
 end
 ```
 
+#### Allowed hosts
+
+The `:ignore_urls` can be used to allow requests to be made to certain hosts.
+
+```elixir
+setup do
+  ExVCR.Setting.set(:ignore_urls, [~/example.com/])
+  ExVCR.Setting.append(:ignore_urls, ~/anotherurl.com/)
+end
+
+test "an actual request is made to example.com" do
+  HTTPoison.get!("https://example.com/path?query=true")
+  HTTPoison.get!("https://anotherurl.com/path?query=true")
+end
+```
+
 #### Ignoring query params in URL
 
 If `ExVCR.Config.filter_url_params(true)` is specified, query params in URL
