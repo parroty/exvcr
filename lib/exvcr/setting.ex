@@ -14,7 +14,10 @@ defmodule ExVCR.Setting do
   end
 
   def append(key, value) do
-    set(key, [value | ExVCR.Setting.get(key)])
+    case __MODULE__.get(key) do
+      [_ | _] = values -> __MODULE__.set(key, [value | values])
+      _ -> __MODULE__.set(key, [value])
+    end
   end
 
   defp setup do

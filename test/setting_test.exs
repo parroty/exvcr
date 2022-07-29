@@ -27,4 +27,20 @@ defmodule ExVCR.SettingTest do
     ExVCR.Setting.set(:response_headers_blacklist, ["Content-Type", "Accept"])
     assert ExVCR.Setting.get(:response_headers_blacklist) == ["Content-Type", "Accept"]
   end
+
+  test "set ignore_urls" do
+    ExVCR.Setting.set(:ignore_urls, ["example.com"])
+    assert ExVCR.Setting.get(:ignore_urls) == ["example.com"]
+  end
+
+  test "append ignore_urls when there are no existing values" do
+    ExVCR.Setting.append(:ignore_urls, "example.com")
+    assert ExVCR.Setting.get(:ignore_urls) == ["example.com"]
+  end
+
+  test "append ignore_urls when there are existing values" do
+    ExVCR.Setting.set(:ignore_urls, [~r/example.com/])
+    ExVCR.Setting.append(:ignore_urls, ~r/example2.com/)
+    assert ExVCR.Setting.get(:ignore_urls) == [~r/example2.com/, ~r/example.com/]
+  end
 end
