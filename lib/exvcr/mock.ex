@@ -25,7 +25,14 @@ defmodule ExVCR.Mock do
   end
 
   @doc """
-  Provides macro to mock response based on specified parameters.
+  Provides macro to trigger recording/replaying http interactions.
+
+  ## Options
+
+  - `:match_requests_on` A list of request properties to match on when
+    finding a matching response. Valid values include `:query`, `:headers`,
+    and `:request_body`
+
   """
   defmacro use_cassette(:stub, options, test) do
     quote do
@@ -45,16 +52,6 @@ defmodule ExVCR.Mock do
     end
   end
 
-  @doc """
-  Provides macro to trigger recording/replaying http interactions.
-
-  ## Options
-
-  - `:match_requests_on` A list of request properties to match on when
-    finding a matching response. Valid values include `:query`, `:headers`,
-    and `:request_body`
-
-  """
   defmacro use_cassette(fixture, options, test) do
     quote do
       recorder = Recorder.start(
@@ -77,9 +74,6 @@ defmodule ExVCR.Mock do
     end
   end
 
-  @doc """
-  Provides macro to trigger recording/replaying http interactions with default options.
-  """
   defmacro use_cassette(fixture, test) do
     quote do
       use_cassette(unquote(fixture), [], unquote(test))

@@ -19,45 +19,83 @@ defmodule ExVCR.Config do
   @doc """
   Replace the specified pattern with placeholder.
   It can be used to remove sensitive data from the casette file.
+
+  ## Examples
+
+      test "replace sensitive data" do
+        ExVCR.Config.filter_sensitive_data("<PASSWORD>.+</PASSWORD>", "PLACEHOLDER")
+
+        use_cassette "sensitive_data" do
+          assert HTTPotion.get("http://something.example.com", []).body =~ ~r/PLACEHOLDER/
+        end
+
+        # Now clear the previous filter
+        ExVCR.Config.filter_sensitive_data(nil)
+      end
   """
   def filter_sensitive_data(pattern, placeholder) do
     Setting.append(:filter_sensitive_data, {pattern, placeholder})
   end
 
-
-  @doc """
-  Clear the previously specified filter_sensitive_data lists.
-  """
   def filter_sensitive_data(nil) do
     Setting.set(:filter_sensitive_data, [])
   end
 
   @doc """
-  Clear the previously specified filter_request_headers lists.
+  This function can be used to filter headers from saved requests.
+
+  ## Examples
+
+      test "replace sensitive data in request header" do
+        ExVCR.Config.filter_request_headers("X-My-Secret-Token")
+
+        use_cassette "sensitive_data_in_request_header" do
+          body = HTTPoison.get!("http://localhost:34000/server?", ["X-My-Secret-Token": "my-secret-token"]).body
+          assert body == "test_response"
+        end
+
+        # The recorded cassette should contain replaced data.
+        cassette = File.read!("sensitive_data_in_request_header.json")
+        assert cassette =~ "\"X-My-Secret-Token\": \"***\""
+        refute cassette =~  "\"X-My-Secret-Token\": \"my-secret-token\""
+
+        # Now reset the filter
+        ExVCR.Config.filter_request_headers(nil)
+      end
   """
   def filter_request_headers(nil) do
     Setting.set(:filter_request_headers, [])
   end
 
-  @doc """
-  Replace the specified request header with placeholder.
-  It can be used to remove sensitive data from the casette file.
-  """
   def filter_request_headers(header) do
     Setting.append(:filter_request_headers, header)
   end
 
   @doc """
-  Clear the previously specified filter_request_options lists.
+  This function can be used to filter options.
+
+  ## Examples
+
+      test "replace sensitive data in request options" do
+        ExVCR.Config.filter_request_options("basic_auth")
+        use_cassette "sensitive_data_in_request_options" do
+          body = HTTPoison.get!(@url, [], [hackney: [basic_auth: {"username", "password"}]]).body
+          assert body == "test_response"
+        end
+
+        # The recorded cassette should contain replaced data.
+        cassette = File.read!("sensitive_data_in_request_options.json")
+        assert cassette =~ "\"basic_auth\": \"***\""
+        refute cassette =~  "\"basic_auth\": {\"username\", \"password\"}"
+
+        # Now reset the filter
+        ExVCR.Config.filter_request_options(nil)
+      end
   """
   def filter_request_options(nil) do
     Setting.set(:filter_request_options, [])
   end
 
-  @doc """
-  Replace the specified request header with placeholder.
-  It can be used to remove sensitive data from the casette file.
-  """
   def filter_request_options(header) do
     Setting.append(:filter_request_options, header)
   end
