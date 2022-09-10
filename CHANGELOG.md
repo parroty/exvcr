@@ -7,7 +7,7 @@
 #### Changes
 * Allow append to be passed to a previously nil setting.
     - Better document the ignore_urls setting (#187).
-
+* Resolve Duplicate Docs Warnings (#180).
 
 0.13.3
 ------
