@@ -35,7 +35,7 @@ defmodule ExVCR.Handler do
     case { response, stub_mode?(recorder_options) } do
       { nil, true } ->
         raise ExVCR.InvalidRequestError,
-          message: "response for [URL:#{params[:url]}, METHOD:#{params[:method]}] was not found"
+          message: "response for [#{invalid_request_details(recorder_options, params)}] was not found"
       { nil, false } ->
         nil
       { response, _ } ->
@@ -43,6 +43,22 @@ defmodule ExVCR.Handler do
         Recorder.set(responses, recorder)
         adapter.get_response_value_from_cache(response)
     end
+  end
+
+  defp invalid_request_details(recorder_options, params) do
+    available_match_types = [:headers, :query, :request_body]
+    match_requests_on = Keyword.get(recorder_options, :match_requests_on, [])
+
+    extra_details =
+      for type <- available_match_types, type in match_requests_on do
+        String.upcase("#{type}") <> ":#{inspect(params[type])}"
+      end
+
+    ([
+       "URL:#{params[:url]}",
+       "METHOD:#{params[:method]}"
+     ] ++ extra_details)
+    |> Enum.join(", ")
   end
 
   defp stub_mode?(options) do
