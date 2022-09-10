@@ -1,3 +1,14 @@
+
+0.13.4
+------
+#### Enhancements
+* Add additional information to the InvalidRequestError message (#188).
+
+#### Changes
+* Allow append to be passed to a previously nil setting.
+    - Better document the ignore_urls setting (#187).
+
+
 0.13.3
 ------
 #### Changes
