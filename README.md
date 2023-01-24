@@ -680,6 +680,18 @@ test "stub request works for httpc" do
   {{_http_version, _status_code = 200, _reason_phrase}, _headers, body} = result
   assert to_string(body) == "success!"
 end
+
+test "stub request works for Finch" do
+  use_cassette :stub, [url: "http://www.example.com",
+                       method: "get",
+                       status_code: 200,
+                       body: "Stub Response"] do
+
+  {:ok, response} = Finch.build(:get, "http://example.com/") |> Finch.request(MyFinch)
+  assert response.body =~ ~r/Stub Response/
+  assert Map.new(response.headers)["content-type"] == "text/html"
+  assert response.status_code == 200
+end
 ```
 
 If the specified `:url` parameter doesn't match requests called inside the
