@@ -1,3 +1,7 @@
+0.13.5
+------
+#### Changes
+* Adds httpoison ~> 2.0 support (#196).
 
 0.13.4
 ------
