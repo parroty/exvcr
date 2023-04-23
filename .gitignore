@@ -9,3 +9,4 @@ erl_crash.dump
 .devcontainer
 Dockerfile
 docker-compose.yml
+.vscode
