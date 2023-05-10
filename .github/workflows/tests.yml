@@ -26,9 +26,9 @@ jobs:
           path: |
             deps
             _build
-          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
-            ${{ runner.os }}-mix-
+            ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-
       - run: mix deps.get
       - uses: nick-invision/retry@v2
         with:
