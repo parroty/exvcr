@@ -16,19 +16,19 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GLOBAL_MOCK: ${{ matrix.global-mock }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: erlef/setup-beam@v1
         with:
          otp-version: ${{ matrix.otp }}
          elixir-version: ${{ matrix.elixir }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             deps
             _build
-          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
-            ${{ runner.os }}-mix-
+            ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-
       - run: mix deps.get
       - uses: nick-invision/retry@v2
         with:
