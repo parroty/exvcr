@@ -157,6 +157,22 @@ defmodule ExVCR.Adapter.FinchTest do
 end
 ```
 
+#### Example with Start / Stop
+
+Instead of single `use_cassette`, `start_cassette` and `stop_cassette` can serve as an alternative syntax.
+
+```Elixir
+use_cassette("x") do
+  do_something
+end
+```
+
+```Elixir
+start_cassette("x")
+do_something
+stop_cassette
+```
+
 #### Custom Cassettes
 
 You can manually define custom cassette JSON file for more flexible response
