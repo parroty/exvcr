@@ -42,7 +42,7 @@ defmodule ExVCR.RecorderFinchTest do
   end
 
   test "forcefully getting response from server with error" do
-    use_cassette "server_error" do
+    use_cassette "server_error1" do
       {:error, reason} = Finch.build(:get, "http://invalid_url") |> Finch.request(ExVCRFinch)
       assert reason == %Mint.TransportError{reason: :nxdomain}
     end
@@ -56,7 +56,7 @@ defmodule ExVCR.RecorderFinchTest do
   end
 
   test "forcefully getting response from server with error using request!" do
-    use_cassette "server_error" do
+    use_cassette "server_error2" do
       assert_raise(Mint.TransportError, fn ->
         Finch.build(:get, "http://invalid_url") |> Finch.request!(ExVCRFinch)
       end)
