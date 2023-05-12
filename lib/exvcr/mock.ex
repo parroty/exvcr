@@ -54,22 +54,13 @@ defmodule ExVCR.Mock do
 
   defmacro use_cassette(fixture, options, test) do
     quote do
-      recorder = Recorder.start(
-        unquote(options) ++ [fixture: normalize_fixture(unquote(fixture)), adapter: adapter_method()])
-
+      recorder = start_cassette(unquote(fixture), unquote(options))
 
       try do
-        mock_methods(recorder, adapter_method())
         [do: return_value] = unquote(test)
         return_value
       after
-        recorder_result = Recorder.save(recorder)
-
-        module_name = adapter_method().module_name
-        unload(module_name)
-        ExVCR.MockLock.release_lock()
-
-        recorder_result
+        stop_cassette(recorder)
       end
     end
   end
@@ -77,6 +68,31 @@ defmodule ExVCR.Mock do
   defmacro use_cassette(fixture, test) do
     quote do
       use_cassette(unquote(fixture), [], unquote(test))
+    end
+  end
+
+  defmacro start_cassette(fixture, options) when fixture != :stub do
+    quote do
+      recorder =
+        Recorder.start(
+          unquote(options) ++
+            [fixture: normalize_fixture(unquote(fixture)), adapter: adapter_method()]
+        )
+
+      mock_methods(recorder, adapter_method())
+      recorder
+    end
+  end
+
+  defmacro stop_cassette(recorder) do
+    quote do
+      recorder_result = Recorder.save(unquote(recorder))
+
+      module_name = adapter_method().module_name
+      unload(module_name)
+      ExVCR.MockLock.release_lock()
+
+      recorder_result
     end
   end
 
