@@ -64,7 +64,9 @@ defmodule ExVCR.Adapter.Finch.Converter do
     end)
   end
 
-  defp response_to_string({:ok, response}) do
+  defp response_to_string({:ok, %Finch.Response{} = response}), do: response_to_string(response)
+
+  defp response_to_string(%Finch.Response{} = response) do
     %ExVCR.Response{
       type: "ok",
       status_code: response.status,

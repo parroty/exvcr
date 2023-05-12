@@ -142,6 +142,23 @@ defmodule ExVCR.Adapter.FinchTest do
     end
   end
 
+  test "single request using request!" do
+    use_cassette "example_finch" do
+      response = Finch.build(:get, "http://example.com") |> Finch.request!(ExVCRFinch)
+      assert response.status == 200
+      assert Map.new(response.headers)["content-type"] == "text/html; charset=UTF-8"
+      assert response.body =~ ~r/Example Domain/
+    end
+  end
+
+  test "single request with error using request!" do
+    use_cassette "error_finch" do
+      assert_raise(Mint.TransportError, fn ->
+        Finch.build(:get, "http://invalid_url") |> Finch.request!(ExVCRFinch)
+      end)
+    end
+  end
+
   defp assert_response({:ok, response}, function \\ nil) do
     assert response.status in 200..299
     assert Map.new(response.headers)["connection"] == "keep-alive"

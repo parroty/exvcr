@@ -48,6 +48,21 @@ defmodule ExVCR.RecorderFinchTest do
     end
   end
 
+  test "forcefully getting response from server using request!" do
+    use_cassette "server1" do
+      response = Finch.build(:get, @url) |> Finch.request!(ExVCRFinch)
+      assert response.body =~ ~r/test_response/
+    end
+  end
+
+  test "forcefully getting response from server with error using request!" do
+    use_cassette "server_error" do
+      assert_raise(Mint.TransportError, fn ->
+        Finch.build(:get, "http://invalid_url") |> Finch.request!(ExVCRFinch)
+      end)
+    end
+  end
+
   test "replace sensitive data in body" do
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
     use_cassette "server_sensitive_data_in_body" do
