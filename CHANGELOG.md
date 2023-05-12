@@ -1,3 +1,9 @@
+0.14.0
+------
+#### Enhancements
+* Add start_cassette / stop_cassette macro (#199).
+* Support Finch request! function (#197).
+
 0.13.5
 ------
 #### Changes
