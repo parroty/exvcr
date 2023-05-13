@@ -1,3 +1,8 @@
+0.14.1
+------
+#### Changes
+* Fix compilation in project lacking Finch (#205).
+
 0.14.0
 ------
 #### Enhancements
