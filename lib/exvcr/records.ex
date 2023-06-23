@@ -60,7 +60,6 @@ end
 defmodule ExVCR.Checker.Results do
   defstruct dirs: nil, files: []
 end
-
 defmodule ExVCR.Checker.Counts do
   defstruct server: 0, cache: 0
 end

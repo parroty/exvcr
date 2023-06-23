@@ -25,9 +25,7 @@ defmodule ExVCR.IEx do
             unquote(test)
           after
             ExVCR.MockLock.release_lock()
-
-            recorder
-            |> Recorder.get()
+            Recorder.get(recorder)
             |> Jason.encode_to_iodata!(pretty: true)
             |> IO.puts
           end

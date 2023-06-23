@@ -10,11 +10,11 @@ defmodule ExVCR.RecorderHackneyTest do
   setup_all do
     File.rm_rf(@dummy_cassette_dir)
 
-    # on_exit(fn ->
-    #   File.rm_rf(@dummy_cassette_dir)
-    #   HttpServer.stop(@port)
-    #   :ok
-    # end)
+    on_exit(fn ->
+      File.rm_rf(@dummy_cassette_dir)
+      HttpServer.stop(@port)
+      :ok
+    end)
 
     HTTPoison.start()
     HttpServer.start(path: "/server", port: @port, response: "test_response")
