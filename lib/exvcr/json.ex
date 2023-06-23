@@ -7,11 +7,11 @@ defmodule ExVCR.JSON do
   Save responses into the json file.
   """
   def save(file_name, recordings) do
-    json = recordings
-    |> Enum.map(&encode_binary_data/1)
-    |> Enum.reverse()
-    |> JSX.encode!()
-    |> JSX.prettify!()
+    json =
+      recordings
+      |> Enum.map(&encode_binary_data/1)
+      |> Enum.reverse()
+      |> Jason.encode_to_iodata!(pretty: true)
 
     unless File.exists?(path = Path.dirname(file_name)), do: File.mkdir_p!(path)
     File.write!(file_name, json)
@@ -48,7 +48,7 @@ defmodule ExVCR.JSON do
   def read_json_file(file_name) do
     file_name
     |> File.read!()
-    |> JSX.decode!()
+    |> Jason.decode!()
     |> Enum.map(&load_binary_data/1)
   end
 

@@ -154,12 +154,22 @@ defmodule ExVCR.RecorderHackneyTest do
     ExVCR.Config.response_headers_blacklist([])
   end
 
+  @tag :wip
   test "hackney request with ssl options" do
     use_cassette "record_hackney_with_ssl_options" do
       host = @url |> URI.parse() |> Map.get(:host) |> to_charlist()
       options = :hackney_connection.ssl_opts(host, [])
       {:ok, status_code, _headers, _ref} = :hackney.request(:post, @url, [], [], options)
       assert status_code == 200
+    end
+  end
+
+  test "HTTPoison with ssl options" do
+    use_cassette "record_hackney_with_ssl_options" do
+      response =
+        HTTPoison.post!("https://example.com", {:form, []}, [], ssl: [{:versions, [:"tlsv1.2"]}])
+
+      assert response.status_code == 200
     end
   end
 
