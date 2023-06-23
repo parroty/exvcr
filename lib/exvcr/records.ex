@@ -2,45 +2,57 @@ defmodule ExVCR.Record do
   defstruct options: nil, responses: nil
 end
 
-defmodule ExVCR.Utils do
-  @moduledoc false
-
-  def keyword_to_map(kw) do
-    kw
-    |> Enum.sort(fn {k1, _}, {k2, _} -> k1 <= k2 end)
-    |> Enum.reduce(%{}, fn {k, v}, acc -> Map.put(acc, k, v) end)
-  end
-end
-
 defmodule ExVCR.Request do
   defstruct url: nil, headers: [], method: nil, body: nil, options: [], request_body: ""
 
-  defimpl Jason.Encoder, for: ExVCR.Request do
-    def encode(value, opts) do
-      %{headers: headers, options: options} = Map.take(value, [:headers, :options])
-
-      map = value
-            |> Map.take([:url, :method, :body, :request_body])
-            |> Map.put(:headers, ExVCR.Utils.keyword_to_map(headers))
-            |> Map.put(:options, ExVCR.Utils.keyword_to_map(options))
-
-      Jason.Encode.map(map, opts)
+  defimpl Jason.Encoder do
+    def encode(request, opts) do
+      request
+      |> Map.update!(:headers, &Map.new/1)
+      |> Map.update!(:options, fn options -> options |> clean_invalid() |> Map.new() end)
+      |> Map.take([:url, :headers, :method, :body, :options, :request_body])
+      |> Jason.Encode.map(opts)
     end
+
+    defp clean_invalid([{_, _} | _] = kw) do
+      kw |> Enum.map(fn {k, v} -> {k, clean_invalid(v)} end) |> Map.new()
+    end
+
+    defp clean_invalid([value | rest]) do
+      [clean_invalid(value) | clean_invalid(rest)]
+    end
+
+    defp clean_invalid([] = empty), do: empty
+
+    defp clean_invalid(map) when is_map(map) do
+      map |> Map.to_list() |> clean_invalid() |> Map.new()
+    end
+
+    defp clean_invalid(tuple) when is_tuple(tuple) do
+      tuple |> Tuple.to_list() |> clean_invalid() |> List.to_tuple()
+    end
+
+    defp clean_invalid(bin) when is_binary(bin) do
+      clean_bin(bin)
+    end
+
+    defp clean_invalid(other), do: other
+
+    defp clean_bin(<<b::utf8, rest::bytes>>), do: <<b::utf8>> <> clean_bin(rest)
+    defp clean_bin(<<_invalid, rest::bytes>>), do: "�" <> clean_bin(rest)
+    defp clean_bin(<<>> = empty), do: empty
   end
 end
 
 defmodule ExVCR.Response do
   defstruct type: "ok", status_code: nil, headers: [], body: nil, binary: false
 
-  defimpl Jason.Encoder, for: ExVCR.Response do
-    def encode(value, opts) do
-      headers = Map.get(value, :headers)
-
-      map = value
-            |> Map.take([:type, :status_code, :body, :binary])
-            |> Map.put(:headers, ExVCR.Utils.keyword_to_map(headers))
-
-      Jason.Encode.map(map, opts)
+  defimpl Jason.Encoder do
+    def encode(response, opts) do
+      response
+      |> Map.update!(:headers, &Map.new/1)
+      |> Map.take([:type, :status_code, :headers, :body, :binary])
+      |> Jason.Encode.map(opts)
     end
   end
 end
