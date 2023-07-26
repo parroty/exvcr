@@ -20,10 +20,7 @@ defmodule ExVCR.Mixfile do
   end
 
   def application do
-    [
-      applications: [:meck, :exactor, :exjsx, :hackney],
-      mod: {ExVCR.Application, []}
-    ]
+    [applications: [:meck, :exactor, :exjsx], mod: {ExVCR.Application, []}]
   end
 
   def deps do
