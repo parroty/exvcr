@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :exvcr, [
   global_mock: false,

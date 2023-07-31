@@ -101,11 +101,13 @@ defmodule ExVCR.Adapter.Hackney.Converter do
   end
 
   def parse_request_body({:form, body}) do
-    :hackney_request.encode_form(body)
+    hackney_request_module().encode_form(body)
     |> elem(2)
     |> to_string
     |> ExVCR.Filter.filter_sensitive_data()
   end
 
   def parse_request_body(body), do: super(body)
+
+  defp hackney_request_module(), do: :hackney_request
 end
