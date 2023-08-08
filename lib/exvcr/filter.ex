@@ -6,13 +6,14 @@ defmodule ExVCR.Filter do
   @doc """
   Filter out senstive data from the response.
   """
-  def filter_sensitive_data(body) do
+  def filter_sensitive_data(body) when is_binary(body) do
     if String.valid?(body) do
       replace(body, ExVCR.Setting.get(:filter_sensitive_data))
     else
       body
     end
   end
+  def filter_sensitive_data(body), do: body
 
   @doc """
   Filter out senstive data from the request header.
