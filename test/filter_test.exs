@@ -13,6 +13,10 @@ defmodule ExVCR.FilterTest do
     ExVCR.Config.filter_sensitive_data(nil)
   end
 
+  test "filter_sensitive_data handles non string values" do
+    assert ExVCR.Filter.filter_sensitive_data(60_000) ==  60000
+  end
+
   test "filter_url_params" do
     url = "https://example.com/api?test1=foo&test2=bar"
 
