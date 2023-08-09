@@ -1,3 +1,8 @@
+0.14.3
+------
+#### Enhancements
+* Allow numeric options for Filter.filter_sensitive_data/1 (#209).
+
 0.14.2
 ------
 #### Changes
