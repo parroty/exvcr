@@ -166,11 +166,15 @@ defmodule ExVCR.Handler do
       request_body = response[:request].body || response[:request].request_body
       key_body     = keys[:request_body] |> to_string |> ExVCR.Filter.filter_sensitive_data
 
-      if match = Regex.run(~r/~r\/(.+)\//, request_body) do
-        pattern = Regex.compile!(Enum.at(match, 1))
-        Regex.match?(pattern, key_body)
-      else
-        request_body == key_body
+      cond do
+        match = Regex.run(~r/~r\/(.+)\//, request_body) ->
+          pattern = Regex.compile!(Enum.at(match, 1))
+          Regex.match?(pattern, key_body)
+
+        Regex.run(~r/^%{.*}$/,  request_body) ->
+          {result, _} = Code.eval_string(request_body)
+          JSX.decode!(key_body) == JSX.decode!(JSX.encode!(result))
+        true -> request_body == key_body
       end
     else
       true
