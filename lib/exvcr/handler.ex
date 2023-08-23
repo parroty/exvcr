@@ -170,11 +170,18 @@ defmodule ExVCR.Handler do
         pattern = Regex.compile!(Enum.at(match, 1))
         Regex.match?(pattern, key_body)
       else
-        request_body == key_body
+        normalize_request_body(request_body) == normalize_request_body(key_body)
       end
     else
       true
     end
+  end
+  
+  defp normalize_request_body(request_body) do
+    request_body
+    |> URI.decode_query()
+    |> Map.to_list()
+    |> Enum.sort_by(fn {key, _val} -> key end)
   end
 
   defp get_response_from_server(request, recorder, record?) do
