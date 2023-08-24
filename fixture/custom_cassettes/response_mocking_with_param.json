@@ -1,7 +1,7 @@
 [
   {
     "request": {
-      "url": "http://example.com?auth_token=123abc",
+      "url": "http://example.com?auth_token=123abc&another_param=456",
       "method": "get"
     },
     "response": {

@@ -4,10 +4,9 @@ defmodule ExVCR.Adapter.HandlerCustomModeTest do
 
   test "query param match succeeds with custom mode" do
     use_cassette "response_mocking_with_param", custom: true do
-      HTTPotion.get("http://example.com?auth_token=123abc", []).body =~ ~r/Custom Response/
+      HTTPotion.get("http://example.com?another_param=456&auth_token=123abc", []).body =~ ~r/Custom Response/
     end
   end
-
 
   test "custom with valid response" do
     use_cassette "response_mocking", custom: true do

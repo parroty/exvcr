@@ -17,7 +17,7 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
     test "specifying match_requests_on: [:query] matches query params" do
       use_cassette "different_query_params_on", match_requests_on: [:query] do
         HttpServer.start(path: "/server", port: @port, response: "test_response_before")
-        assert HTTPotion.get("#{@url}?p=3", []).body =~ ~r/test_response_before/
+        assert HTTPotion.get("#{@url}?q=string&p=3", []).body =~ ~r/test_response_before/
         HttpServer.stop(@port)
 
         # this method call should NOT be mocked as previous "test_response_before" response

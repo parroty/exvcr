@@ -31,6 +31,14 @@ defmodule ExVCR.Adapter.HandlerStubModeTest do
     end
   end
 
+  test "url matches as regardless of query param order" do
+    use_cassette :stub, [url: "http://localhost?param1=10&param2=20&param3=30"] do
+      {:ok, status_code, _headers, body} = :ibrowse.send_req('http://localhost?param3=30&param1=10&param2=20', [], :get)
+      assert status_code == '200'
+      assert to_string(body) =~ ~r/Hello World/
+    end
+  end
+
   test "url matches as regex" do
     use_cassette :stub, [url: "~r/.+/"] do
       {:ok, status_code, _headers, body} = :ibrowse.send_req('http://localhost', [], :get)

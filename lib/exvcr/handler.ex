@@ -112,13 +112,13 @@ defmodule ExVCR.Handler do
         pattern = Regex.compile!(Enum.at(match, 1))
         Regex.match?(pattern, key_url)
       else
-        request_url == key_url
+        normalize_url(request_url) == normalize_url(key_url)
       end
     else
       request_url = parse_url(request_url, recorder_options)
       key_url     = parse_url(key_url, recorder_options)
 
-      request_url == key_url
+      normalize_url(request_url) == normalize_url(key_url)
     end
   end
 
@@ -176,12 +176,27 @@ defmodule ExVCR.Handler do
       true
     end
   end
-  
+
+  defp normalize_url(url) do
+    original_url = URI.parse(url)
+    
+    original_url
+    |> Map.put(:query, normalize_query(original_url.query))
+    |> URI.to_string()
+  end
+
   defp normalize_request_body(request_body) do
-    request_body
+    normalize_query(request_body)
+  end
+  
+  defp normalize_query(nil), do: nil 
+
+  defp normalize_query(query) do
+    query
     |> URI.decode_query()
     |> Map.to_list()
     |> Enum.sort_by(fn {key, _val} -> key end)
+    |> URI.encode_query()
   end
 
   defp get_response_from_server(request, recorder, record?) do
