@@ -12,7 +12,7 @@ jobs:
         elixir: ['1.10', '1.11']
         include:
           - otp: '26'
-            elixir: '1.15'
+            elixir: '1.14'
         global-mock: [true, false]
     env:
       MIX_ENV: test
