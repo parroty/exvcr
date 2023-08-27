@@ -1,3 +1,9 @@
+0.14.4
+------
+#### Changes
+* Normalizes request body and URL by parsing params to a list and sorting (#211)
+  - Fix for OTP 26 (map key order is not guaranteed)
+
 0.14.3
 ------
 #### Enhancements
