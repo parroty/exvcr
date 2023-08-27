@@ -5,7 +5,7 @@
       "headers": [],
       "method": "get",
       "options": [],
-      "url": "http://localhost:34006/server?p=3"
+      "url": "http://localhost:34006/server?p=3&q=string"
     },
     "response": {
       "body": "test_response_before",
