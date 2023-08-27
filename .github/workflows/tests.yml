@@ -11,6 +11,13 @@ jobs:
         otp: ['21','23']
         elixir: ['1.10', '1.11']
         global-mock: [true, false]
+        include:
+          - otp: '26'
+            elixir: '1.14'
+            global-mock: true
+          - otp: '26'
+            elixir: '1.14'
+            global-mock: false
     env:
       MIX_ENV: test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
