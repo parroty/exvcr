@@ -179,7 +179,6 @@ defmodule ExVCR.Handler do
 
   defp normalize_url(url) do
     original_url = URI.parse(url)
-
     original_url
     |> Map.put(:query, normalize_query(original_url.query))
     |> URI.to_string()
