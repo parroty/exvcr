@@ -36,6 +36,15 @@ defmodule ExVCR.Adapter.Httpc.Converter do
         response
       end
 
+    response =
+      if response.body do
+        body = response.body
+                |> convert_string_to_char_list()
+        %{response | body: body}
+      else
+        response
+      end
+
     response
   end
 
