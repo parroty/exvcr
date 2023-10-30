@@ -119,7 +119,7 @@ defmodule ExVCR.Adapter.FinchTest do
     end
   end
 
-  test "using recorded cassete, but requesting with different url should return error" do
+  test "using recorded cassette, but requesting with different url should return error" do
     use_cassette "example_finch_different" do
       {:ok, response} = Finch.build(:get, "http://example.com") |> Finch.request(ExVCRFinch)
       assert response.status == 200

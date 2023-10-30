@@ -18,7 +18,7 @@ defmodule ExVCR.Config do
 
   @doc """
   Replace the specified pattern with placeholder.
-  It can be used to remove sensitive data from the casette file.
+  It can be used to remove sensitive data from the cassette file.
 
   ## Examples
 
