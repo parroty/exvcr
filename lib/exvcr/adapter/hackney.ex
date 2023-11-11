@@ -9,7 +9,7 @@ defmodule ExVCR.Adapter.Hackney do
 
   defmacro __using__(_opts) do
     quote do
-      Store.start
+      Store.start()
     end
   end
 
@@ -145,7 +145,7 @@ defmodule ExVCR.Adapter.Hackney do
   end
 
   @doc """
-  Returns the response from the ExVCR.Reponse record.
+  Returns the response from the ExVCR.Response record.
   """
   def get_response_value_from_cache(response) do
     if response.type == "error" do

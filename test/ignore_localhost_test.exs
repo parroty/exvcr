@@ -6,7 +6,7 @@ defmodule ExVCR.IgnoreLocalhostTest do
   @url "http://localhost:#{@port}/server"
 
   setup_all do
-    HTTPotion.start
+    HTTPotion.start()
     on_exit fn ->
       HttpServer.stop(@port)
     end

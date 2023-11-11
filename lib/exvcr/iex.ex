@@ -10,7 +10,7 @@ defmodule ExVCR.IEx do
   """
   defmacro print(options \\ [], test) do
     adapter = options[:adapter] || ExVCR.Adapter.IBrowse
-    method_name = :"ExVCR.IEx.Sample#{ExVCR.Util.uniq_id}"
+    method_name = :"ExVCR.IEx.Sample#{ExVCR.Util.uniq_id()}"
 
     quote do
       defmodule unquote(method_name) do

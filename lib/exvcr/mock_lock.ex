@@ -8,7 +8,7 @@ defmodule ExVCR.MockLock do
 
   def ensure_started do
     unless Process.whereis(:mock_lock) do
-      __MODULE__.start
+      __MODULE__.start()
     end
   end
 

@@ -15,4 +15,4 @@ config :exvcr, [
   strict_mode: false
 ]
 
-if Mix.env == :test, do: import_config "test.exs"
+if Mix.env() == :test, do: import_config "test.exs"
