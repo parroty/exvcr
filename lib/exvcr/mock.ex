@@ -142,7 +142,7 @@ defmodule ExVCR.Mock do
     if Keyword.keyword?(options) do
       prepare_stub_record(options, adapter)
     else
-      Enum.map(options, &prepare_stub_record(&1, adapter)) |> List.flatten()
+      Enum.flat_map(options, &prepare_stub_record(&1, adapter))
     end
   end
 
