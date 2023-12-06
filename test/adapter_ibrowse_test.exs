@@ -150,6 +150,23 @@ defmodule ExVCR.Adapter.IBrowseTest do
     end
   end
 
+  test "stub multiple requests works for ibrowse" do
+    stubs = [
+      [url: "http://example.com/1", body: "Stub Response 1", status_code: 200],
+      [url: "http://example.com/2", body: "Stub Response 2", status_code: 404]
+    ]
+
+    use_cassette :stub, stubs do
+      {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com/1', [], :get)
+      assert status_code == '200'
+      assert to_string(body) =~ ~r/Stub Response 1/
+
+      {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com/2', [], :get)
+      assert status_code == '404'
+      assert to_string(body) =~ ~r/Stub Response 2/
+    end
+  end
+
   defp assert_response(response, function \\ nil) do
     assert HTTPotion.Response.success?(response, :extra)
     assert response.headers[:Connection] == "keep-alive"

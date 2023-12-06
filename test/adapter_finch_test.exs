@@ -142,6 +142,23 @@ defmodule ExVCR.Adapter.FinchTest do
     end
   end
 
+  test "stub multiple requests works on Finch" do
+    stubs = [
+      [url: "http://example.com/1", body: "Stub Response 1", status_code: 200],
+      [url: "http://example.com/2", body: "Stub Response 2", status_code: 404]
+    ]
+
+    use_cassette :stub, stubs do
+      {:ok, response} = Finch.build(:get, "http://example.com/1") |> Finch.request(ExVCRFinch)
+      assert response.status == 200
+      assert response.body =~ ~r/Stub Response 1/
+
+      {:ok, response} = Finch.build(:get, "http://example.com/2") |> Finch.request(ExVCRFinch)
+      assert response.status == 404
+      assert response.body =~ ~r/Stub Response 2/
+    end
+  end
+
   test "single request using request!" do
     use_cassette "example_finch" do
       response = Finch.build(:get, "http://example.com") |> Finch.request!(ExVCRFinch)
