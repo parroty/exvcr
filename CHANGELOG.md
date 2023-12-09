@@ -1,8 +1,12 @@
-0.14.5
+0.15.0
 ------
+#### Enhancements
+* Support for Multiple Stub Requests (#216).
+
 #### Changes
 * Fix typos for documentation and missing json-parsed body in `mix vcr.show`.
   - Fix typos (#214).
+* Update dependency - excoveralls 0.18.0 (#217).
 
 0.14.4
 ------
