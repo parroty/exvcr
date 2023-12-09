@@ -179,17 +179,44 @@ defmodule ExVCR.Handler do
 
   defp normalize_url(url) do
     original_url = URI.parse(url)
-    
     original_url
     |> Map.put(:query, normalize_query(original_url.query))
     |> URI.to_string()
   end
 
-  defp normalize_request_body(request_body) do
-    normalize_query(request_body)
+  defp normalize_request_body(request_body) when is_binary(request_body) do
+    case JSX.decode(request_body) do
+      {:ok, decoded} ->
+        normalize_request_body(decoded)
+
+      {:error, _} ->
+        normalize_query(request_body)
+    end
   end
-  
-  defp normalize_query(nil), do: nil 
+
+  defp normalize_request_body(request_body) when is_map(request_body) do
+    request_body
+    |> Map.to_list()
+    |> Enum.sort_by(fn {key, _val} -> key end)
+    |> Enum.map(fn
+      {key, val} when is_map(val) -> {key, normalize_request_body(val)}
+      {key, val} when is_list(val) -> {key, normalize_request_body(val)}
+      {key, val} -> {key, val}
+    end)
+    |> URI.encode_query()
+  end
+
+  defp normalize_request_body(request_body) when is_list(request_body) do
+    request_body
+    |> Enum.map(fn
+      val when is_map(val) -> normalize_request_body(val)
+      val when is_list(val) -> normalize_request_body(val)
+      val -> val
+    end)
+    |> Enum.map_join(&to_string/1)
+  end
+
+  defp normalize_query(nil), do: nil
 
   defp normalize_query(query) do
     query
