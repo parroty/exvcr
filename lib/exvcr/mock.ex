@@ -37,7 +37,7 @@ defmodule ExVCR.Mock do
   defmacro use_cassette(:stub, options, test) do
     quote do
       stub_fixture = "stub_fixture_#{ExVCR.Util.uniq_id}"
-      stub = prepare_stub_record(unquote(options), adapter_method())
+      stub = prepare_stub_records(unquote(options), adapter_method())
       recorder = Recorder.start([fixture: stub_fixture, stub: stub, adapter: adapter_method()])
 
       try do
@@ -133,6 +133,17 @@ defmodule ExVCR.Mock do
       end
     end)
     |> Task.await(:infinity)
+  end
+
+  @doc """
+  Prepare stub records
+  """
+  def prepare_stub_records(options, adapter) do
+    if Keyword.keyword?(options) do
+      prepare_stub_record(options, adapter)
+    else
+      Enum.flat_map(options, &prepare_stub_record(&1, adapter))
+    end
   end
 
   @doc """
