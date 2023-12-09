@@ -53,7 +53,7 @@ defmodule ExVCR.StrictModeTest do
     end
   end
 
-  test "it does not uses a cassette when override the defaut config" do
+  test "it does not uses a cassette when override the default config" do
     ExVCR.Setting.set(:strict_mode, true)
 
     use_cassette "strict_mode_cassette", strict_mode: false do

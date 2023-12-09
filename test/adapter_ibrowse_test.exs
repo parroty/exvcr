@@ -119,7 +119,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
     end
   end
 
-  test "using recorded cassete, but requesting with different url should return error" do
+  test "using recorded cassette, but requesting with different url should return error" do
     use_cassette "example_ibrowse_different" do
       {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com', [], :get)
       assert status_code == '200'

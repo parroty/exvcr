@@ -4,7 +4,7 @@ defmodule ExVCR.Filter do
   """
 
   @doc """
-  Filter out senstive data from the response.
+  Filter out sensitive data from the response.
   """
   def filter_sensitive_data(body) when is_binary(body) do
     if String.valid?(body) do
@@ -16,14 +16,14 @@ defmodule ExVCR.Filter do
   def filter_sensitive_data(body), do: body
 
   @doc """
-  Filter out senstive data from the request header.
+  Filter out sensitive data from the request header.
   """
   def filter_request_header(header, value) do
     if Enum.member?(ExVCR.Setting.get(:filter_request_headers), header), do: "***", else: value
   end
 
   @doc """
-  Filter out senstive data from the request options.
+  Filter out sensitive data from the request options.
   """
   def filter_request_option(option, value) do
     if Enum.member?(ExVCR.Setting.get(:filter_request_options), option), do: "***", else: value

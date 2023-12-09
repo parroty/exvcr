@@ -38,6 +38,6 @@ defmodule ExVCR.Task.Show do
     |> JSX.decode!()
     |> List.first()
     |> Enum.into(%{})
-    |> get_in(["responce", "body"])
+    |> get_in(["response", "body"])
   end
 end
