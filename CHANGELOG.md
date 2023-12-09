@@ -4,6 +4,7 @@
 * Support for Multiple Stub Requests (#216).
 
 #### Changes
+* Fix match request body json otp26 (#213).
 * Fix typos for documentation and missing json-parsed body in `mix vcr.show`.
   - Fix typos (#214).
 * Update dependency - excoveralls 0.18.0 (#217).
