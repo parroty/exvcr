@@ -1,3 +1,9 @@
+0.14.5
+------
+#### Changes
+* Fix typos for documentation and missing json-parsed body in `mix vcr.show`.
+  - Fix typos (#214).
+
 0.14.4
 ------
 #### Changes
