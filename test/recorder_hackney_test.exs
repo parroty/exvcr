@@ -16,7 +16,7 @@ defmodule ExVCR.RecorderHackneyTest do
       :ok
     end)
 
-    HTTPoison.start()()
+    HTTPoison.start()
     HttpServer.start(path: "/server", port: @port, response: "test_response")
     :ok
   end
