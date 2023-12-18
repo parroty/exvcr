@@ -119,7 +119,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
     end
   end
 
-  test "using recorded cassete, but requesting with different url should return error" do
+  test "using recorded cassette, but requesting with different url should return error" do
     use_cassette "example_ibrowse_different" do
       {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com', [], :get)
       assert status_code == '200'
@@ -147,6 +147,23 @@ defmodule ExVCR.Adapter.IBrowseTest do
       assert response.body =~ ~r/Stub Response/
       assert response.headers[:"Content-Type"] == "text/html"
       assert response.status_code == 200
+    end
+  end
+
+  test "stub multiple requests works for ibrowse" do
+    stubs = [
+      [url: "http://example.com/1", body: "Stub Response 1", status_code: 200],
+      [url: "http://example.com/2", body: "Stub Response 2", status_code: 404]
+    ]
+
+    use_cassette :stub, stubs do
+      {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com/1', [], :get)
+      assert status_code == '200'
+      assert to_string(body) =~ ~r/Stub Response 1/
+
+      {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com/2', [], :get)
+      assert status_code == '404'
+      assert to_string(body) =~ ~r/Stub Response 2/
     end
   end
 

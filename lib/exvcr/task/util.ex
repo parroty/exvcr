@@ -12,7 +12,7 @@ defmodule ExVCR.Task.Util do
   end
 
   @doc """
-  Method for priting help message.
+  Method for printing help message.
   """
   def print_help_message do
     IO.puts """
@@ -23,7 +23,7 @@ Usage: mix vcr [options]
   -d (--dir)          Specify vcr cassettes directory
   -c (--custom)       Specify custom cassettes directory
 
-Usage: mix vcr.delete [options] [cassete-file-names]
+Usage: mix vcr.delete [options] [cassette-file-names]
   Used to delete cassettes
 
   -d (--dir)          Specify vcr cassettes directory
@@ -37,7 +37,7 @@ Usage: mix vcr.check [options] [test-files]
   -d (--dir)          Specify vcr cassettes directory
   -c (--custom)       Specify custom cassettes directory
 
-Usage: mix vcr.show [cassete-file-names]
+Usage: mix vcr.show [cassette-file-names]
   Used to show cassette contents
 
 """

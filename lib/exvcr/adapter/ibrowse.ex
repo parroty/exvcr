@@ -62,7 +62,7 @@ defmodule ExVCR.Adapter.IBrowse do
   end
 
   @doc """
-  Callback from ExVCR.Handler to get the response content tuple from the ExVCR.Reponse record.
+  Callback from ExVCR.Handler to get the response content tuple from the ExVCR.Response record.
   """
   def get_response_value_from_cache(response) do
     if response.type == "error" do
