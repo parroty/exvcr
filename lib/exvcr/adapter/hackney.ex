@@ -9,7 +9,7 @@ defmodule ExVCR.Adapter.Hackney do
 
   defmacro __using__(_opts) do
     quote do
-      Store.start
+      Store.start()
     end
   end
 

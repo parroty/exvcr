@@ -16,7 +16,7 @@ defmodule Mix.Tasks.Vcr do
   def run(args) do
     {options, _, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom, h: :help], switches: [dir: :string, custom: :string, help: :boolean])
     if options[:help] do
-      ExVCR.Task.Util.print_help_message
+      ExVCR.Task.Util.print_help_message()
     else
       ExVCR.Task.Util.parse_basic_options(options) |> ExVCR.Task.Runner.show_vcr_cassettes
     end
@@ -63,7 +63,7 @@ defmodule Mix.Tasks.Vcr do
       Mix.env(:test)
       Mix.Task.run("test")
       System.at_exit(fn(_) ->
-        ExVCR.Task.Runner.check_cassettes(ExVCR.Checker.get)
+        ExVCR.Task.Runner.check_cassettes(ExVCR.Checker.get())
       end)
     end
   end

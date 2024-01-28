@@ -16,7 +16,7 @@ defmodule ExVCR.StrictModeTest do
       :ok
     end
 
-    HTTPotion.start
+    HTTPotion.start()
     HttpServer.start(@http_server_opts)
     :ok
   end

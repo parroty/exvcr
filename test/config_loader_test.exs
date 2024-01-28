@@ -25,7 +25,7 @@ defmodule ExVCR.ConfigLoaderTest do
     ExVCR.Config.response_headers_blacklist(["Content-Type", "Accept"])
 
     # Load default values (defined in config/config.exs)
-    ExVCR.ConfigLoader.load_defaults
+    ExVCR.ConfigLoader.load_defaults()
 
     # Verify against default values
     assert ExVCR.Setting.get(:cassette_library_dir) == "fixture/vcr_cassettes"
@@ -48,7 +48,7 @@ defmodule ExVCR.ConfigLoaderTest do
     Application.delete_env(:exvcr, :response_headers_blacklist)
 
     # Load default values
-    ExVCR.ConfigLoader.load_defaults
+    ExVCR.ConfigLoader.load_defaults()
 
     # Verify against default values
     assert ExVCR.Setting.get(:cassette_library_dir) == "fixture/vcr_cassettes"

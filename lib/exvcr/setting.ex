@@ -23,7 +23,7 @@ defmodule ExVCR.Setting do
   defp setup do
     if :ets.info(table()) == :undefined do
       :ets.new(table(), [:set, :public, :named_table])
-      ExVCR.ConfigLoader.load_defaults
+      ExVCR.ConfigLoader.load_defaults()
     end
   end
 

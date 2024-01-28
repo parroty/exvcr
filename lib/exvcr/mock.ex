@@ -11,7 +11,7 @@ defmodule ExVCR.Mock do
 
     quote do
       import ExVCR.Mock
-      :application.start(unquote(adapter).module_name)
+      :application.start(unquote(adapter).module_name())
       use unquote(adapter)
 
       def adapter_method() do
@@ -36,7 +36,7 @@ defmodule ExVCR.Mock do
   """
   defmacro use_cassette(:stub, options, test) do
     quote do
-      stub_fixture = "stub_fixture_#{ExVCR.Util.uniq_id}"
+      stub_fixture = "stub_fixture_#{ExVCR.Util.uniq_id()}"
       stub = prepare_stub_records(unquote(options), adapter_method())
       recorder = Recorder.start([fixture: stub_fixture, stub: stub, adapter: adapter_method()])
 
@@ -45,7 +45,7 @@ defmodule ExVCR.Mock do
         [do: return_value] = unquote(test)
         return_value
       after
-        module_name = adapter_method().module_name
+        module_name = adapter_method().module_name()
         unload(module_name)
         ExVCR.MockLock.release_lock()
       end
@@ -88,7 +88,7 @@ defmodule ExVCR.Mock do
     quote do
       recorder_result = Recorder.save(unquote(recorder))
 
-      module_name = adapter_method().module_name
+      module_name = adapter_method().module_name()
       unload(module_name)
       ExVCR.MockLock.release_lock()
 
@@ -101,7 +101,7 @@ defmodule ExVCR.Mock do
     if ExVCR.Application.global_mock_enabled?() do
       ExVCR.Actor.CurrentRecorder.set(recorder)
     else
-      module_name    = adapter.module_name
+      module_name    = adapter.module_name()
       target_methods = adapter.target_methods(recorder)
       Enum.each(target_methods, fn({function, callback}) ->
         :meck.expect(module_name, function, callback)
@@ -125,7 +125,7 @@ defmodule ExVCR.Mock do
   def mock_methods(recorder, adapter) do
     parent_pid = self()
     Task.async(fn ->
-      ExVCR.MockLock.ensure_started
+      ExVCR.MockLock.ensure_started()
       ExVCR.MockLock.request_lock(self(), parent_pid)
       receive do
         :lock_granted ->

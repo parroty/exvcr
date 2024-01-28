@@ -6,7 +6,7 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   setup_all do
     HttpServer.start(path: "/server", port: @port, response: "test_response")
-    {:ok, _} = HTTPoison.start
+    {:ok, _} = HTTPoison.start()
     on_exit fn ->
       HttpServer.stop(@port)
     end
