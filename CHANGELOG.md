@@ -1,3 +1,8 @@
+0.15.1
+------
+#### Changes
+* Fix upstream warnings under Elixir 1.16 (#215).
+
 0.15.0
 ------
 #### Enhancements
