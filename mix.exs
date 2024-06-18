@@ -33,6 +33,7 @@ defmodule ExVCR.Mixfile do
       {:httpoison, "~> 1.0 or ~> 2.0", optional: true},
       {:finch, "~> 0.16", optional: true},
       {:excoveralls, "~> 0.18", only: :test},
+      {:certifi, "~> 2.13.0", only: :test, override: true},
       {:http_server, github: "parroty/http_server", only: [:dev, :test]},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
