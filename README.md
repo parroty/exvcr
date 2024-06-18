@@ -7,23 +7,23 @@
 [![License](https://img.shields.io/hexpm/l/exvcr.svg)](http://opensource.org/licenses/MIT)
 
 Record and replay HTTP interactions library for Elixir.  It's inspired by
-Ruby's VCR (https://github.com/vcr/vcr), and trying to provide similar
+[Ruby's VCR](https://github.com/vcr/vcr), and trying to provide similar
 functionalities.
 
 ### Basics
 
 The following HTTP libraries can be applied.
 
-  - <a href="https://github.com/cmullaparthi/ibrowse" target="_blank">ibrowse</a>-based libraries.
-    - <a href="https://github.com/myfreeweb/httpotion" target="_blank">HTTPotion</a>
-  - <a href="https://github.com/benoitc/hackney" target="_blank">hackney</a>-based libraries.
-    - <a href="https://github.com/edgurgel/httpoison" target="_blank">HTTPoison</a>
+  - [ibrowse](https://github.com/cmullaparthi/ibrowse){:target="_blank" rel="noopener"}-based libraries.
+    - [HTTPotion](https://github.com/myfreeweb/httpotion){:target="_blank" rel="noopener"}
+  - [hackney](https://github.com/benoitc/hackney){:target="_blank" rel="noopener"}-based libraries.
+    - [HTTPoison](https://github.com/edgurgel/httpoison){:target="_blank" rel="noopener"}
     - support is very limited, and tested only with sync request of HTTPoison yet.
-  - <a href="http://erlang.org/doc/man/httpc.html" target="_blank">httpc</a>-based libraries.
-    - <a href="https://github.com/tim/erlang-oauth/" target="_blank">erlang-oauth</a>
-    - <a href="https://github.com/Zatvobor/tirexs" target="_blank">tirexs</a>
+  - [httpc](http://erlang.org/doc/man/httpc.html){:target="_blank" rel="noopener"}-based libraries.
+    - [erlang-oauth](https://github.com/tim/erlang-oauth/){:target="_blank" rel="noopener"}
+    - [tirexs](https://github.com/Zatvobor/tirexs){:target="_blank" rel="noopener"}
     - support is very limited, and tested only with `:httpc.request/1` and `:httpc.request/4`.
-  - <a href="https://github.com/keathley/finch" target="_blank">Finch</a>
+  - [Finch](https://github.com/keathley/finch){:target="_blank" rel="noopener"}
     - the deprecated `Finch.request/6` functions is not supported
 
 HTTP interactions are recorded as JSON file. The JSON file can be recorded
@@ -64,7 +64,7 @@ using `hackney`, specify `adapter: ExVCR.Adapter.Hackney` options as follows.
 
 ##### Example with ibrowse
 
-```Elixir
+```elixir
 defmodule ExVCR.Adapter.IBrowseTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock
@@ -94,7 +94,7 @@ end
 
 ##### Example with hackney
 
-```Elixir
+```elixir
 defmodule ExVCR.Adapter.HackneyTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
@@ -114,7 +114,7 @@ end
 
 ##### Example with httpc
 
-```Elixir
+```elixir
 defmodule ExVCR.Adapter.HttpcTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
@@ -136,7 +136,7 @@ end
 
 ##### Example with Finch
 
-```Elixir
+```elixir
 defmodule ExVCR.Adapter.FinchTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Finch
@@ -161,13 +161,13 @@ end
 
 Instead of single `use_cassette`, `start_cassette` and `stop_cassette` can serve as an alternative syntax.
 
-```Elixir
+```elixir
 use_cassette("x") do
   do_something
 end
 ```
 
-```Elixir
+```elixir
 start_cassette("x")
 do_something
 stop_cassette
@@ -187,7 +187,7 @@ control rather than just recoding the actual server response.
   of requesting to server.
 
 
-```Elixir
+```elixir
 defmodule ExVCR.MockTest do
   use ExUnit.Case, async: true
   import ExVCR.Mock
@@ -667,7 +667,7 @@ iex(2)> ExVCR.IEx.print(adapter: ExVCR.Adapter.Hackney) do
 Specifying `:stub` as fixture name allows directly stubbing the response
 header/body information based on parameter.
 
-```Elixir
+```elixir
 test "stub request works for HTTPotion" do
   use_cassette :stub, [url: "http://example.com", body: "Stub Response", status_code: 200] do
     response = HTTPotion.get("http://example.com", [])
@@ -733,7 +733,7 @@ If the specified `:url` parameter doesn't match requests called inside the
 The `:url` can be regular expression string. Please note that you should use
 the `~r` sigil with `/` as delimiters.
 
-```Elixir
+```elixir
 test "match URL with regular expression" do
   use_cassette :stub, [url: "~r/(foo|bar)/", body: "Stub Response", status_code: 200] do
     # ...
