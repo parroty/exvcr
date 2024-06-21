@@ -741,14 +741,13 @@ test "match URL with regular expression" do
 end
 
 test "make sure to properly escape the /" do
-  # escape /path/to/file
-  use_cassette :stub, [url: "~r/\/path\/to\/file", body: "Stub Response", status_code: 200] do
+  use_cassette :stub, [url: "~r/\/path\/to\/file\/without\/trailing\/slash\/does\/not\/work", body: "Stub Response", status_code: 200] do
     # ...
   end
 end
 
 test "the sigil delimiter cannot be anything else" do
-  use_cassette :stub, [url: "~r{this-delimiter-doesn-not-work}", body: "Stub Response", status_code: 200] do
+  use_cassette :stub, [url: "~r{this-delimiter-does-not-work}", body: "Stub Response", status_code: 200] do
     # ...
   end
 end
