@@ -14,16 +14,16 @@ functionalities.
 
 The following HTTP libraries can be applied.
 
-  - [ibrowse](https://github.com/cmullaparthi/ibrowse){:target="_blank" rel="noopener"}-based libraries.
-    - [HTTPotion](https://github.com/myfreeweb/httpotion){:target="_blank" rel="noopener"}
-  - [hackney](https://github.com/benoitc/hackney){:target="_blank" rel="noopener"}-based libraries.
-    - [HTTPoison](https://github.com/edgurgel/httpoison){:target="_blank" rel="noopener"}
+  - [ibrowse](https://github.com/cmullaparthi/ibrowse)-based libraries.
+    - [HTTPotion](https://github.com/myfreeweb/httpotion)
+  - [hackney](https://github.com/benoitc/hackney)-based libraries.
+    - [HTTPoison](https://github.com/edgurgel/httpoison)
     - support is very limited, and tested only with sync request of HTTPoison yet.
-  - [httpc](http://erlang.org/doc/man/httpc.html){:target="_blank" rel="noopener"}-based libraries.
-    - [erlang-oauth](https://github.com/tim/erlang-oauth/){:target="_blank" rel="noopener"}
-    - [tirexs](https://github.com/Zatvobor/tirexs){:target="_blank" rel="noopener"}
+  - [httpc](http://erlang.org/doc/man/httpc.html)-based libraries.
+    - [erlang-oauth](https://github.com/tim/erlang-oauth/)
+    - [tirexs](https://github.com/Zatvobor/tirexs)
     - support is very limited, and tested only with `:httpc.request/1` and `:httpc.request/4`.
-  - [Finch](https://github.com/keathley/finch){:target="_blank" rel="noopener"}
+  - [Finch](https://github.com/keathley/finch)
     - the deprecated `Finch.request/6` functions is not supported
 
 HTTP interactions are recorded as JSON file. The JSON file can be recorded
