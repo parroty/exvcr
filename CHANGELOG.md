@@ -1,3 +1,8 @@
+0.15.2
+------
+#### Changes
+* Remove kramdown syntax from links (#222).
+
 0.15.1
 ------
 #### Changes
