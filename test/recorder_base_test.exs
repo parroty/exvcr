@@ -1,6 +1,7 @@
 defmodule ExVCR.RecorderBaseTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock
+
   alias ExVCR.Recorder
 
   test "initializes recorder" do

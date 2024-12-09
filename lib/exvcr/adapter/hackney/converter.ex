@@ -11,7 +11,7 @@ defmodule ExVCR.Adapter.Hackney.Converter do
 
     response =
       if is_map(response.headers) do
-        headers = response.headers |> Map.to_list()
+        headers = Map.to_list(response.headers)
         %{response | headers: headers}
       else
         response
@@ -21,11 +21,11 @@ defmodule ExVCR.Adapter.Hackney.Converter do
   end
 
   defp request_to_string(request) do
-    method = Enum.fetch!(request, 0) |> to_string()
-    url = Enum.fetch!(request, 1) |> parse_url()
-    headers = Enum.at(request, 2, []) |> parse_headers()
-    body = Enum.at(request, 3, "") |> parse_request_body()
-    options = Enum.at(request, 4, []) |> sanitize_options() |> parse_options()
+    method = request |> Enum.fetch!(0) |> to_string()
+    url = request |> Enum.fetch!(1) |> parse_url()
+    headers = request |> Enum.at(2, []) |> parse_headers()
+    body = request |> Enum.at(3, "") |> parse_request_body()
+    options = request |> Enum.at(4, []) |> sanitize_options() |> parse_options()
 
     %ExVCR.Request{
       url: url,
@@ -101,13 +101,14 @@ defmodule ExVCR.Adapter.Hackney.Converter do
   end
 
   def parse_request_body({:form, body}) do
-    hackney_request_module().encode_form(body)
+    body
+    |> hackney_request_module().encode_form()
     |> elem(2)
-    |> to_string
+    |> to_string()
     |> ExVCR.Filter.filter_sensitive_data()
   end
 
   def parse_request_body(body), do: super(body)
 
-  defp hackney_request_module(), do: :hackney_request
+  defp hackney_request_module, do: :hackney_request
 end

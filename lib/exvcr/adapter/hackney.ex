@@ -4,6 +4,8 @@ defmodule ExVCR.Adapter.Hackney do
   """
 
   use ExVCR.Adapter
+
+  alias ExVCR.Adapter.Hackney.Converter
   alias ExVCR.Adapter.Hackney.Store
   alias ExVCR.Util
 
@@ -13,9 +15,9 @@ defmodule ExVCR.Adapter.Hackney do
     end
   end
 
-  defdelegate convert_from_string(string), to: ExVCR.Adapter.Hackney.Converter
-  defdelegate convert_to_string(request, response), to: ExVCR.Adapter.Hackney.Converter
-  defdelegate parse_request_body(request_body), to: ExVCR.Adapter.Hackney.Converter
+  defdelegate convert_from_string(string), to: Converter
+  defdelegate convert_to_string(request, response), to: Converter
+  defdelegate parse_request_body(request_body), to: Converter
 
   @doc """
   Returns the name of the mock target module.
@@ -28,7 +30,7 @@ defmodule ExVCR.Adapter.Hackney do
   Returns list of the mock target methods with function name and callback.
   Implementation for global mock.
   """
-  def target_methods() do
+  def target_methods do
     [
       {:request, &ExVCR.Recorder.request([&1, &2, &3, &4, &5])},
       {:request, &ExVCR.Recorder.request([&1, &2, &3, &4])},
@@ -61,8 +63,8 @@ defmodule ExVCR.Adapter.Hackney do
   def generate_keys_for_request(request) do
     url = Enum.fetch!(request, 1)
     method = Enum.fetch!(request, 0)
-    request_body = Enum.fetch(request, 3) |> parse_request_body
-    headers = Enum.at(request, 2, []) |> Util.stringify_keys()
+    request_body = request |> Enum.fetch(3) |> parse_request_body()
+    headers = request |> Enum.at(2, []) |> Util.stringify_keys()
 
     [url: url, method: method, request_body: request_body, headers: headers]
   end
@@ -100,15 +102,14 @@ defmodule ExVCR.Adapter.Hackney do
       response
     else
       client = make_ref()
-      client_key_atom = client |> inspect |> String.to_atom()
+      client_key_atom = client |> inspect() |> String.to_atom()
       Store.set(client_key_atom, body)
       %{response | body: client}
     end
   end
 
   defp handle_body_request(args) do
-    ExVCR.Actor.CurrentRecorder.get()
-    |> handle_body_request(args)
+    handle_body_request(ExVCR.Actor.CurrentRecorder.get(), args)
   end
 
   defp handle_body_request(nil, args) do
@@ -120,7 +121,7 @@ defmodule ExVCR.Adapter.Hackney do
   end
 
   defp handle_body_request(recorder, [client, max_length]) do
-    client_key_atom = client |> inspect |> String.to_atom()
+    client_key_atom = client |> inspect() |> String.to_atom()
 
     if body = Store.get(client_key_atom) do
       Store.delete(client_key_atom)

@@ -3,7 +3,7 @@ defmodule ExVCR.RecorderIBrowseTest do
   use ExVCR.Mock
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_ibrowse"
-  @port 34000
+  @port 34_000
   @url "http://localhost:#{@port}/server"
   @url_with_query "http://localhost:#{@port}/server?password=sample"
 
@@ -82,8 +82,8 @@ defmodule ExVCR.RecorderIBrowseTest do
 
     # The recorded cassette should contain replaced data.
     cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_header.json")
-    assert cassette =~ "\"X-My-Secret-Token\": \"***\""
-    refute cassette =~ "\"X-My-Secret-Token\": \"my-secret-token\""
+    assert cassette =~ ~s("X-My-Secret-Token": "***")
+    refute cassette =~ ~s("X-My-Secret-Token": "my-secret-token")
 
     ExVCR.Config.filter_request_headers(nil)
   end
@@ -98,7 +98,7 @@ defmodule ExVCR.RecorderIBrowseTest do
 
     # The recorded cassette should contain replaced data.
     cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_matches_in_request_headers.json")
-    assert cassette =~ "\"Authorization\": \"Basic ***\""
+    assert cassette =~ ~s("Authorization": "Basic ***")
 
     # Attempt another request should match on filtered header
     use_cassette "sensitive_data_matches_in_request_headers", match_requests_on: [:headers] do
@@ -119,8 +119,8 @@ defmodule ExVCR.RecorderIBrowseTest do
 
     # The recorded cassette should contain replaced data.
     cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_options.json")
-    assert cassette =~ "\"basic_auth\": \"***\""
-    refute cassette =~ "\"basic_auth\": {\"username\", \"password\"}"
+    assert cassette =~ ~s("basic_auth": "***")
+    refute cassette =~ ~s("basic_auth": {"username", "password"})
 
     ExVCR.Config.filter_request_options(nil)
   end

@@ -14,7 +14,7 @@ defmodule ExVCR.FilterTest do
   end
 
   test "filter_sensitive_data handles non string values" do
-    assert ExVCR.Filter.filter_sensitive_data(60_000) == 60000
+    assert ExVCR.Filter.filter_sensitive_data(60_000) == 60_000
   end
 
   test "filter_url_params" do

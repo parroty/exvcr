@@ -3,7 +3,7 @@ defmodule ExVCR.RecorderFinchTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Finch
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_finch"
-  @port 34003
+  @port 34_003
   @url "http://localhost:#{@port}/server"
   @url_with_query "http://localhost:#{@port}/server?password=sample"
 
@@ -24,33 +24,33 @@ defmodule ExVCR.RecorderFinchTest do
 
   test "forcefully getting response from server by removing json in advance" do
     use_cassette "server1" do
-      {:ok, response} = Finch.build(:get, @url) |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build(@url) |> Finch.request(ExVCRFinch)
       assert response.body =~ ~r/test_response/
     end
   end
 
   test "forcefully getting response from server, then loading from cache by recording twice" do
     use_cassette "server2" do
-      {:ok, response} = Finch.build(:get, @url) |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build(@url) |> Finch.request(ExVCRFinch)
       assert response.body =~ ~r/test_response/
     end
 
     use_cassette "server2" do
-      {:ok, response} = Finch.build(:get, @url) |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build(@url) |> Finch.request(ExVCRFinch)
       assert response.body =~ ~r/test_response/
     end
   end
 
   test "forcefully getting response from server with error" do
     use_cassette "server_error1" do
-      {:error, reason} = Finch.build(:get, "http://invalid_url") |> Finch.request(ExVCRFinch)
+      {:error, reason} = :get |> Finch.build("http://invalid_url") |> Finch.request(ExVCRFinch)
       assert reason == %Mint.TransportError{reason: :nxdomain}
     end
   end
 
   test "forcefully getting response from server using request!" do
     use_cassette "server1" do
-      response = Finch.build(:get, @url) |> Finch.request!(ExVCRFinch)
+      response = :get |> Finch.build(@url) |> Finch.request!(ExVCRFinch)
       assert response.body =~ ~r/test_response/
     end
   end
@@ -58,7 +58,7 @@ defmodule ExVCR.RecorderFinchTest do
   test "forcefully getting response from server with error using request!" do
     use_cassette "server_error2" do
       assert_raise(Mint.TransportError, fn ->
-        Finch.build(:get, "http://invalid_url") |> Finch.request!(ExVCRFinch)
+        :get |> Finch.build("http://invalid_url") |> Finch.request!(ExVCRFinch)
       end)
     end
   end
@@ -68,7 +68,7 @@ defmodule ExVCR.RecorderFinchTest do
 
     use_cassette "server_sensitive_data_in_body" do
       # require IEx; IEx.pry
-      {:ok, response} = Finch.build(:get, @url) |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build(@url) |> Finch.request(ExVCRFinch)
       assert response.body =~ ~r/PLACEHOLDER/
     end
 
@@ -79,7 +79,7 @@ defmodule ExVCR.RecorderFinchTest do
     ExVCR.Config.filter_sensitive_data("password=[a-z]+", "password=***")
 
     use_cassette "server_sensitive_data_in_query" do
-      {:ok, response} = Finch.build(:get, @url_with_query) |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build(@url_with_query) |> Finch.request(ExVCRFinch)
       assert response.body =~ ~r/test_response/
     end
 
@@ -96,7 +96,8 @@ defmodule ExVCR.RecorderFinchTest do
 
     use_cassette "sensitive_data_in_request_header" do
       {:ok, response} =
-        Finch.build(:get, @url_with_query, [{"X-My-Secret-Token", "my-secret-token"}])
+        :get
+        |> Finch.build(@url_with_query, [{"X-My-Secret-Token", "my-secret-token"}])
         |> Finch.request(ExVCRFinch)
 
       assert response.body =~ ~r/test_response/
@@ -104,8 +105,8 @@ defmodule ExVCR.RecorderFinchTest do
 
     # The recorded cassette should contain replaced data.
     cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_header.json")
-    assert cassette =~ "\"X-My-Secret-Token\": \"***\""
-    refute cassette =~ "\"X-My-Secret-Token\": \"my-secret-token\""
+    assert cassette =~ ~s("X-My-Secret-Token": "***")
+    refute cassette =~ ~s("X-My-Secret-Token": "my-secret-token")
 
     ExVCR.Config.filter_request_headers(nil)
   end
@@ -115,7 +116,8 @@ defmodule ExVCR.RecorderFinchTest do
 
     use_cassette "sensitive_data_matches_in_request_headers", match_requests_on: [:headers] do
       {:ok, response} =
-        Finch.build(:get, @url_with_query, [{"Authorization", "Basic credentials"}])
+        :get
+        |> Finch.build(@url_with_query, [{"Authorization", "Basic credentials"}])
         |> Finch.request(ExVCRFinch)
 
       assert response.body =~ ~r/test_response/
@@ -123,12 +125,13 @@ defmodule ExVCR.RecorderFinchTest do
 
     # The recorded cassette should contain replaced data.
     cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_matches_in_request_headers.json")
-    assert cassette =~ "\"Authorization\": \"Basic ***\""
+    assert cassette =~ ~s("Authorization": "Basic ***")
 
     # Attempt another request should match on filtered header
     use_cassette "sensitive_data_matches_in_request_headers", match_requests_on: [:headers] do
       {:ok, response} =
-        Finch.build(:get, @url_with_query, [{"Authorization", "Basic credentials"}])
+        :get
+        |> Finch.build(@url_with_query, [{"Authorization", "Basic credentials"}])
         |> Finch.request(ExVCRFinch)
 
       assert response.body =~ ~r/test_response/
@@ -142,7 +145,8 @@ defmodule ExVCR.RecorderFinchTest do
 
     use_cassette "sensitive_data_in_request_options" do
       {:ok, response} =
-        Finch.build(:get, @url_with_query, [{"Authorization", "Basic credentials"}])
+        :get
+        |> Finch.build(@url_with_query, [{"Authorization", "Basic credentials"}])
         |> Finch.request(ExVCRFinch, pool_timeout: 5_000)
 
       assert response.body =~ ~r/test_response/
@@ -150,7 +154,7 @@ defmodule ExVCR.RecorderFinchTest do
 
     # The recorded cassette should contain replaced data.
     cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_options.json")
-    assert cassette =~ "\"pool_timeout\": \"***\""
+    assert cassette =~ ~s("pool_timeout": "***")
     refute cassette =~ "\"pool_timeout\": 5000"
 
     ExVCR.Config.filter_request_options(nil)
@@ -161,7 +165,7 @@ defmodule ExVCR.RecorderFinchTest do
 
     use_cassette "example_ignore_url_params" do
       {:ok, response} =
-        Finch.build(:get, "#{@url}?should_not_be_contained") |> Finch.request(ExVCRFinch)
+        :get |> Finch.build("#{@url}?should_not_be_contained") |> Finch.request(ExVCRFinch)
 
       assert response.body =~ ~r/test_response/
     end
@@ -175,7 +179,7 @@ defmodule ExVCR.RecorderFinchTest do
     ExVCR.Config.response_headers_blacklist(["date"])
 
     use_cassette "remove_blacklisted_headers" do
-      {:ok, response} = Finch.build(:get, @url) |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build(@url) |> Finch.request(ExVCRFinch)
 
       assert response.headers == [
                {"server", "Cowboy"},

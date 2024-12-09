@@ -2,7 +2,9 @@ defmodule ExVCR.Adapter.HackneyTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
-  @port 34009
+  alias ExVCR.Actor.CurrentRecorder
+
+  @port 34_009
 
   setup_all do
     HttpServer.start(path: "/server", port: @port, response: "test_response")
@@ -17,8 +19,7 @@ defmodule ExVCR.Adapter.HackneyTest do
 
   test "passthrough works when CurrentRecorder has an initial state" do
     if ExVCR.Application.global_mock_enabled?() do
-      ExVCR.Actor.CurrentRecorder.default_state()
-      |> ExVCR.Actor.CurrentRecorder.set()
+      CurrentRecorder.set(CurrentRecorder.default_state())
     end
 
     url = "http://localhost:#{@port}/server"
@@ -197,7 +198,7 @@ defmodule ExVCR.Adapter.HackneyTest do
           ]
         },
         [],
-        recv_timeout: 30000
+        recv_timeout: 30_000
       )
     end
   end
@@ -259,6 +260,6 @@ defmodule ExVCR.Adapter.HackneyTest do
   defp assert_response(response, function \\ nil) do
     assert response.status_code == 200
     assert is_binary(response.body)
-    unless function == nil, do: function.(response)
+    if function != nil, do: function.(response)
   end
 end

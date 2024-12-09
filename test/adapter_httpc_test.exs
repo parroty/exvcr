@@ -2,7 +2,9 @@ defmodule ExVCR.Adapter.HttpcTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
-  @port 34010
+  alias ExVCR.Actor.CurrentRecorder
+
+  @port 34_010
 
   setup_all do
     HttpServer.start(path: "/server", port: @port, response: "test_response")
@@ -17,18 +19,17 @@ defmodule ExVCR.Adapter.HttpcTest do
 
   test "passthrough works when CurrentRecorder has an initial state" do
     if ExVCR.Application.global_mock_enabled?() do
-      ExVCR.Actor.CurrentRecorder.default_state()
-      |> ExVCR.Actor.CurrentRecorder.set()
+      CurrentRecorder.set(CurrentRecorder.default_state())
     end
 
-    url = "http://localhost:#{@port}/server" |> to_charlist()
+    url = to_charlist("http://localhost:#{@port}/server")
     {:ok, result} = :httpc.request(url)
     {{_http_version, status_code, _reason_phrase}, _headers, _body} = result
     assert status_code == 200
   end
 
   test "passthrough works after cassette has been used" do
-    url = "http://localhost:#{@port}/server" |> to_charlist()
+    url = to_charlist("http://localhost:#{@port}/server")
 
     use_cassette "httpc_get_localhost" do
       {:ok, result} = :httpc.request(url)

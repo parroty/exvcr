@@ -4,15 +4,17 @@ defmodule ExVCR.Adapter.Httpc do
   """
 
   use ExVCR.Adapter
+
+  alias ExVCR.Adapter.Httpc.Converter
   alias ExVCR.Util
 
   defmacro __using__(_opts) do
     # do nothing
   end
 
-  defdelegate convert_from_string(string), to: ExVCR.Adapter.Httpc.Converter
-  defdelegate convert_to_string(request, response), to: ExVCR.Adapter.Httpc.Converter
-  defdelegate parse_request_body(request_body), to: ExVCR.Adapter.Httpc.Converter
+  defdelegate convert_from_string(string), to: Converter
+  defdelegate convert_to_string(request, response), to: Converter
+  defdelegate parse_request_body(request_body), to: Converter
 
   @doc """
   Returns the name of the mock target module.
@@ -28,7 +30,7 @@ defmodule ExVCR.Adapter.Httpc do
       {:request, &ExVCR.Recorder.request(recorder, [&1,&2])}
       {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])}
   """
-  def target_methods() do
+  def target_methods do
     [
       {:request, &ExVCR.Recorder.request([&1])},
       {:request, &ExVCR.Recorder.request([&1, &2, &3, &4])}
@@ -72,7 +74,7 @@ defmodule ExVCR.Adapter.Httpc do
   end
 
   defp apply_filters({:ok, {status_code, headers, body}}) do
-    replaced_body = to_string(body) |> ExVCR.Filter.filter_sensitive_data()
+    replaced_body = body |> to_string() |> ExVCR.Filter.filter_sensitive_data()
     filtered_headers = ExVCR.Filter.remove_blacklisted_headers(headers)
     {:ok, {status_code, filtered_headers, replaced_body}}
   end

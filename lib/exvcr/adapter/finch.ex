@@ -6,15 +6,16 @@ if Code.ensure_loaded?(Finch) do
 
     use ExVCR.Adapter
 
+    alias ExVCR.Adapter.Finch.Converter
     alias ExVCR.Util
 
     defmacro __using__(_opts) do
       # do nothing
     end
 
-    defdelegate convert_from_string(string), to: ExVCR.Adapter.Finch.Converter
-    defdelegate convert_to_string(request, response), to: ExVCR.Adapter.Finch.Converter
-    defdelegate parse_request_body(request_body), to: ExVCR.Adapter.Finch.Converter
+    defdelegate convert_from_string(string), to: Converter
+    defdelegate convert_to_string(request, response), to: Converter
+    defdelegate parse_request_body(request_body), to: Converter
 
     @doc """
     Returns the name of the mock target module.
@@ -27,12 +28,12 @@ if Code.ensure_loaded?(Finch) do
     Returns list of the mock target methods with function name and callback.
     Implementation for global mock.
     """
-    def target_methods() do
+    def target_methods do
       [
         {:request, &ExVCR.Recorder.request([&1, &2])},
         {:request, &ExVCR.Recorder.request([&1, &2, &3])},
-        {:request!, &(ExVCR.Recorder.request([&1, &2]) |> handle_response_for_request!())},
-        {:request!, &(ExVCR.Recorder.request([&1, &2, &3]) |> handle_response_for_request!())}
+        {:request!, &([&1, &2] |> ExVCR.Recorder.request() |> handle_response_for_request!())},
+        {:request!, &([&1, &2, &3] |> ExVCR.Recorder.request() |> handle_response_for_request!())}
       ]
     end
 
@@ -43,10 +44,8 @@ if Code.ensure_loaded?(Finch) do
       [
         {:request, &ExVCR.Recorder.request(recorder, [&1, &2])},
         {:request, &ExVCR.Recorder.request(recorder, [&1, &2, &3])},
-        {:request!,
-         &(ExVCR.Recorder.request(recorder, [&1, &2]) |> handle_response_for_request!())},
-        {:request!,
-         &(ExVCR.Recorder.request(recorder, [&1, &2, &3]) |> handle_response_for_request!())}
+        {:request!, &(recorder |> ExVCR.Recorder.request([&1, &2]) |> handle_response_for_request!())},
+        {:request!, &(recorder |> ExVCR.Recorder.request([&1, &2, &3]) |> handle_response_for_request!())}
       ]
     end
 
@@ -95,7 +94,7 @@ if Code.ensure_loaded?(Finch) do
     end
 
     defp apply_filters(%Finch.Response{} = response) do
-      replaced_body = to_string(response.body) |> ExVCR.Filter.filter_sensitive_data()
+      replaced_body = response.body |> to_string() |> ExVCR.Filter.filter_sensitive_data()
       filtered_headers = ExVCR.Filter.remove_blacklisted_headers(response.headers)
 
       response
@@ -117,6 +116,7 @@ if Code.ensure_loaded?(Finch) do
   end
 else
   defmodule ExVCR.Adapter.Finch do
+    @moduledoc false
     def module_name, do: raise("Missing dependency: Finch")
     def target_methods, do: raise("Missing dependency: Finch")
   end

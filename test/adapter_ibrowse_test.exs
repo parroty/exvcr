@@ -2,7 +2,9 @@ defmodule ExVCR.Adapter.IBrowseTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock
 
-  @port 34011
+  alias ExVCR.Actor.CurrentRecorder
+
+  @port 34_011
 
   setup_all do
     HttpServer.start(path: "/server", port: @port, response: "test_response")
@@ -17,17 +19,16 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "passthrough works when CurrentRecorder has an initial state" do
     if ExVCR.Application.global_mock_enabled?() do
-      ExVCR.Actor.CurrentRecorder.default_state()
-      |> ExVCR.Actor.CurrentRecorder.set()
+      CurrentRecorder.set(CurrentRecorder.default_state())
     end
 
-    url = "http://localhost:#{@port}/server" |> to_charlist()
+    url = to_charlist("http://localhost:#{@port}/server")
     {:ok, status_code, _headers, _body} = :ibrowse.send_req(url, [], :get)
     assert status_code == ~c"200"
   end
 
   test "passthrough works after cassette has been used" do
-    url = "http://localhost:#{@port}/server" |> to_charlist()
+    url = to_charlist("http://localhost:#{@port}/server")
 
     use_cassette "ibrowse_get_localhost" do
       {:ok, status_code, _headers, _body} = :ibrowse.send_req(url, [], :get)
@@ -91,7 +92,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "put method" do
     use_cassette "httpotion_put" do
-      assert_response(HTTPotion.put("http://httpbin.org/put", body: "test", timeout: 10000))
+      assert_response(HTTPotion.put("http://httpbin.org/put", body: "test", timeout: 10_000))
     end
   end
 
@@ -103,7 +104,7 @@ defmodule ExVCR.Adapter.IBrowseTest do
 
   test "delete method" do
     use_cassette "httpotion_delete" do
-      assert_response(HTTPotion.delete("http://httpbin.org/delete", timeout: 10000))
+      assert_response(HTTPotion.delete("http://httpbin.org/delete", timeout: 10_000))
     end
   end
 
@@ -175,6 +176,6 @@ defmodule ExVCR.Adapter.IBrowseTest do
     assert HTTPotion.Response.success?(response, :extra)
     assert response.headers[:Connection] == "keep-alive"
     assert is_binary(response.body)
-    unless function == nil, do: function.(response)
+    if function != nil, do: function.(response)
   end
 end

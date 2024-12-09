@@ -39,16 +39,13 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
     response
   end
 
-  defp string_to_error_reason([reason, details]),
-    do: {String.to_atom(reason), binary_to_tuple(details)}
+  defp string_to_error_reason([reason, details]), do: {String.to_atom(reason), binary_to_tuple(details)}
 
   defp string_to_error_reason([reason]), do: String.to_atom(reason)
 
-  defp request_to_string([url, headers, method]),
-    do: request_to_string([url, headers, method, [], []])
+  defp request_to_string([url, headers, method]), do: request_to_string([url, headers, method, [], []])
 
-  defp request_to_string([url, headers, method, body]),
-    do: request_to_string([url, headers, method, body, []])
+  defp request_to_string([url, headers, method, body]), do: request_to_string([url, headers, method, body, []])
 
   defp request_to_string([url, headers, method, body, options]),
     do: request_to_string([url, headers, method, body, options, 5000])
@@ -90,8 +87,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
     }
   end
 
-  defp error_reason_to_string({reason, details}),
-    do: [Atom.to_string(reason), tuple_to_binary(details)]
+  defp error_reason_to_string({reason, details}), do: [Atom.to_string(reason), tuple_to_binary(details)]
 
   defp error_reason_to_string(reason), do: [Atom.to_string(reason)]
 
@@ -102,7 +98,8 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
   end
 
   defp binary_to_tuple(list) do
-    Enum.map(list, fn x ->
+    list
+    |> Enum.map(fn x ->
       if is_binary(x), do: String.to_atom(x), else: x
     end)
     |> List.to_tuple()

@@ -1,9 +1,10 @@
 defmodule ExVCR.Adapter.HandlerOptionsTest do
   defmodule MatchRequestsOn do
+    @moduledoc false
     use ExVCR.Mock
     use ExUnit.Case, async: false
 
-    @port 34006
+    @port 34_006
     @url "http://localhost:#{@port}/server"
 
     setup_all do
@@ -109,7 +110,7 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
     defp always_map(headers) do
       # When a request is first recorded then the request headers are stored
       # as a List, but when it's fetched from storage then they are a Map...
-      if(is_list(headers), do: Enum.into(headers, %{}), else: headers)
+      if(is_list(headers), do: Map.new(headers), else: headers)
     end
 
     test "specifying custom_matchers matches using user-defined functions" do
@@ -117,8 +118,7 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
         recorded_headers = always_map(response.request.headers)
         expected_value = recorded_headers["X-Special-Header"]
 
-        keys[:headers]
-        |> Enum.any?(&match?({"X-Special-Header", ^expected_value}, &1))
+        Enum.any?(keys[:headers], &match?({"X-Special-Header", ^expected_value}, &1))
       end
 
       # This will always return true, but just so we can show you can pass an arbitrary
@@ -153,8 +153,7 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
         recorded_headers = always_map(response.request.headers)
         expected_value = recorded_headers["X-Special-Header"]
 
-        keys[:headers]
-        |> Enum.any?(&match?({"X-Special-Header", ^expected_value}, &1))
+        Enum.any?(keys[:headers], &match?({"X-Special-Header", ^expected_value}, &1))
       end
 
       # This will always return true, but just so we can show you can pass an arbitrary

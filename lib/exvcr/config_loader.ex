@@ -3,10 +3,10 @@ defmodule ExVCR.ConfigLoader do
   Load configuration parameters from config.exs.
   """
 
+  alias ExVCR.Config
+
   @default_vcr_path "fixture/vcr_cassettes"
   @default_custom_path "fixture/custom_cassettes"
-
-  alias ExVCR.Config
 
   @doc """
   Load default config values.
@@ -14,15 +14,15 @@ defmodule ExVCR.ConfigLoader do
   def load_defaults do
     env = Application.get_all_env(:exvcr)
 
-    if env[:vcr_cassette_library_dir] != nil do
-      Config.cassette_library_dir(
-        env[:vcr_cassette_library_dir],
-        env[:custom_cassette_library_dir]
-      )
-    else
+    if env[:vcr_cassette_library_dir] == nil do
       Config.cassette_library_dir(
         @default_vcr_path,
         @default_custom_path
+      )
+    else
+      Config.cassette_library_dir(
+        env[:vcr_cassette_library_dir],
+        env[:custom_cassette_library_dir]
       )
     end
 
@@ -57,10 +57,10 @@ defmodule ExVCR.ConfigLoader do
       Config.filter_url_params(env[:filter_url_params])
     end
 
-    if env[:response_headers_blacklist] != nil do
-      Config.response_headers_blacklist(env[:response_headers_blacklist])
-    else
+    if env[:response_headers_blacklist] == nil do
       Config.response_headers_blacklist([])
+    else
+      Config.response_headers_blacklist(env[:response_headers_blacklist])
     end
 
     if env[:ignore_localhost] != nil do

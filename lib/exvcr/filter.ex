@@ -40,19 +40,21 @@ defmodule ExVCR.Filter do
   Filter out query params from the url.
   """
   def filter_url_params(url) do
-    if ExVCR.Setting.get(:filter_url_params) do
-      strip_query_params(url)
-    else
-      url
-    end
-    |> filter_sensitive_data
+    if_result =
+      if ExVCR.Setting.get(:filter_url_params) do
+        strip_query_params(url)
+      else
+        url
+      end
+
+    filter_sensitive_data(if_result)
   end
 
   @doc """
   Remove query params from the specified url.
   """
   def strip_query_params(url) do
-    url |> String.replace(~r/\?.+$/, "")
+    String.replace(url, ~r/\?.+$/, "")
   end
 
   @doc """

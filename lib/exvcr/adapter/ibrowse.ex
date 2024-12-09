@@ -4,15 +4,17 @@ defmodule ExVCR.Adapter.IBrowse do
   """
 
   use ExVCR.Adapter
+
+  alias ExVCR.Adapter.IBrowse.Converter
   alias ExVCR.Util
 
   defmacro __using__(_opts) do
     # do nothing
   end
 
-  defdelegate convert_from_string(string), to: ExVCR.Adapter.IBrowse.Converter
-  defdelegate convert_to_string(request, response), to: ExVCR.Adapter.IBrowse.Converter
-  defdelegate parse_request_body(request_body), to: ExVCR.Adapter.IBrowse.Converter
+  defdelegate convert_from_string(string), to: Converter
+  defdelegate convert_to_string(request, response), to: Converter
+  defdelegate parse_request_body(request_body), to: Converter
 
   @doc """
   Returns the name of the mock target module.
@@ -25,7 +27,7 @@ defmodule ExVCR.Adapter.IBrowse do
   Returns list of the mock target methods with function name and callback.
   Implementation for global mock.
   """
-  def target_methods() do
+  def target_methods do
     [
       {:send_req, &ExVCR.Recorder.request([&1, &2, &3])},
       {:send_req, &ExVCR.Recorder.request([&1, &2, &3, &4])},
@@ -52,8 +54,8 @@ defmodule ExVCR.Adapter.IBrowse do
   def generate_keys_for_request(request) do
     url = Enum.fetch!(request, 0)
     method = Enum.fetch!(request, 2)
-    request_body = Enum.fetch(request, 3) |> parse_request_body
-    headers = Enum.fetch!(request, 1) |> Util.stringify_keys()
+    request_body = request |> Enum.fetch(3) |> parse_request_body()
+    headers = request |> Enum.fetch!(1) |> Util.stringify_keys()
 
     [url: url, method: method, request_body: request_body, headers: headers]
   end
@@ -86,7 +88,7 @@ defmodule ExVCR.Adapter.IBrowse do
   end
 
   defp apply_filters({:ok, status_code, headers, body}) do
-    replaced_body = to_string(body) |> ExVCR.Filter.filter_sensitive_data()
+    replaced_body = body |> to_string() |> ExVCR.Filter.filter_sensitive_data()
     filtered_headers = ExVCR.Filter.remove_blacklisted_headers(headers)
     {:ok, status_code, filtered_headers, replaced_body}
   end

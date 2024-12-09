@@ -24,7 +24,7 @@ defmodule ExVCR.Converter do
       defoverridable convert_to_string: 2
 
       def string_to_request(string) do
-        request = Enum.map(string, fn {x, y} -> {String.to_atom(x), y} end) |> Enum.into(%{})
+        request = Map.new(string, fn {x, y} -> {String.to_atom(x), y} end)
         struct(ExVCR.Request, request)
       end
 
@@ -46,11 +46,11 @@ defmodule ExVCR.Converter do
       defoverridable parse_headers: 1
 
       def do_parse_headers([], acc) do
-        Enum.reverse(acc) |> Enum.uniq_by(fn {key, value} -> key end)
+        acc |> Enum.reverse() |> Enum.uniq_by(fn {key, value} -> key end)
       end
 
       def do_parse_headers([{key, value} | tail], acc) do
-        replaced_value = to_string(value) |> ExVCR.Filter.filter_sensitive_data()
+        replaced_value = value |> to_string() |> ExVCR.Filter.filter_sensitive_data()
 
         replaced_value =
           ExVCR.Filter.filter_request_header(to_string(key), to_string(replaced_value))
@@ -67,7 +67,7 @@ defmodule ExVCR.Converter do
       defoverridable parse_options: 1
 
       def do_parse_options([], acc) do
-        Enum.reverse(acc) |> Enum.uniq_by(fn {key, value} -> key end)
+        acc |> Enum.reverse() |> Enum.uniq_by(fn {key, value} -> key end)
       end
 
       def do_parse_options([{key, value} | tail], acc) when is_function(value) do
@@ -75,7 +75,7 @@ defmodule ExVCR.Converter do
       end
 
       def do_parse_options([{key, value} | tail], acc) do
-        replaced_value = atom_to_string(value) |> ExVCR.Filter.filter_sensitive_data()
+        replaced_value = value |> atom_to_string() |> ExVCR.Filter.filter_sensitive_data()
 
         replaced_value =
           ExVCR.Filter.filter_request_option(to_string(key), atom_to_string(replaced_value))
@@ -86,7 +86,7 @@ defmodule ExVCR.Converter do
       defoverridable do_parse_options: 2
 
       def parse_url(url) do
-        to_string(url) |> ExVCR.Filter.filter_url_params()
+        url |> to_string() |> ExVCR.Filter.filter_url_params()
       end
 
       defoverridable parse_url: 1

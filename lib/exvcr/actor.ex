@@ -135,7 +135,7 @@ defmodule ExVCR.Actor do
       GenServer.call(__MODULE__, :get)
     end
 
-    def default_state(), do: nil
+    def default_state, do: nil
 
     # Callbacks
 

@@ -15,7 +15,7 @@ defmodule ExVCR.Util do
   """
 
   def stringify_keys(list) do
-    list |> Enum.map(fn {key, value} -> {to_string(key), to_string(value)} end)
+    Enum.map(list, fn {key, value} -> {to_string(key), to_string(value)} end)
   end
 
   def build_url(scheme, host, path, port \\ nil, query \\ nil) do

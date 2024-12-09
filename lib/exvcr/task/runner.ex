@@ -3,6 +3,8 @@ defmodule ExVCR.Task.Runner do
   Provides task processing logics, which will be invoked by custom mix tasks.
   """
 
+  alias ExVCR.Checker.Counts
+
   @print_header_format "  ~-40s ~-30s\n"
   @check_header_format "  ~-40s ~-20s ~-20s\n"
   @check_content_format "  ~-40s ~-20w ~-20w\n"
@@ -15,7 +17,7 @@ defmodule ExVCR.Task.Runner do
   def show_vcr_cassettes(path_list) do
     Enum.each(path_list, fn path ->
       if File.exists?(path) do
-        read_cassettes(path) |> print_cassettes(path)
+        path |> read_cassettes() |> print_cassettes(path)
         IO.puts("")
       end
     end)
@@ -29,7 +31,8 @@ defmodule ExVCR.Task.Runner do
 
   defp find_json_files(path) do
     if File.exists?(path) do
-      File.ls!(path)
+      path
+      |> File.ls!()
       |> Enum.filter(&(&1 =~ @json_file_pattern))
       |> Enum.sort()
     else
@@ -54,7 +57,7 @@ defmodule ExVCR.Task.Runner do
   """
   def delete_cassettes(path, file_patterns, is_interactive \\ false) do
     path
-    |> find_json_files
+    |> find_json_files()
     |> Enum.filter(&(&1 =~ file_patterns))
     |> Enum.each(&delete_and_print_name(path, &1, is_interactive))
   end
@@ -68,7 +71,7 @@ defmodule ExVCR.Task.Runner do
   end
 
   defp delete_and_print_name(path, file_name, false) do
-    case Path.expand(file_name, path) |> File.rm() do
+    case file_name |> Path.expand(path) |> File.rm() do
       :ok -> IO.puts("Deleted #{file_name}.")
       :error -> IO.puts("Failed to delete #{file_name}")
     end
@@ -96,7 +99,7 @@ defmodule ExVCR.Task.Runner do
 
   defp create_count_hash([{type, path} | tail], acc) do
     file = Path.basename(path)
-    counts = Map.get(acc, file, %ExVCR.Checker.Counts{})
+    counts = Map.get(acc, file, %Counts{})
 
     hash =
       case type do
@@ -111,7 +114,7 @@ defmodule ExVCR.Task.Runner do
     printf(@check_header_format, ["[File Name]", "[Cassette Counts]", "[Server Counts]"])
 
     Enum.each(items, fn {name, _date} ->
-      counts = Map.get(counts_hash, name, %ExVCR.Checker.Counts{})
+      counts = Map.get(counts_hash, name, %Counts{})
       printf(@check_content_format, [name, counts.cache, counts.server])
     end)
   end

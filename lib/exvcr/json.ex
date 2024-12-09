@@ -13,25 +13,22 @@ defmodule ExVCR.JSON do
       |> Enum.reverse()
       |> Jason.encode!(pretty: true)
 
-    unless File.exists?(path = Path.dirname(file_name)), do: File.mkdir_p!(path)
+    if !File.exists?(path = Path.dirname(file_name)), do: File.mkdir_p!(path)
     File.write!(file_name, json)
   end
 
-  defp encode_binary_data(%{request: _, response: %ExVCR.Response{body: nil}} = recording),
-    do: recording
+  defp encode_binary_data(%{request: _, response: %ExVCR.Response{body: nil}} = recording), do: recording
 
   defp encode_binary_data(%{response: response} = recording) do
-    case String.valid?(response.body) do
-      true ->
-        recording
+    if String.valid?(response.body) do
+      recording
+    else
+      body =
+        response.body
+        |> :erlang.term_to_binary()
+        |> Base.encode64()
 
-      false ->
-        body =
-          response.body
-          |> :erlang.term_to_binary()
-          |> Base.encode64()
-
-        %{recording | response: %{response | body: body, binary: true}}
+      %{recording | response: %{response | body: body, binary: true}}
     end
   end
 
@@ -42,7 +39,7 @@ defmodule ExVCR.JSON do
   def load(file_name, custom_mode, adapter) do
     case {File.exists?(file_name), custom_mode} do
       {true, _} ->
-        read_json_file(file_name) |> Enum.map(&adapter.convert_from_string/1)
+        file_name |> read_json_file() |> Enum.map(&adapter.convert_from_string/1)
 
       {false, true} ->
         raise ExVCR.FileNotFoundError, message: "cassette file \"#{file_name}\" not found"
@@ -62,9 +59,7 @@ defmodule ExVCR.JSON do
     |> Enum.map(&load_binary_data/1)
   end
 
-  defp load_binary_data(
-         %{"response" => %{"body" => body, "binary" => true} = response} = recording
-       ) do
+  defp load_binary_data(%{"response" => %{"body" => body, "binary" => true} = response} = recording) do
     body =
       body
       |> Base.decode64!()

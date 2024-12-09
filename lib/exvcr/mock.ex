@@ -3,6 +3,7 @@ defmodule ExVCR.Mock do
   Provides macro to record HTTP request/response.
   """
 
+  alias ExVCR.Actor.CurrentRecorder
   alias ExVCR.Recorder
 
   defmacro __using__(opts) do
@@ -10,15 +11,17 @@ defmodule ExVCR.Mock do
     options = opts[:options]
 
     quote do
-      import ExVCR.Mock
-      :application.start(unquote(adapter).module_name())
       use unquote(adapter)
 
-      def adapter_method() do
+      import ExVCR.Mock
+
+      :application.start(unquote(adapter).module_name())
+
+      def adapter_method do
         unquote(adapter)
       end
 
-      def options_method() do
+      def options_method do
         unquote(options)
       end
     end
@@ -99,7 +102,7 @@ defmodule ExVCR.Mock do
   @doc false
   defp load(adapter, recorder) do
     if ExVCR.Application.global_mock_enabled?() do
-      ExVCR.Actor.CurrentRecorder.set(recorder)
+      CurrentRecorder.set(recorder)
     else
       module_name = adapter.module_name()
       target_methods = adapter.target_methods(recorder)
@@ -113,8 +116,7 @@ defmodule ExVCR.Mock do
   @doc false
   def unload(module_name) do
     if ExVCR.Application.global_mock_enabled?() do
-      ExVCR.Actor.CurrentRecorder.default_state()
-      |> ExVCR.Actor.CurrentRecorder.set()
+      CurrentRecorder.set(CurrentRecorder.default_state())
     else
       :meck.unload(module_name)
     end
@@ -126,7 +128,7 @@ defmodule ExVCR.Mock do
   def mock_methods(recorder, adapter) do
     parent_pid = self()
 
-    Task.async(fn ->
+    fn ->
       ExVCR.MockLock.ensure_started()
       ExVCR.MockLock.request_lock(self(), parent_pid)
 
@@ -134,7 +136,8 @@ defmodule ExVCR.Mock do
         :lock_granted ->
           load(adapter, recorder)
       end
-    end)
+    end
+    |> Task.async()
     |> Task.await(:infinity)
   end
 
@@ -153,11 +156,11 @@ defmodule ExVCR.Mock do
   Prepare stub record based on specified option parameters.
   """
   def prepare_stub_record(options, adapter) do
-    method = (options[:method] || "get") |> to_string
-    url = (options[:url] || "~r/.+/") |> to_string
-    body = (options[:body] || "Hello World") |> to_string
+    method = to_string(options[:method] || "get")
+    url = to_string(options[:url] || "~r/.+/")
+    body = to_string(options[:body] || "Hello World")
     # REVIEW: would be great to have "~r/.+/" as default request_body
-    request_body = (options[:request_body] || "") |> to_string
+    request_body = to_string(options[:request_body] || "")
 
     headers = options[:headers] || adapter.default_stub_params(:headers)
     status_code = options[:status_code] || adapter.default_stub_params(:status_code)

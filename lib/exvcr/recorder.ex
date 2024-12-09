@@ -3,9 +3,9 @@ defmodule ExVCR.Recorder do
   Provides data saving/loading capability for HTTP interactions.
   """
 
-  alias ExVCR.Handler
-  alias ExVCR.Actor.Responses
   alias ExVCR.Actor.Options
+  alias ExVCR.Actor.Responses
+  alias ExVCR.Handler
 
   @doc """
   Initialize recorder.
@@ -33,8 +33,7 @@ defmodule ExVCR.Recorder do
   Implementation for global mock.
   """
   def request(request) do
-    ExVCR.Actor.CurrentRecorder.get()
-    |> request(request)
+    request(ExVCR.Actor.CurrentRecorder.get(), request)
   end
 
   @doc """
@@ -74,9 +73,10 @@ defmodule ExVCR.Recorder do
     opts = options(recorder)
 
     directory =
-      case opts[:custom] do
-        true -> ExVCR.Setting.get(:custom_library_dir)
-        _ -> ExVCR.Setting.get(:cassette_library_dir)
+      if opts[:custom] do
+        ExVCR.Setting.get(:custom_library_dir)
+      else
+        ExVCR.Setting.get(:cassette_library_dir)
       end
 
     "#{directory}/#{opts[:fixture]}.json"

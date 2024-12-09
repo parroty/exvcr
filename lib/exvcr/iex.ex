@@ -25,7 +25,8 @@ defmodule ExVCR.IEx do
           after
             ExVCR.MockLock.release_lock()
 
-            Recorder.get(recorder)
+            recorder
+            |> Recorder.get()
             |> Jason.encode!(pretty: true)
             |> IO.puts()
           end

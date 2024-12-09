@@ -1,9 +1,11 @@
 defmodule ExVCR.IExTest do
   use ExUnit.Case, async: true
+
   import ExUnit.CaptureIO
+
   require ExVCR.IEx
 
-  @port 34005
+  @port 34_005
 
   setup_all do
     :ibrowse.start()

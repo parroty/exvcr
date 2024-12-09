@@ -15,7 +15,7 @@ defmodule ExVCR.Adapter do
       Returns list of the mock target methods with function name and callback.
       Implementation for global mock.
       """
-      def target_methods(), do: raise(ExVCR.ImplementationMissingError)
+      def target_methods, do: raise(ExVCR.ImplementationMissingError)
       defoverridable target_methods: 0
 
       @doc """

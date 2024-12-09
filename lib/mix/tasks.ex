@@ -1,6 +1,4 @@
 defmodule Mix.Tasks.Vcr do
-  use Mix.Task
-
   @shortdoc "Operate exvcr cassettes"
 
   @moduledoc """
@@ -12,6 +10,11 @@ defmodule Mix.Tasks.Vcr do
   * `-i (--interactive)` - ask for confirmation for each file operation.
   """
 
+  use Mix.Task
+
+  alias ExVCR.Task.Runner
+  alias ExVCR.Task.Util
+
   @doc "Entry point for [mix vcr] task"
   def run(args) do
     {options, _, _} =
@@ -21,13 +24,14 @@ defmodule Mix.Tasks.Vcr do
       )
 
     if options[:help] do
-      ExVCR.Task.Util.print_help_message()
+      Util.print_help_message()
     else
-      ExVCR.Task.Util.parse_basic_options(options) |> ExVCR.Task.Runner.show_vcr_cassettes()
+      options |> Util.parse_basic_options() |> Runner.show_vcr_cassettes()
     end
   end
 
   defmodule Delete do
+    @moduledoc false
     use Mix.Task
 
     @doc "Entry point for [mix vcr.delete] task"
@@ -46,7 +50,7 @@ defmodule Mix.Tasks.Vcr do
         end
 
       if pattern do
-        ExVCR.Task.Runner.delete_cassettes(
+        Runner.delete_cassettes(
           options[:dir] || ExVCR.Setting.get(:cassette_library_dir),
           pattern,
           options[:interactive] || false
@@ -73,14 +77,14 @@ defmodule Mix.Tasks.Vcr do
           switches: [dir: :string, custom: :string]
         )
 
-      dirs = ExVCR.Task.Util.parse_basic_options(options)
+      dirs = Util.parse_basic_options(options)
       ExVCR.Checker.start(%ExVCR.Checker.Results{dirs: dirs})
 
       Mix.env(:test)
       Mix.Task.run("test")
 
       System.at_exit(fn _ ->
-        ExVCR.Task.Runner.check_cassettes(ExVCR.Checker.get())
+        Runner.check_cassettes(ExVCR.Checker.get())
       end)
     end
   end

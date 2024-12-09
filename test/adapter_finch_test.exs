@@ -2,7 +2,9 @@ defmodule ExVCR.Adapter.FinchTest do
   use ExUnit.Case, async: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Finch
 
-  @port 34008
+  alias ExVCR.Actor.CurrentRecorder
+
+  @port 34_008
 
   setup_all do
     HttpServer.start(path: "/server", port: @port, response: "test_response")
@@ -16,12 +18,11 @@ defmodule ExVCR.Adapter.FinchTest do
 
   test "passthrough works when CurrentRecorder has an initial state" do
     if ExVCR.Application.global_mock_enabled?() do
-      ExVCR.Actor.CurrentRecorder.default_state()
-      |> ExVCR.Actor.CurrentRecorder.set()
+      CurrentRecorder.set(CurrentRecorder.default_state())
     end
 
     url = "http://localhost:#{@port}/server"
-    {:ok, response} = Finch.build(:get, url) |> Finch.request(ExVCRFinch)
+    {:ok, response} = :get |> Finch.build(url) |> Finch.request(ExVCRFinch)
     assert response.status == 200
   end
 
@@ -29,17 +30,17 @@ defmodule ExVCR.Adapter.FinchTest do
     url = "http://localhost:#{@port}/server"
 
     use_cassette "finch_get_localhost" do
-      {:ok, response} = Finch.build(:get, url) |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build(url) |> Finch.request(ExVCRFinch)
       assert response.status == 200
     end
 
-    {:ok, response} = Finch.build(:get, url) |> Finch.request(ExVCRFinch)
+    {:ok, response} = :get |> Finch.build(url) |> Finch.request(ExVCRFinch)
     assert response.status == 200
   end
 
   test "example single request" do
     use_cassette "example_finch" do
-      {:ok, response} = Finch.build(:get, "http://example.com") |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build("http://example.com") |> Finch.request(ExVCRFinch)
       assert response.status == 200
       assert Map.new(response.headers)["content-type"] == "text/html; charset=UTF-8"
       assert response.body =~ ~r/Example Domain/
@@ -48,11 +49,11 @@ defmodule ExVCR.Adapter.FinchTest do
 
   test "example multiple requests" do
     use_cassette "example_finch_multiple" do
-      {:ok, response} = Finch.build(:get, "http://example.com") |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build("http://example.com") |> Finch.request(ExVCRFinch)
       assert response.status == 200
       assert response.body =~ ~r/Example Domain/
 
-      {:ok, response} = Finch.build(:get, "http://example.com/2") |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build("http://example.com/2") |> Finch.request(ExVCRFinch)
       assert response.status == 404
       assert response.body =~ ~r/Example Domain/
     end
@@ -60,14 +61,14 @@ defmodule ExVCR.Adapter.FinchTest do
 
   test "single request with error" do
     use_cassette "error_finch" do
-      {:error, response} = Finch.build(:get, "http://invalid_url") |> Finch.request(ExVCRFinch)
+      {:error, response} = :get |> Finch.build("http://invalid_url") |> Finch.request(ExVCRFinch)
       assert response == %Mint.TransportError{reason: :nxdomain}
     end
   end
 
   test "request with HTTPError" do
     use_cassette "finch_httperror", custom: true do
-      {:error, response} = Finch.build(:get, "http://example.com/") |> Finch.request(ExVCRFinch)
+      {:error, response} = :get |> Finch.build("http://example.com/") |> Finch.request(ExVCRFinch)
 
       assert response == %Mint.HTTPError{
                module: Mint.HTTP2,
@@ -78,104 +79,103 @@ defmodule ExVCR.Adapter.FinchTest do
 
   test "request with generic timeout error" do
     use_cassette "finch_generic_timeout_error", custom: true do
-      {:error, response} = Finch.build(:get, "http://example.com/") |> Finch.request(ExVCRFinch)
+      {:error, response} = :get |> Finch.build("http://example.com/") |> Finch.request(ExVCRFinch)
       assert response == %{reason: :timeout}
     end
   end
 
   test "request with generic string error" do
     use_cassette "finch_generic_string_error", custom: true do
-      {:error, response} = Finch.build(:get, "http://example.com/") |> Finch.request(ExVCRFinch)
+      {:error, response} = :get |> Finch.build("http://example.com/") |> Finch.request(ExVCRFinch)
       assert response == %{reason: "some made up error which could happen, in theory"}
     end
   end
 
   test "request with tuple error" do
     use_cassette "finch_tuple_transport_error", custom: true do
-      {:error, response} = Finch.build(:get, "http://example.com/") |> Finch.request(ExVCRFinch)
+      {:error, response} = :get |> Finch.build("http://example.com/") |> Finch.request(ExVCRFinch)
       assert response == %Mint.TransportError{reason: {:bad_alpn_protocol, "h3"}}
     end
   end
 
   test "post method" do
     use_cassette "finch_post" do
-      assert_response(
-        Finch.build(:post, "http://httpbin.org/post", [], "test")
-        |> Finch.request(ExVCRFinch)
-      )
+      :post
+      |> Finch.build("http://httpbin.org/post", [], "test")
+      |> Finch.request(ExVCRFinch)
+      |> assert_response()
     end
   end
 
   @tag :wip
   test "post method with json body" do
     use_cassette "finch_post_map" do
-      assert_response(
-        Finch.build(
-          :post,
-          "http://httpbin.org/post",
-          [],
-          Jason.encode!(%{
-            name: "John",
-            age: 30,
-            city: "New York",
-            country: "USA",
-            isMarried: true,
-            hobbies: ["reading", "traveling", "swimming"],
-            address: %{
-              street: "123 Main St",
-              city: "Los Angeles",
-              state: "CA",
-              zip: "90001"
+      :post
+      |> Finch.build(
+        "http://httpbin.org/post",
+        [],
+        Jason.encode!(%{
+          name: "John",
+          age: 30,
+          city: "New York",
+          country: "USA",
+          isMarried: true,
+          hobbies: ["reading", "traveling", "swimming"],
+          address: %{
+            street: "123 Main St",
+            city: "Los Angeles",
+            state: "CA",
+            zip: "90001"
+          },
+          phoneNumbers: [
+            %{
+              type: "home",
+              number: "555-555-1234"
             },
-            phoneNumbers: [
-              %{
-                type: "home",
-                number: "555-555-1234"
-              },
-              %{
-                type: "work",
-                number: "555-555-5678"
-              }
-            ],
-            favoriteColor: "blue"
-          })
-        )
-        |> Finch.request(ExVCRFinch)
+            %{
+              type: "work",
+              number: "555-555-5678"
+            }
+          ],
+          favoriteColor: "blue"
+        })
       )
+      |> Finch.request(ExVCRFinch)
+      |> assert_response()
     end
   end
 
   test "put method" do
     use_cassette "finch_put" do
-      assert_response(
-        Finch.build(:put, "http://httpbin.org/put", [], "test")
-        |> Finch.request(ExVCRFinch, receive_timeout: 10_000)
-      )
+      :put
+      |> Finch.build("http://httpbin.org/put", [], "test")
+      |> Finch.request(ExVCRFinch, receive_timeout: 10_000)
+      |> assert_response()
     end
   end
 
   test "patch method" do
     use_cassette "finch_patch" do
-      assert_response(
-        Finch.build(:patch, "http://httpbin.org/patch", [], "test")
-        |> Finch.request(ExVCRFinch)
-      )
+      :patch
+      |> Finch.build("http://httpbin.org/patch", [], "test")
+      |> Finch.request(ExVCRFinch)
+      |> assert_response()
     end
   end
 
   test "delete method" do
     use_cassette "finch_delete" do
-      assert_response(
-        Finch.build(:delete, "http://httpbin.org/delete")
-        |> Finch.request(ExVCRFinch, receive_timeout: 10_000)
-      )
+      :delete
+      |> Finch.build("http://httpbin.org/delete")
+      |> Finch.request(ExVCRFinch, receive_timeout: 10_000)
+      |> assert_response()
     end
   end
 
   test "get fails with timeout" do
     use_cassette "finch_get_timeout" do
       {:error, error} =
-        Finch.build(:get, "http://example.com") |> Finch.request(ExVCRFinch, receive_timeout: 1)
+        :get |> Finch.build("http://example.com") |> Finch.request(ExVCRFinch, receive_timeout: 1)
 
       assert error == %Mint.TransportError{reason: :timeout}
     end
@@ -183,7 +183,7 @@ defmodule ExVCR.Adapter.FinchTest do
 
   test "using recorded cassette, but requesting with different url should return error" do
     use_cassette "example_finch_different" do
-      {:ok, response} = Finch.build(:get, "http://example.com") |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build("http://example.com") |> Finch.request(ExVCRFinch)
       assert response.status == 200
       assert response.body =~ ~r/Example Domain/
     end
@@ -191,7 +191,8 @@ defmodule ExVCR.Adapter.FinchTest do
     use_cassette "example_finch_different" do
       assert_raise ExVCR.RequestNotMatchError, ~r/different_from_original/, fn ->
         {:ok, _response} =
-          Finch.build(:get, "http://example.com/different_from_original")
+          :get
+          |> Finch.build("http://example.com/different_from_original")
           |> Finch.request(ExVCRFinch)
       end
     end
@@ -199,7 +200,7 @@ defmodule ExVCR.Adapter.FinchTest do
 
   test "stub request works for Finch" do
     use_cassette :stub, url: "http://example.com/", body: "Stub Response", status_code: 200 do
-      {:ok, response} = Finch.build(:get, "http://example.com") |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build("http://example.com") |> Finch.request(ExVCRFinch)
       assert response.body =~ ~r/Stub Response/
       assert Map.new(response.headers)["content-type"] == "text/html"
       assert response.status == 200
@@ -213,11 +214,11 @@ defmodule ExVCR.Adapter.FinchTest do
     ]
 
     use_cassette :stub, stubs do
-      {:ok, response} = Finch.build(:get, "http://example.com/1") |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build("http://example.com/1") |> Finch.request(ExVCRFinch)
       assert response.status == 200
       assert response.body =~ ~r/Stub Response 1/
 
-      {:ok, response} = Finch.build(:get, "http://example.com/2") |> Finch.request(ExVCRFinch)
+      {:ok, response} = :get |> Finch.build("http://example.com/2") |> Finch.request(ExVCRFinch)
       assert response.status == 404
       assert response.body =~ ~r/Stub Response 2/
     end
@@ -225,7 +226,7 @@ defmodule ExVCR.Adapter.FinchTest do
 
   test "single request using request!" do
     use_cassette "example_finch" do
-      response = Finch.build(:get, "http://example.com") |> Finch.request!(ExVCRFinch)
+      response = :get |> Finch.build("http://example.com") |> Finch.request!(ExVCRFinch)
       assert response.status == 200
       assert Map.new(response.headers)["content-type"] == "text/html; charset=UTF-8"
       assert response.body =~ ~r/Example Domain/
@@ -235,7 +236,7 @@ defmodule ExVCR.Adapter.FinchTest do
   test "single request with error using request!" do
     use_cassette "error_finch" do
       assert_raise(Mint.TransportError, fn ->
-        Finch.build(:get, "http://invalid_url") |> Finch.request!(ExVCRFinch)
+        :get |> Finch.build("http://invalid_url") |> Finch.request!(ExVCRFinch)
       end)
     end
   end
@@ -244,6 +245,6 @@ defmodule ExVCR.Adapter.FinchTest do
     assert response.status in 200..299
     assert Map.new(response.headers)["connection"] == "keep-alive"
     assert is_binary(response.body)
-    unless function == nil, do: function.(response)
+    if function != nil, do: function.(response)
   end
 end

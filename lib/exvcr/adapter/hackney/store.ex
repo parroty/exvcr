@@ -40,6 +40,6 @@ defmodule ExVCR.Adapter.Hackney.Store do
   end
 
   defp table do
-    "exvcr_hackney#{inspect(self())}" |> String.to_atom()
+    String.to_atom("exvcr_hackney#{inspect(self())}")
   end
 end

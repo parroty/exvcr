@@ -1,13 +1,15 @@
 defmodule ExVCR.MockLock do
+  @moduledoc false
   use GenServer
+
   @ten_milliseconds 10
 
-  def start() do
+  def start do
     GenServer.start(__MODULE__, %{lock_holder: nil}, name: :mock_lock)
   end
 
   def ensure_started do
-    unless Process.whereis(:mock_lock) do
+    if !Process.whereis(:mock_lock) do
       __MODULE__.start()
     end
   end
@@ -16,7 +18,7 @@ defmodule ExVCR.MockLock do
     GenServer.cast(:mock_lock, {:request_lock, caller_pid, test_pid})
   end
 
-  def release_lock() do
+  def release_lock do
     GenServer.call(:mock_lock, :release_lock)
   end
 

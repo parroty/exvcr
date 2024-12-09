@@ -1,13 +1,16 @@
 defmodule ExVCR.TaskRunnerTest do
   use ExUnit.Case, async: true
+
   import ExUnit.CaptureIO
+
+  alias ExVCR.Task.Runner
 
   @deletes_path "test/cassettes/for_deletes/"
 
   test "show vcr cassettes task prints json file summary" do
     result =
       capture_io(fn ->
-        ExVCR.Task.Runner.show_vcr_cassettes(["test/cassettes"])
+        Runner.show_vcr_cassettes(["test/cassettes"])
       end)
 
     assert result =~ ~r/[File Name]/
@@ -21,7 +24,7 @@ defmodule ExVCR.TaskRunnerTest do
     File.touch(@deletes_path <> "test2.json")
 
     assert capture_io(fn ->
-             ExVCR.Task.Runner.delete_cassettes(@deletes_path, "test1")
+             Runner.delete_cassettes(@deletes_path, "test1")
            end) == "Deleted test1.json.\n"
 
     File.rm(@deletes_path <> "test1.json")
@@ -41,7 +44,7 @@ defmodule ExVCR.TaskRunnerTest do
           ]
         }
 
-        ExVCR.Task.Runner.check_cassettes(record)
+        Runner.check_cassettes(record)
       end)
 
     assert result =~ ~r/Showing hit counts of cassettes in/

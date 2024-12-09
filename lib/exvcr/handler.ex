@@ -3,8 +3,10 @@ defmodule ExVCR.Handler do
   Provide operations for request/response.
   """
 
-  alias ExVCR.{Recorder, Setting, Util}
   alias ExVCR.Actor.Options
+  alias ExVCR.Recorder
+  alias ExVCR.Setting
+  alias ExVCR.Util
 
   @doc """
   Get response from either server or cache.
@@ -36,8 +38,7 @@ defmodule ExVCR.Handler do
     case {response, stub_mode?(recorder_options)} do
       {nil, true} ->
         raise ExVCR.InvalidRequestError,
-          message:
-            "response for [#{invalid_request_details(recorder_options, params)}] was not found"
+          message: "response for [#{invalid_request_details(recorder_options, params)}] was not found"
 
       {nil, false} ->
         nil
@@ -58,11 +59,7 @@ defmodule ExVCR.Handler do
         String.upcase("#{type}") <> ":#{inspect(params[type])}"
       end
 
-    ([
-       "URL:#{params[:url]}",
-       "METHOD:#{params[:method]}"
-     ] ++ extra_details)
-    |> Enum.join(", ")
+    Enum.join(["URL:#{params[:url]}", "METHOD:#{params[:method]}"] ++ extra_details, ", ")
   end
 
   defp stub_mode?(options) do
@@ -83,15 +80,15 @@ defmodule ExVCR.Handler do
     Enum.member?(flags, type)
   end
 
-  defp find_response(responses, keys, recorder_options),
-    do: find_response(responses, keys, recorder_options, [])
+  defp find_response(responses, keys, recorder_options), do: find_response(responses, keys, recorder_options, [])
 
   defp find_response([], _keys, _recorder_options, _acc), do: {nil, nil}
 
   defp find_response([response | tail], keys, recorder_options, acc) do
-    case match_response(response, keys, recorder_options) do
-      true -> {response[:response], Enum.reverse(acc) ++ tail ++ [response]}
-      false -> find_response(tail, keys, recorder_options, [response | acc])
+    if match_response(response, keys, recorder_options) do
+      {response[:response], Enum.reverse(acc, tail ++ [response])}
+    else
+      find_response(tail, keys, recorder_options, [response | acc])
     end
   end
 
@@ -113,7 +110,7 @@ defmodule ExVCR.Handler do
 
   defp match_by_url(response, keys, recorder_options) do
     request_url = response[:request].url
-    key_url = to_string(keys[:url]) |> ExVCR.Filter.filter_sensitive_data()
+    key_url = keys[:url] |> to_string() |> ExVCR.Filter.filter_sensitive_data()
 
     if stub_mode?(recorder_options) do
       if match = Regex.run(~r/~r\/(.+)\//, request_url) do
@@ -157,7 +154,7 @@ defmodule ExVCR.Handler do
     if has_match_requests_on(:query, options) do
       to_string(url)
     else
-      to_string(url) |> ExVCR.Filter.strip_query_params()
+      url |> to_string() |> ExVCR.Filter.strip_query_params()
     end
   end
 
@@ -173,7 +170,7 @@ defmodule ExVCR.Handler do
     if stub_with_non_empty_request_body?(recorder_options) ||
          has_match_requests_on(:request_body, recorder_options) do
       request_body = response[:request].body || response[:request].request_body
-      key_body = keys[:request_body] |> to_string |> ExVCR.Filter.filter_sensitive_data()
+      key_body = keys[:request_body] |> to_string() |> ExVCR.Filter.filter_sensitive_data()
 
       if match = Regex.run(~r/~r\/(.+)\//, request_body) do
         pattern = Regex.compile!(Enum.at(match, 1))
@@ -240,7 +237,8 @@ defmodule ExVCR.Handler do
     adapter = ExVCR.Recorder.options(recorder)[:adapter]
 
     response =
-      :meck.passthrough(request)
+      request
+      |> :meck.passthrough()
       |> adapter.hook_response_from_server
 
     if record? do
