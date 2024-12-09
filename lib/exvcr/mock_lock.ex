@@ -1,9 +1,9 @@
 defmodule ExVCR.MockLock do
-  use ExActor.GenServer, export: :mock_lock
+  use GenServer
   @ten_milliseconds 10
 
-  defstart start() do
-    initial_state(%{lock_holder: nil})
+  def start() do
+    GenServer.start(__MODULE__, %{lock_holder: nil}, name: :mock_lock)
   end
 
   def ensure_started do
@@ -12,38 +12,50 @@ defmodule ExVCR.MockLock do
     end
   end
 
-  defcast request_lock(caller_pid, test_pid) do
-    Process.send(self(), {:do_request_lock, caller_pid, test_pid}, [])
-    noreply()
+  def request_lock(caller_pid, test_pid) do
+    GenServer.cast(:mock_lock, {:request_lock, caller_pid, test_pid})
   end
 
-  defhandleinfo {:do_request_lock, caller_pid, test_pid}, state: state do
+  def release_lock() do
+    GenServer.call(:mock_lock, :release_lock)
+  end
+
+  # Callbacks
+
+  @impl true
+  def init(state) do
+    {:ok, state}
+  end
+
+  @impl true
+  def handle_cast({:request_lock, caller_pid, test_pid}, state) do
+    Process.send(self(), {:do_request_lock, caller_pid, test_pid}, [])
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_info({:do_request_lock, caller_pid, test_pid}, state) do
     if Map.get(state, :lock_holder) do
       Process.send_after(self(), {:do_request_lock, caller_pid, test_pid}, @ten_milliseconds)
-      noreply()
+      {:noreply, state}
     else
       Process.monitor(test_pid)
       Process.send(caller_pid, :lock_granted, [])
-
-      state
-      |> Map.put(:lock_holder, caller_pid)
-      |> new_state
+      {:noreply, Map.put(state, :lock_holder, caller_pid)}
     end
   end
 
-  defhandleinfo {:DOWN, _ref, :process, pid, _}, state: state do
+  @impl true
+  def handle_info({:DOWN, _ref, :process, pid, _}, state) do
     if state.lock_holder == pid do
-      state
-      |> Map.put(:lock_holder, nil)
-      |> new_state
+      {:noreply, Map.put(state, :lock_holder, nil)}
     else
-      noreply()
+      {:noreply, state}
     end
   end
 
-  defcall release_lock(), state: state do
-    state
-    |> Map.put(:lock_holder, nil)
-    |> set_and_reply(:ok)
+  @impl true
+  def handle_call(:release_lock, _from, state) do
+    {:reply, :ok, Map.put(state, :lock_holder, nil)}
   end
 end
