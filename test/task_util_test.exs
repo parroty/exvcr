@@ -7,7 +7,7 @@ defmodule ExVCR.TaskUtilTest do
   end
 
   test "custom option" do
-    option = ExVCR.Task.Util.parse_basic_options([dir: "test1", custom: "test2"])
+    option = ExVCR.Task.Util.parse_basic_options(dir: "test1", custom: "test2")
     assert option == ["test1", "test2"]
   end
 end

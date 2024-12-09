@@ -10,6 +10,7 @@ defmodule ExVCR.Adapter.Hackney.Store do
     if :ets.info(table()) == :undefined do
       :ets.new(table(), [:set, :public, :named_table])
     end
+
     :ok
   end
 
@@ -39,6 +40,6 @@ defmodule ExVCR.Adapter.Hackney.Store do
   end
 
   defp table do
-    "exvcr_hackney#{inspect self()}" |> String.to_atom
+    "exvcr_hackney#{inspect(self())}" |> String.to_atom()
   end
 end

@@ -5,9 +5,10 @@ defmodule ExVCR.TaskRunnerTest do
   @deletes_path "test/cassettes/for_deletes/"
 
   test "show vcr cassettes task prints json file summary" do
-    result = capture_io(fn ->
-      ExVCR.Task.Runner.show_vcr_cassettes(["test/cassettes"])
-    end)
+    result =
+      capture_io(fn ->
+        ExVCR.Task.Runner.show_vcr_cassettes(["test/cassettes"])
+      end)
 
     assert result =~ ~r/[File Name]/
     assert result =~ ~r/test1.json/
@@ -20,20 +21,28 @@ defmodule ExVCR.TaskRunnerTest do
     File.touch(@deletes_path <> "test2.json")
 
     assert capture_io(fn ->
-      ExVCR.Task.Runner.delete_cassettes(@deletes_path, "test1")
-    end) == "Deleted test1.json.\n"
+             ExVCR.Task.Runner.delete_cassettes(@deletes_path, "test1")
+           end) == "Deleted test1.json.\n"
 
     File.rm(@deletes_path <> "test1.json")
     File.rm(@deletes_path <> "test2.json")
   end
 
   test "check vcr cassettes task prints json file summary" do
-    result = capture_io(fn ->
-      record = %ExVCR.Checker.Results{
-        dirs: ["test/cassettes"],
-        files: [{:cache, "test1.json"}, {:cache, "test2.json"}, {:server, "test1.json"}, {:server, "test1.json"}]}
-      ExVCR.Task.Runner.check_cassettes(record)
-    end)
+    result =
+      capture_io(fn ->
+        record = %ExVCR.Checker.Results{
+          dirs: ["test/cassettes"],
+          files: [
+            {:cache, "test1.json"},
+            {:cache, "test2.json"},
+            {:server, "test1.json"},
+            {:server, "test1.json"}
+          ]
+        }
+
+        ExVCR.Task.Runner.check_cassettes(record)
+      end)
 
     assert result =~ ~r/Showing hit counts of cassettes in/
     assert result =~ ~r/test1.json\s+1\s+2\s+\n/

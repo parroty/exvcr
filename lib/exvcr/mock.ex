@@ -38,7 +38,7 @@ defmodule ExVCR.Mock do
     quote do
       stub_fixture = "stub_fixture_#{ExVCR.Util.uniq_id()}"
       stub = prepare_stub_records(unquote(options), adapter_method())
-      recorder = Recorder.start([fixture: stub_fixture, stub: stub, adapter: adapter_method()])
+      recorder = Recorder.start(fixture: stub_fixture, stub: stub, adapter: adapter_method())
 
       try do
         mock_methods(recorder, adapter_method())
@@ -101,9 +101,10 @@ defmodule ExVCR.Mock do
     if ExVCR.Application.global_mock_enabled?() do
       ExVCR.Actor.CurrentRecorder.set(recorder)
     else
-      module_name    = adapter.module_name()
+      module_name = adapter.module_name()
       target_methods = adapter.target_methods(recorder)
-      Enum.each(target_methods, fn({function, callback}) ->
+
+      Enum.each(target_methods, fn {function, callback} ->
         :meck.expect(module_name, function, callback)
       end)
     end
@@ -124,9 +125,11 @@ defmodule ExVCR.Mock do
   """
   def mock_methods(recorder, adapter) do
     parent_pid = self()
+
     Task.async(fn ->
       ExVCR.MockLock.ensure_started()
       ExVCR.MockLock.request_lock(self(), parent_pid)
+
       receive do
         :lock_granted ->
           load(adapter, recorder)
@@ -150,17 +153,19 @@ defmodule ExVCR.Mock do
   Prepare stub record based on specified option parameters.
   """
   def prepare_stub_record(options, adapter) do
-    method        = (options[:method] || "get") |> to_string
-    url           = (options[:url] || "~r/.+/") |> to_string
-    body          = (options[:body] || "Hello World") |> to_string
+    method = (options[:method] || "get") |> to_string
+    url = (options[:url] || "~r/.+/") |> to_string
+    body = (options[:body] || "Hello World") |> to_string
     # REVIEW: would be great to have "~r/.+/" as default request_body
-    request_body  = (options[:request_body] || "") |> to_string
+    request_body = (options[:request_body] || "") |> to_string
 
-    headers     = options[:headers] || adapter.default_stub_params(:headers)
+    headers = options[:headers] || adapter.default_stub_params(:headers)
     status_code = options[:status_code] || adapter.default_stub_params(:status_code)
 
-    record = %{ "request"  => %{"method" => method, "url" => url, "request_body" => request_body},
-                "response" => %{"body" => body, "headers"  => headers, "status_code" => status_code} }
+    record = %{
+      "request" => %{"method" => method, "url" => url, "request_body" => request_body},
+      "response" => %{"body" => body, "headers" => headers, "status_code" => status_code}
+    }
 
     [adapter.convert_from_string(record)]
   end
@@ -169,6 +174,6 @@ defmodule ExVCR.Mock do
   Normalize fixture name for using as json file names, which removes whitespaces and align case.
   """
   def normalize_fixture(fixture) do
-    fixture |> String.replace(~r/\s/, "_") |> String.downcase
+    fixture |> String.replace(~r/\s/, "_") |> String.downcase()
   end
 end

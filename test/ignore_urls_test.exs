@@ -11,9 +11,11 @@ defmodule ExVCR.IgnoreUrlsTest do
 
   setup_all do
     HTTPotion.start()
-    on_exit fn ->
+
+    on_exit(fn ->
       HttpServer.stop(@port)
-    end
+    end)
+
     :ok
   end
 
@@ -59,7 +61,10 @@ defmodule ExVCR.IgnoreUrlsTest do
       # this method call should be mocked
       non_localhost_url = "http://127.0.0.1:#{@port}/server"
       HttpServer.start(path: "/server", port: @port, response: "test_response_before")
-      assert HTTPotion.get(non_localhost_url, headers: ["User-Agent": "ExVCR"]).body =~ ~r/test_response_before/
+
+      assert HTTPotion.get(non_localhost_url, headers: ["User-Agent": "ExVCR"]).body =~
+               ~r/test_response_before/
+
       HttpServer.stop(@port)
     end
   end

@@ -6,14 +6,16 @@ defmodule ExVCR.Adapter.Httpc.Converter do
   use ExVCR.Converter
 
   defp string_to_response(string) do
-    response = Enum.map(string, fn({x, y}) -> {String.to_atom(x), y} end)
+    response = Enum.map(string, fn {x, y} -> {String.to_atom(x), y} end)
     response = struct(ExVCR.Response, response)
 
     response =
       if response.status_code do
-        status_code = response.status_code
-                      |> Enum.map(&convert_string_to_charlist/1)
-                      |> List.to_tuple
+        status_code =
+          response.status_code
+          |> Enum.map(&convert_string_to_charlist/1)
+          |> List.to_tuple()
+
         %{response | status_code: status_code}
       else
         response
@@ -28,9 +30,11 @@ defmodule ExVCR.Adapter.Httpc.Converter do
 
     response =
       if is_map(response.headers) do
-        headers = response.headers
-                  |> Map.to_list
-                  |> Enum.map(fn({k,v}) -> {to_charlist(k), to_charlist(v)} end)
+        headers =
+          response.headers
+          |> Map.to_list()
+          |> Enum.map(fn {k, v} -> {to_charlist(k), to_charlist(v)} end)
+
         %{response | headers: headers}
       else
         response
@@ -50,6 +54,7 @@ defmodule ExVCR.Adapter.Httpc.Converter do
   defp request_to_string([url]) do
     request_to_string([:get, {url, [], [], []}, [], []])
   end
+
   defp request_to_string([method, {url, headers}, http_options, options]) do
     request_to_string([method, {url, headers, [], []}, http_options, options])
   end
@@ -61,7 +66,10 @@ defmodule ExVCR.Adapter.Httpc.Converter do
       headers: parse_headers(headers),
       method: to_string(method),
       body: parse_request_body(body),
-      options: [httpc_options: parse_keyword_list(options), http_options: parse_keyword_list(http_options)]
+      options: [
+        httpc_options: parse_keyword_list(options),
+        http_options: parse_keyword_list(http_options)
+      ]
     }
   end
 

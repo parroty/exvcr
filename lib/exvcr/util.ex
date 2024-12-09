@@ -7,7 +7,7 @@ defmodule ExVCR.Util do
   Returns uniq_id string based on current timestamp (ex. 1407237617115869)
   """
   def uniq_id do
-    :os.timestamp() |> Tuple.to_list |> Enum.join("")
+    :os.timestamp() |> Tuple.to_list() |> Enum.join("")
   end
 
   @doc """
@@ -19,29 +19,33 @@ defmodule ExVCR.Util do
   end
 
   def build_url(scheme, host, path, port \\ nil, query \\ nil) do
-    scheme = case scheme do
-      s when s in [:http, "http", "HTTP"] -> "http://"
-      s when s in [:https, "https", "HTTPS"] -> "https://"
-      _ -> scheme
-    end
+    scheme =
+      case scheme do
+        s when s in [:http, "http", "HTTP"] -> "http://"
+        s when s in [:https, "https", "HTTPS"] -> "https://"
+        _ -> scheme
+      end
 
-    port = cond do
-      scheme == "http://" && port == 80 -> nil
-      scheme == "https://" && port == 443 -> nil
-      true -> port
-    end
+    port =
+      cond do
+        scheme == "http://" && port == 80 -> nil
+        scheme == "https://" && port == 443 -> nil
+        true -> port
+      end
 
-    url = if port do
-      "#{scheme}#{host}:#{port}#{path}"
-    else
-      "#{scheme}#{host}#{path}"
-    end
+    url =
+      if port do
+        "#{scheme}#{host}:#{port}#{path}"
+      else
+        "#{scheme}#{host}#{path}"
+      end
 
-    url = if query != nil && query != "" do
-      "#{url}?#{query}"
-    else
-      url
-    end
+    url =
+      if query != nil && query != "" do
+        "#{url}?#{query}"
+      else
+        url
+      end
 
     url
   end
