@@ -195,7 +195,7 @@ defmodule ExVCR.Handler do
   end
 
   defp normalize_request_body(request_body) when is_binary(request_body) do
-    case JSX.decode(request_body) do
+    case Jason.decode(request_body) do
       {:ok, decoded} ->
         normalize_request_body(decoded)
 

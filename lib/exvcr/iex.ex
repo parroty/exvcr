@@ -26,8 +26,7 @@ defmodule ExVCR.IEx do
             ExVCR.MockLock.release_lock()
 
             Recorder.get(recorder)
-            |> JSX.encode!()
-            |> JSX.prettify!()
+            |> Jason.encode!(pretty: true)
             |> IO.puts()
           end
 

@@ -114,7 +114,7 @@ defmodule ExVCR.Adapter.FinchTest do
           :post,
           "http://httpbin.org/post",
           [],
-          JSX.encode!(%{
+          Jason.encode!(%{
             name: "John",
             age: 30,
             city: "New York",
