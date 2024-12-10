@@ -1,4 +1,5 @@
-ExUnit.start()
-Application.ensure_all_started(:http_server)
 Application.ensure_all_started(:telemetry)
+Application.ensure_all_started(:mimic)
+Application.ensure_all_started(HttpServer)
 Finch.start_link(name: ExVCRFinch)
+ExUnit.start()

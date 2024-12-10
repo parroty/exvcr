@@ -28,17 +28,18 @@ defmodule ExVCR.Recorder do
   end
 
   @doc """
-  Provides entry point to be called from :meck library. HTTP request arguments are specified as args parameter.
-  If response is not found in the cache, access to the server.
-  Implementation for global mock.
+  Provides entry point to be called from :meck library. HTTP request
+  arguments are specified as args parameter.  If response is not found
+  in the cache, access to the server.  Implementation for global mock.
   """
   def request(request) do
     request(ExVCR.Actor.CurrentRecorder.get(), request)
   end
 
   @doc """
-  Provides entry point to be called from :meck library. HTTP request arguments are specified as args parameter.
-  If response is not found in the cache, access to the server.
+  Provides entry point to be called from :meck library. HTTP request
+  arguments are specified as args parameter.  If response is not found
+  in the cache, access to the server.
   """
   def request(recorder, request) do
     Handler.get_response(recorder, request)
@@ -67,7 +68,8 @@ defmodule ExVCR.Recorder do
   end
 
   @doc """
-  Returns the file path of the save/load target, based on the custom_mode(true or false).
+  Returns the file path of the save/load target, based on the
+  custom_mode(true or false).
   """
   def get_file_path(recorder) do
     opts = options(recorder)

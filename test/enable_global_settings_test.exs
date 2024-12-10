@@ -1,6 +1,6 @@
 defmodule ExVCR.EnableGlobalSettingsTest do
-  use ExVCR.Mock
   use ExUnit.Case, async: false
+  use ExVCR.Mock
 
   test "settings are normally per-process" do
     original_value = ExVCR.Setting.get(:custom_library_dir)

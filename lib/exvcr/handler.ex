@@ -12,7 +12,7 @@ defmodule ExVCR.Handler do
   Get response from either server or cache.
   """
   def get_response(nil, request) do
-    :meck.passthrough(request)
+    call_original(request)
   end
 
   def get_response(recorder, request) do
@@ -25,6 +25,16 @@ defmodule ExVCR.Handler do
     end
   end
 
+  def call_original(request) do
+    case request do
+      [_, Req.Finch | _] ->
+        Mimic.call_original(Finch, :request, request)
+
+      [_, ExVCRFinch | _] ->
+        Mimic.call_original(Finch, :request, request)
+    end
+  end
+
   @doc """
   Get response from the cache (pre-recorded cassettes).
   """
@@ -32,7 +42,8 @@ defmodule ExVCR.Handler do
     recorder_options = Options.get(recorder.options)
     adapter = ExVCR.Recorder.options(recorder)[:adapter]
     params = adapter.generate_keys_for_request(request)
-    {response, responses} = find_response(Recorder.get(recorder), params, recorder_options)
+    responses = Recorder.get(recorder)
+    {response, responses} = find_response(responses, params, recorder_options)
     response = adapter.hook_response_from_cache(request, response)
 
     case {response, stub_mode?(recorder_options)} do
@@ -189,6 +200,7 @@ defmodule ExVCR.Handler do
     original_url
     |> Map.put(:query, normalize_query(original_url.query))
     |> URI.to_string()
+    |> String.trim_trailing("/")
   end
 
   defp normalize_request_body(request_body) when is_binary(request_body) do
@@ -238,7 +250,7 @@ defmodule ExVCR.Handler do
 
     response =
       request
-      |> :meck.passthrough()
+      |> call_original()
       |> adapter.hook_response_from_server
 
     if record? do

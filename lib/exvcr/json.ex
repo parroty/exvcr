@@ -55,7 +55,7 @@ defmodule ExVCR.JSON do
   def read_json_file(file_name) do
     file_name
     |> File.read!()
-    |> Jason.decode!()
+    |> ExVCR.JSONEncoder.decode()
     |> Enum.map(&load_binary_data/1)
   end
 

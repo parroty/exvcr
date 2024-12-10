@@ -7,14 +7,16 @@ defmodule ExVCR.Mock do
   alias ExVCR.Recorder
 
   defmacro __using__(opts) do
-    adapter = opts[:adapter] || ExVCR.Adapter.IBrowse
+    adapter = opts[:adapter] || ExVCR.Adapter.Finch
     options = opts[:options]
 
     quote do
+      use unquote(Mimic)
       use unquote(adapter)
 
       import ExVCR.Mock
 
+      Mimic.copy(unquote(adapter).module_name())
       :application.start(unquote(adapter).module_name())
 
       def adapter_method do
@@ -50,6 +52,7 @@ defmodule ExVCR.Mock do
       after
         module_name = adapter_method().module_name()
         unload(module_name)
+        Mimic.verify!()
         ExVCR.MockLock.release_lock()
       end
     end
@@ -108,7 +111,7 @@ defmodule ExVCR.Mock do
       target_methods = adapter.target_methods(recorder)
 
       Enum.each(target_methods, fn {function, callback} ->
-        :meck.expect(module_name, function, callback)
+        Mimic.stub(module_name, function, callback)
       end)
     end
   end
@@ -117,8 +120,6 @@ defmodule ExVCR.Mock do
   def unload(module_name) do
     if ExVCR.Application.global_mock_enabled?() do
       CurrentRecorder.set(CurrentRecorder.default_state())
-    else
-      :meck.unload(module_name)
     end
   end
 
@@ -126,6 +127,7 @@ defmodule ExVCR.Mock do
   Mock methods pre-defined for the specified adapter.
   """
   def mock_methods(recorder, adapter) do
+    load(adapter, recorder)
     parent_pid = self()
 
     fn ->

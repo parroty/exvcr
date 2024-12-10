@@ -1,4 +1,4 @@
-defmodule ExVCR.Mixfile do
+defmodule ExVCR.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/parroty/exvcr"
@@ -14,26 +14,38 @@ defmodule ExVCR.Mixfile do
       docs: docs(),
       description: description(),
       package: package(),
+      compilers: [:yecc, :leex] ++ Mix.compilers(),
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [coveralls: :test]
+      preferred_cli_env: [coveralls: :test],
+      elixirc_paths: elixirc_paths(Mix.env())
     ]
   end
 
   def application do
-    [applications: [:meck, :jason], mod: {ExVCR.Application, []}]
+    [
+      applications: [:mimic, :jason, :finch, :req] ++ test_apps(),
+      mod: {ExVCR.Application, []}
+    ]
+  end
+
+  defp test_apps do
+    case Mix.env() do
+      :test -> [:plug, :bandit]
+      _ -> []
+    end
   end
 
   def deps do
     [
-      {:meck, "~> 0.8"},
+      {:mimic, "~> 1.7"},
       {:jason, "~> 1.4"},
-      {:ibrowse, "4.4.0", optional: true},
-      {:httpotion, "~> 3.1", optional: true},
-      {:httpoison, "~> 1.0 or ~> 2.0", optional: true},
-      {:finch, "~> 0.16", optional: true},
+      {:finch, "~> 0.18"},
+      {:req, "~> 0.5"},
+      # {:finch, "~> 0.16", optional: true},
       {:excoveralls, "~> 0.18", only: :test},
       {:styler, "~> 1.2", only: :dev, runtime: false},
-      {:http_server, github: "parroty/http_server", only: [:dev, :test]},
+      {:bandit, "~> 1.0", only: [:dev, :test]},
+      {:plug, "~> 1.0", only: [:dev, :test]},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
@@ -66,4 +78,7 @@ defmodule ExVCR.Mixfile do
       ]
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 end

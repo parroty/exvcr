@@ -9,7 +9,7 @@ defmodule ExVCR.IEx do
   Provides helper for monitoring http request/response in cassette json format.
   """
   defmacro print(options \\ [], test) do
-    adapter = options[:adapter] || ExVCR.Adapter.IBrowse
+    adapter = options[:adapter] || ExVCR.Adapter.Finch
     method_name = :"ExVCR.IEx.Sample#{ExVCR.Util.uniq_id()}"
 
     quote do

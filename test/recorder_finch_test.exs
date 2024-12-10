@@ -105,8 +105,9 @@ defmodule ExVCR.RecorderFinchTest do
 
     # The recorded cassette should contain replaced data.
     cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_header.json")
-    assert cassette =~ ~s("X-My-Secret-Token": "***")
-    refute cassette =~ ~s("X-My-Secret-Token": "my-secret-token")
+    assert cassette =~ ~s("X-My-Secret-Token",)
+    assert cassette =~ ~s("***")
+    refute cassette =~ ~s("my-secret-token")
 
     ExVCR.Config.filter_request_headers(nil)
   end
@@ -125,7 +126,8 @@ defmodule ExVCR.RecorderFinchTest do
 
     # The recorded cassette should contain replaced data.
     cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_matches_in_request_headers.json")
-    assert cassette =~ ~s("Authorization": "Basic ***")
+    assert cassette =~ ~s("Authorization")
+    assert cassette =~ ~s("Basic ***")
 
     # Attempt another request should match on filtered header
     use_cassette "sensitive_data_matches_in_request_headers", match_requests_on: [:headers] do
@@ -154,8 +156,9 @@ defmodule ExVCR.RecorderFinchTest do
 
     # The recorded cassette should contain replaced data.
     cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_options.json")
-    assert cassette =~ ~s("pool_timeout": "***")
-    refute cassette =~ "\"pool_timeout\": 5000"
+    assert cassette =~ ~s("pool_timeout",)
+    assert cassette =~ ~s("***")
+    refute cassette =~ "5000"
 
     ExVCR.Config.filter_request_options(nil)
   end
@@ -182,8 +185,10 @@ defmodule ExVCR.RecorderFinchTest do
       {:ok, response} = :get |> Finch.build(@url) |> Finch.request(ExVCRFinch)
 
       assert response.headers == [
-               {"server", "Cowboy"},
-               {"content-length", "13"}
+               {"content-length", "13"},
+               {"vary", "accept-encoding"},
+               {"cache-control", "max-age=0, private, must-revalidate"},
+               {"content-type", "text/plain"}
              ]
     end
 
