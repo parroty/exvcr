@@ -1,0 +1,132 @@
+if Code.ensure_loaded?(Req) do
+  defmodule ExVCR.Adapter.Req do
+    @moduledoc """
+    Provides adapter methods to mock Req methods.
+    """
+
+    use ExVCR.Adapter
+
+    alias ExVCR.Adapter.Req.Converter
+
+    defmacro __using__(_opts) do
+      # do nothing
+    end
+
+    defdelegate convert_from_string(string), to: Converter
+    defdelegate convert_to_string(request, response), to: Converter
+    defdelegate parse_request_body(request_body), to: Converter
+
+    @doc """
+    Returns the name of the mock target module.
+    """
+    def module_name do
+      Req
+    end
+
+    @doc """
+    Returns list of the mock target methods with function name and callback.
+    Implementation for global mock.
+    """
+    def target_methods do
+      [
+        {:request, &ExVCR.Recorder.request([&1])},
+        {:request, &ExVCR.Recorder.request([&1, &2])},
+        {:request!, &([&1] |> ExVCR.Recorder.request() |> handle_response_for_request!())},
+        {:request!, &([&1, &2] |> ExVCR.Recorder.request() |> handle_response_for_request!())}
+      ]
+    end
+
+    @doc """
+    Returns list of the mock target methods with function name and callback.
+    """
+    def target_methods(recorder) do
+      [
+        {:request, &ExVCR.Recorder.request(recorder, [&1])},
+        {:request, &ExVCR.Recorder.request(recorder, [&1, &2])},
+        {:request!, &(recorder |> ExVCR.Recorder.request([&1]) |> handle_response_for_request!())},
+        {:request!, &(recorder |> ExVCR.Recorder.request([&1, &2]) |> handle_response_for_request!())}
+      ]
+    end
+
+    @doc """
+    Generate key for searching response.
+    """
+    def generate_keys_for_request(request) do
+      req = Enum.fetch!(request, 0)
+      url = req.url
+
+      [
+        url: url,
+        method: String.downcase("#{req.method}"),
+        request_body: req.body,
+        headers: req.headers
+      ]
+    end
+
+    @doc """
+    Callback from ExVCR.Handler when response is retrieved from the HTTP server.
+    """
+    def hook_response_from_server(response) do
+      apply_filters(response)
+    end
+
+    @doc """
+    Callback from ExVCR.Handler to get the response content tuple from the ExVCR.Response record.
+    """
+    def get_response_value_from_cache(response) do
+      if response.type == "error" do
+        {:error, response.body}
+      else
+        req_response = %Req.Response{
+          status: response.status_code,
+          headers: normalize_headers(response.headers),
+          body: response.body
+        }
+
+        {:ok, req_response}
+      end
+    end
+
+    @doc """
+    Returns default parameters for stub.
+    """
+    def default_stub_params(:headers), do: [{"content-type", "text/html"}]
+    def default_stub_params(:status_code), do: 200
+
+    defp apply_filters({:ok, %Req.Response{} = response}) do
+      filtered_response = apply_filters(response)
+      {:ok, filtered_response}
+    end
+
+    defp apply_filters(%Req.Response{} = response) do
+      replaced_body = response.body |> to_string() |> ExVCR.Filter.filter_sensitive_data()
+      filtered_headers = ExVCR.Filter.remove_blacklisted_headers(response.headers)
+
+      response
+      |> Map.put(:body, replaced_body)
+      |> Map.put(:headers, filtered_headers)
+    end
+
+    defp apply_filters(value), do: value
+
+    defp normalize_headers(headers) when is_list(headers) do
+      Enum.map(headers, fn
+        {k, v} -> {String.downcase(to_string(k)), to_string(v)}
+        [k, v] -> {String.downcase(to_string(k)), to_string(v)}
+        header when is_tuple(header) ->
+          {k, v} = header
+          {String.downcase(to_string(k)), to_string(v)}
+      end)
+    end
+
+    defp normalize_headers(headers) when is_map(headers) do
+      headers
+      |> Map.to_list()
+      |> normalize_headers()
+    end
+
+    defp handle_response_for_request!({:ok, resp}), do: resp
+    defp handle_response_for_request!({:error, error}), do: raise(error)
+    defp handle_response_for_request!(resp), do: resp
+  end
+end

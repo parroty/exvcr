@@ -1,0 +1,19 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "http://example.com/"
+    },
+    "response": {
+      "binary": false,
+      "body": "%Mint.HTTPError{module: Mint.HTTP2, reason: :too_many_concurrent_requests}",
+      "headers": [],
+      "status_code": null,
+      "type": "error"
+    }
+  }
+]
