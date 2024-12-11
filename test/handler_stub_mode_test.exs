@@ -80,7 +80,7 @@ defmodule ExVCR.Adapter.HandlerStubModeTest do
         method: :post,
         request_body: "~r/param3/",
         body: "Hello World" do
-        response = Req.post!("http://localhost", body: "param1=value1&param2=value2")
+        _response = Req.post!("http://localhost", body: "param1=value1&param2=value2")
       end
     end
   end
@@ -104,7 +104,7 @@ defmodule ExVCR.Adapter.HandlerStubModeTest do
         method: :post,
         request_body: "param1=10&param3=30&param4=40",
         body: "Hello World" do
-        response = Req.post!("http://localhost", form: [param2: "20", param1: "10", param3: "30"])
+        _response = Req.post!("http://localhost", form: [param2: "20", param1: "10", param3: "30"])
       end
     end
   end
@@ -112,7 +112,7 @@ defmodule ExVCR.Adapter.HandlerStubModeTest do
   test "request_body mismatch should raise error" do
     assert_raise ExVCR.InvalidRequestError, fn ->
       use_cassette :stub, url: "http://localhost", method: :post, request_body: ~s({"one" => 1}) do
-        response = Req.post!("http://localhost")
+        _response = Req.post!("http://localhost")
       end
     end
   end
@@ -127,7 +127,7 @@ defmodule ExVCR.Adapter.HandlerStubModeTest do
   test "url mismatch should raise error" do
     assert_raise ExVCR.InvalidRequestError, fn ->
       use_cassette :stub, url: "http://localhost" do
-        response = Req.get!("http://www.example.com")
+        _response = Req.get!("http://www.example.com")
       end
     end
   end
@@ -135,7 +135,7 @@ defmodule ExVCR.Adapter.HandlerStubModeTest do
   test "method mismatch should raise error" do
     assert_raise ExVCR.InvalidRequestError, fn ->
       use_cassette :stub, url: "http://localhost", method: "post" do
-        response = Req.get!("http://localhost")
+        _response = Req.get!("http://localhost")
       end
     end
   end

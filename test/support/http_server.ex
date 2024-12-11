@@ -20,6 +20,7 @@ defmodule HttpServer do
     ensure_stopped(port)
 
     HttpServer.Handler.define_response(args[:response], args[:wait_time])
+    HttpServer.Handler.set_path(path)
 
     # Start the registry if it doesn't exist
     ensure_registry()
@@ -52,7 +53,7 @@ defmodule HttpServer do
 
   defp ensure_stopped(port) do
     with {:ok, entries} <- safe_registry_lookup(port),
-         [{owner_pid, server_pid}] <- entries do
+         [{_owner_pid, server_pid}] <- entries do
       # Try graceful shutdown first
       safe_stop_server(server_pid)
       safe_unregister(port)

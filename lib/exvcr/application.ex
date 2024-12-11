@@ -15,7 +15,7 @@ defmodule ExVCR.Application do
   end
 
   defp globally_mock_adapters do
-    for app <- [Finch], true == Code.ensure_loaded?(app) do
+    for app <- [Finch, Req], true == Code.ensure_loaded?(app) do
       app
       |> target_methods()
       |> Enum.each(fn {function, callback} ->
@@ -25,6 +25,7 @@ defmodule ExVCR.Application do
   end
 
   defp target_methods(Finch), do: ExVCR.Adapter.Finch.target_methods()
+  defp target_methods(Req), do: ExVCR.Adapter.Req.target_methods()
 
   def global_mock_enabled? do
     Application.get_env(:exvcr, :global_mock, false)

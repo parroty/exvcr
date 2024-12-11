@@ -5,13 +5,11 @@ end
 
 defmodule ExVCR.Request do
   @moduledoc false
-  @derive Jason.Encoder
   defstruct url: nil, headers: [], method: nil, body: nil, options: [], request_body: ""
 end
 
 defmodule ExVCR.Response do
   @moduledoc false
-  @derive Jason.Encoder
   defstruct type: "ok", status_code: nil, headers: [], body: nil, binary: false
 end
 

@@ -22,11 +22,7 @@ if Code.ensure_loaded?(Finch) do
 
       response =
         if is_map(response.headers) do
-          headers =
-            response.headers
-            |> Map.to_list()
-            |> Enum.map(fn {k, v} -> {k, v} end)
-
+          headers = parse_headers(response.headers)
           %{response | headers: headers}
         else
           response
@@ -87,5 +83,26 @@ if Code.ensure_loaded?(Finch) do
     end
 
     defp error_reason_to_string(reason), do: Macro.to_string(reason)
+
+    defp parse_headers(headers) when is_list(headers) do
+      headers
+      |> normalize_headers()
+      |> Enum.map(fn {k, v} -> {String.downcase(to_string(k)), to_string(v)} end)
+    end
+
+    defp parse_headers(headers) when is_map(headers) do
+      headers
+      |> Map.to_list()
+      |> normalize_headers()
+      |> Enum.map(fn {k, v} -> {String.downcase(to_string(k)), to_string(v)} end)
+    end
+
+    defp normalize_headers(headers) do
+      Enum.map(headers, fn
+        {k, v} -> {k, v}
+        [k, v] -> {k, v}
+        header when is_tuple(header) -> header
+      end)
+    end
   end
 end

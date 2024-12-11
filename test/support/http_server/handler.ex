@@ -12,6 +12,7 @@ defmodule HttpServer.Handler do
 
   @ets_table :httpserver_handler
   @ets_key :response
+  @path_key :path
   @default_response "Hello World"
 
   def define_response(response, wait_time) do
@@ -25,57 +26,78 @@ defmodule HttpServer.Handler do
     :ets.insert(@ets_table, {@ets_key, {response, wait_time}})
   end
 
+  def set_path(path) do
+    if :ets.info(@ets_table) == :undefined do
+      :ets.new(@ets_table, [:set, :public, :named_table])
+    end
+
+    :ets.insert(@ets_table, {@path_key, path})
+  end
+
   def init(opts) do
     opts
   end
 
   def call(conn, opts) do
     conn = super(conn, opts)
-    {response, wait_time} = :ets.lookup(@ets_table, @ets_key)[@ets_key]
-    wait_for(wait_time)
+    path = :ets.lookup(@ets_table, @path_key)[@path_key] || "/"
+    request_path = conn.request_path
 
-    case response do
-      {status, headers, body} ->
-        conn
-        |> put_resp_headers(headers)
-        |> send_resp(status, body)
+    # Remove trailing slash from both paths for comparison
+    path = String.trim_trailing(path, "/")
+    request_path = String.trim_trailing(request_path, "/")
+    
+    if String.starts_with?(request_path, path) do
+      {response, wait_time} = :ets.lookup(@ets_table, @ets_key)[@ets_key]
+      wait_for(wait_time)
 
-      response when is_function(response) ->
-        conn_values = %{
-          path: conn.request_path,
-          method: conn.method,
-          headers: conn.req_headers,
-          qs: conn.query_string,
-          body: conn.body_params,
-          peer: conn.remote_ip
-        }
+      case response do
+        {status, headers, body} ->
+          conn
+          |> put_resp_headers(headers)
+          |> send_resp(status, body)
 
-        case response.(conn_values) do
-          {status, headers, body} ->
-            conn
-            |> put_resp_headers(headers)
-            |> send_resp(status, body)
+        response when is_function(response) ->
+          conn_values = %{
+            path: conn.request_path,
+            method: conn.method,
+            headers: conn.req_headers,
+            qs: conn.query_string,
+            body: conn.body_params,
+            peer: conn.remote_ip
+          }
 
-          {:error, reason} ->
-            # For error responses like timeouts
-            Process.sleep(wait_time)
-            {:error, reason}
-        end
+          case response.(conn_values) do
+            {status, headers, body} ->
+              conn
+              |> put_resp_headers(headers)
+              |> send_resp(status, body)
 
-      {:error, reason} ->
-        # For direct error responses
-        Process.sleep(wait_time)
-        {:error, reason}
+            {:error, reason} ->
+              # For error responses like timeouts
+              Process.sleep(wait_time)
+              {:error, reason}
+          end
 
-      response when is_binary(response) ->
-        conn
-        |> put_resp_header("content-type", "text/plain")
-        |> send_resp(200, response)
+        {:error, reason} ->
+          # For direct error responses
+          Process.sleep(wait_time)
+          {:error, reason}
 
-      response ->
-        conn
-        |> put_resp_header("content-type", "text/plain")
-        |> send_resp(200, inspect(response))
+        response when is_binary(response) ->
+          conn
+          |> put_resp_header("content-type", "text/plain")
+          |> send_resp(200, response)
+
+        response ->
+          conn
+          |> put_resp_header("content-type", "text/plain")
+          |> send_resp(200, inspect(response))
+      end
+    else
+      conn
+      |> put_resp_header("content-type", "text/plain")
+      |> send_resp(404, "Not Found")
     end
   end
 

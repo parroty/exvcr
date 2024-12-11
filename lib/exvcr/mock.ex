@@ -7,7 +7,7 @@ defmodule ExVCR.Mock do
   alias ExVCR.Recorder
 
   defmacro __using__(opts) do
-    adapter = opts[:adapter] || ExVCR.Adapter.Finch
+    adapter = opts[:adapter] || ExVCR.Adapter.Req
     options = opts[:options]
 
     quote do
@@ -111,13 +111,13 @@ defmodule ExVCR.Mock do
       target_methods = adapter.target_methods(recorder)
 
       Enum.each(target_methods, fn {function, callback} ->
-        Mimic.stub(module_name, function, callback)
+        Mimic.expect(module_name, function, callback)
       end)
     end
   end
 
   @doc false
-  def unload(module_name) do
+  def unload(_module_name) do
     if ExVCR.Application.global_mock_enabled?() do
       CurrentRecorder.set(CurrentRecorder.default_state())
     end

@@ -1,48 +1,104 @@
 [
   {
     "request": {
-      "body": "body",
-      "headers": {
-        "User-Agent": "My App"
-      },
-      "method": "post",
       "options": [],
+      "body": "body",
+      "url": "http://localhost:34006/server",
+      "headers": [
+        [
+          "accept-encoding",
+          "gzip"
+        ],
+        [
+          "user-agent",
+          "My App"
+        ]
+      ],
       "request_body": "",
-      "url": "http://localhost:34006/server"
+      "method": "post"
     },
     "response": {
-      "body": "test_response_before",
-      "headers": {
-        "connection": "keep-alive",
-        "server": "Cowboy",
-        "date": "Thu, 21 Apr 2016 17:40:10 GMT",
-        "content-length": "20"
-      },
-      "status_code": 200,
-      "type": "ok"
+      "binary": true,
+      "type": "ok",
+      "body": "g20AAAAoH4sIAAAAAAAAAytJLS6JL0otLsjPK06NT0pNyy9KBQDESo7NFAAAAA==",
+      "headers": [
+        [
+          "date",
+          "Wed, 11 Dec 2024 18:48:00 GMT"
+        ],
+        [
+          "content-length",
+          "40"
+        ],
+        [
+          "content-encoding",
+          "gzip"
+        ],
+        [
+          "vary",
+          "accept-encoding"
+        ],
+        [
+          "cache-control",
+          "max-age=0, private, must-revalidate"
+        ],
+        [
+          "content-type",
+          "text/plain"
+        ]
+      ],
+      "status_code": 200
     }
   },
   {
     "request": {
-      "body": "body",
-      "headers": {
-        "User-Agent": "Other App"
-      },
-      "method": "post",
       "options": [],
+      "body": "body",
+      "url": "http://localhost:34006/server",
+      "headers": [
+        [
+          "accept-encoding",
+          "gzip"
+        ],
+        [
+          "user-agent",
+          "Other App"
+        ]
+      ],
       "request_body": "",
-      "url": "http://localhost:34006/server"
+      "method": "post"
     },
     "response": {
-      "body": "test_response_after",
-      "headers": {
-        "connection": "keep-alive",
-        "server": "Cowboy",
-        "date": "Thu, 21 Apr 2016 17:40:10 GMT",
-        "content-length": "19"
-      },
-      "status_code": 200,
-      "type": "ok"
+      "binary": true,
+      "type": "ok",
+      "body": "g20AAAAnH4sIAAAAAAAAAytJLS6JL0otLsjPK06NT0wrSS0CABxtfuYTAAAA",
+      "headers": [
+        [
+          "date",
+          "Wed, 11 Dec 2024 18:48:00 GMT"
+        ],
+        [
+          "content-length",
+          "39"
+        ],
+        [
+          "content-encoding",
+          "gzip"
+        ],
+        [
+          "vary",
+          "accept-encoding"
+        ],
+        [
+          "cache-control",
+          "max-age=0, private, must-revalidate"
+        ],
+        [
+          "content-type",
+          "text/plain"
+        ]
+      ],
+      "status_code": 200
     }
   }
 ]

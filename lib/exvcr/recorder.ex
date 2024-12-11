@@ -42,6 +42,7 @@ defmodule ExVCR.Recorder do
   in the cache, access to the server.
   """
   def request(recorder, request) do
+    IO.inspect(123)
     Handler.get_response(recorder, request)
   end
 

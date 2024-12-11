@@ -1,50 +1,112 @@
 [
   {
     "request": {
-      "body": "p=3",
-      "headers": {
-        "User-Agent": "My App",
-        "X-Special-Header": "Value One"
-      },
-      "method": "post",
       "options": [],
+      "body": "p=3",
+      "url": "http://localhost:34006/server",
+      "headers": [
+        [
+          "accept-encoding",
+          "gzip"
+        ],
+        [
+          "user-agent",
+          "My App"
+        ],
+        [
+          "x-special-header",
+          "Value One"
+        ]
+      ],
       "request_body": "",
-      "url": "http://localhost:34006/server"
+      "method": "post"
     },
     "response": {
-      "binary": false,
-      "body": "test_response_before",
-      "headers": {
-        "server": "Cowboy",
-        "date": "Fri, 13 Sep 2019 13:02:18 GMT",
-        "content-length": "20"
-      },
-      "status_code": 200,
-      "type": "ok"
+      "binary": true,
+      "type": "ok",
+      "body": "g20AAAAoH4sIAAAAAAAAAytJLS6JL0otLsjPK06NT0pNyy9KBQDESo7NFAAAAA==",
+      "headers": [
+        [
+          "date",
+          "Wed, 11 Dec 2024 18:47:58 GMT"
+        ],
+        [
+          "content-length",
+          "40"
+        ],
+        [
+          "content-encoding",
+          "gzip"
+        ],
+        [
+          "vary",
+          "accept-encoding"
+        ],
+        [
+          "cache-control",
+          "max-age=0, private, must-revalidate"
+        ],
+        [
+          "content-type",
+          "text/plain"
+        ]
+      ],
+      "status_code": 200
     }
   },
   {
     "request": {
-      "body": "p=4",
-      "headers": {
-        "User-Agent": "Other App",
-        "X-Special-Header": "Value Two"
-      },
-      "method": "post",
       "options": [],
+      "body": "p=4",
+      "url": "http://localhost:34006/server",
+      "headers": [
+        [
+          "accept-encoding",
+          "gzip"
+        ],
+        [
+          "user-agent",
+          "Other App"
+        ],
+        [
+          "x-special-header",
+          "Value Two"
+        ]
+      ],
       "request_body": "",
-      "url": "http://localhost:34006/server"
+      "method": "post"
     },
     "response": {
-      "binary": false,
-      "body": "test_response_after",
-      "headers": {
-        "server": "Cowboy",
-        "date": "Fri, 13 Sep 2019 13:02:18 GMT",
-        "content-length": "19"
-      },
-      "status_code": 200,
-      "type": "ok"
+      "binary": true,
+      "type": "ok",
+      "body": "g20AAAAnH4sIAAAAAAAAAytJLS6JL0otLsjPK06NT0wrSS0CABxtfuYTAAAA",
+      "headers": [
+        [
+          "date",
+          "Wed, 11 Dec 2024 18:47:58 GMT"
+        ],
+        [
+          "content-length",
+          "39"
+        ],
+        [
+          "content-encoding",
+          "gzip"
+        ],
+        [
+          "vary",
+          "accept-encoding"
+        ],
+        [
+          "cache-control",
+          "max-age=0, private, must-revalidate"
+        ],
+        [
+          "content-type",
+          "text/plain"
+        ]
+      ],
+      "status_code": 200
     }
   }
 ]

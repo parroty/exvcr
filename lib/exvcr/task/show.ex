@@ -31,13 +31,15 @@ defmodule ExVCR.Task.Show do
   end
 
   defp display_parsed_body(json) do
-    case json |> extract_body() |> Jason.decode!() |> Jason.encode!(pretty: true) do
-      {:ok, body_json} ->
-        IO.puts("\n\e[33m[Showing parsed JSON body]\e[m")
-        IO.puts(body_json)
-
-      _ ->
-        nil
+    case extract_body(json) do
+      nil -> nil
+      body ->
+        case Jason.decode(body) do
+          {:ok, decoded} ->
+            IO.puts("\n\e[33m[Showing parsed JSON body]\e[m")
+            IO.puts(Jason.encode!(decoded, pretty: true))
+          _ -> nil
+        end
     end
   end
 
