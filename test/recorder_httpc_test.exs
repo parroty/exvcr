@@ -4,15 +4,15 @@ defmodule ExVCR.RecorderHttpcTest do
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_httpc"
   @port 34001
-  @url 'http://localhost:#{@port}/server'
-  @url_with_query 'http://localhost:#{@port}/server?password=sample'
+  @url ~c"http://localhost:#{@port}/server"
+  @url_with_query ~c"http://localhost:#{@port}/server?password=sample"
 
   setup_all do
-    on_exit fn ->
+    on_exit(fn ->
       File.rm_rf(@dummy_cassette_dir)
       HttpServer.stop(@port)
       :ok
-    end
+    end)
 
     Application.ensure_started(:inets)
     HttpServer.start(path: "/server", port: @port, response: "test_response")
@@ -44,15 +44,18 @@ defmodule ExVCR.RecorderHttpcTest do
 
   test "replace sensitive data in body" do
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
+
     use_cassette "server_sensitive_data_in_body" do
       {:ok, {_, _, body}} = :httpc.request(@url)
       assert body =~ ~r/PLACEHOLDER/
     end
+
     ExVCR.Config.filter_sensitive_data(nil)
   end
 
   test "replace sensitive data in query " do
     ExVCR.Config.filter_sensitive_data("password=[a-z]+", "password=***")
+
     use_cassette "server_sensitive_data_in_query" do
       {:ok, {_, _, body}} = :httpc.request(@url_with_query)
       assert body =~ ~r/test_response/
@@ -68,15 +71,23 @@ defmodule ExVCR.RecorderHttpcTest do
 
   test "replace sensitive data in request header" do
     ExVCR.Config.filter_request_headers("X-My-Secret-Token")
+
     use_cassette "sensitive_data_in_request_header" do
-      {:ok, {_, _, body}} = :httpc.request(:get, {@url_with_query, [{'X-My-Secret-Token', 'my-secret-token'}]}, [], [])
+      {:ok, {_, _, body}} =
+        :httpc.request(
+          :get,
+          {@url_with_query, [{~c"X-My-Secret-Token", ~c"my-secret-token"}]},
+          [],
+          []
+        )
+
       assert body == "test_response"
     end
 
     # The recorded cassette should contain replaced data.
     cassette = File.read!("#{@dummy_cassette_dir}/sensitive_data_in_request_header.json")
     assert cassette =~ "\"X-My-Secret-Token\": \"***\""
-    refute cassette =~  "\"X-My-Secret-Token\": \"my-secret-token\""
+    refute cassette =~ "\"X-My-Secret-Token\": \"my-secret-token\""
 
     ExVCR.Config.filter_request_headers(nil)
   end
@@ -85,7 +96,14 @@ defmodule ExVCR.RecorderHttpcTest do
     ExVCR.Config.filter_sensitive_data("Basic [a-z]+", "Basic ***")
 
     use_cassette "sensitive_data_matches_in_request_headers", match_requests_on: [:headers] do
-      {:ok, {_, _, body}} = :httpc.request(:get, {@url_with_query, [{'Authorization', 'Basic credentials'}]}, [], [])
+      {:ok, {_, _, body}} =
+        :httpc.request(
+          :get,
+          {@url_with_query, [{~c"Authorization", ~c"Basic credentials"}]},
+          [],
+          []
+        )
+
       assert body =~ ~r/test_response/
     end
 
@@ -95,7 +113,14 @@ defmodule ExVCR.RecorderHttpcTest do
 
     # Attempt another request should match on filtered header
     use_cassette "sensitive_data_matches_in_request_headers", match_requests_on: [:headers] do
-      {:ok, {_, _, body}} = :httpc.request(:get, {@url_with_query, [{'Authorization', 'Basic credentials'}]}, [], [])
+      {:ok, {_, _, body}} =
+        :httpc.request(
+          :get,
+          {@url_with_query, [{~c"Authorization", ~c"Basic credentials"}]},
+          [],
+          []
+        )
+
       assert body =~ ~r/test_response/
     end
 
@@ -104,10 +129,12 @@ defmodule ExVCR.RecorderHttpcTest do
 
   test "filter url param flag removes url params when recording cassettes" do
     ExVCR.Config.filter_url_params(true)
+
     use_cassette "example_ignore_url_params" do
-      {:ok, {_, _, body}} = :httpc.request('#{@url}?should_not_be_contained')
+      {:ok, {_, _, body}} = :httpc.request(~c"#{@url}?should_not_be_contained")
       assert body =~ ~r/test_response/
     end
+
     json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
     refute String.contains?(json, "should_not_be_contained")
     ExVCR.Config.filter_url_params(false)
@@ -115,10 +142,14 @@ defmodule ExVCR.RecorderHttpcTest do
 
   test "remove blacklisted headers" do
     ExVCR.Config.response_headers_blacklist(["Date"])
+
     use_cassette "remove_blacklisted_headers" do
       {:ok, {_, headers, _}} = :httpc.request(@url)
-      assert Enum.sort(headers) == Enum.sort([{'server', 'Cowboy'}, {'content-length', '13'}])
+
+      assert Enum.sort(headers) ==
+               Enum.sort([{~c"server", ~c"Cowboy"}, {~c"content-length", ~c"13"}])
     end
+
     ExVCR.Config.response_headers_blacklist([])
   end
 end

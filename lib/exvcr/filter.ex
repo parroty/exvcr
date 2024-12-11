@@ -13,6 +13,7 @@ defmodule ExVCR.Filter do
       body
     end
   end
+
   def filter_sensitive_data(body), do: body
 
   @doc """
@@ -30,7 +31,8 @@ defmodule ExVCR.Filter do
   end
 
   defp replace(body, []), do: body
-  defp replace(body, [{pattern, placeholder}|tail]) do
+
+  defp replace(body, [{pattern, placeholder} | tail]) do
     replace(String.replace(body, ~r/#{pattern}/, placeholder), tail)
   end
 
@@ -42,7 +44,8 @@ defmodule ExVCR.Filter do
       strip_query_params(url)
     else
       url
-    end |> filter_sensitive_data
+    end
+    |> filter_sensitive_data
   end
 
   @doc """
@@ -59,13 +62,13 @@ defmodule ExVCR.Filter do
   def remove_blacklisted_headers([]), do: []
 
   def remove_blacklisted_headers(headers) do
-    Enum.filter(headers, fn({key, _value}) ->
+    Enum.filter(headers, fn {key, _value} ->
       is_header_allowed?(key)
     end)
   end
 
   defp is_header_allowed?(header_name) do
-    Enum.find(ExVCR.Setting.get(:response_headers_blacklist), fn(x) ->
+    Enum.find(ExVCR.Setting.get(:response_headers_blacklist), fn x ->
       String.downcase(to_string(header_name)) == x
     end) == nil
   end

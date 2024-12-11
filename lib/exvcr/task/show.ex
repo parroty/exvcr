@@ -13,29 +13,38 @@ defmodule ExVCR.Task.Show do
 
   defp print_file(file) do
     if File.exists?(file) do
-      IO.puts "\e[32mShowing #{file}\e[m"
-      IO.puts "\e[32m**************************************\e[m"
+      IO.puts("\e[32mShowing #{file}\e[m")
+      IO.puts("\e[32m**************************************\e[m")
       json = File.read!(file)
-      IO.puts json |> JSX.prettify! |> String.replace(~r/\\n/, "\n")
+
+      IO.inspect(
+        json
+        |> Jason.decode!()
+        |> Jason.encode!(pretty: true)
+        |> String.replace(~r/\\n/, "\n")
+      )
+
       display_parsed_body(json)
-      IO.puts "\e[32m**************************************\e[m"
+      IO.puts("\e[32m**************************************\e[m")
     else
-      IO.puts "Specified file [#{file}] was not found."
+      IO.puts("Specified file [#{file}] was not found.")
     end
   end
 
   defp display_parsed_body(json) do
-    case extract_body(json) |> JSX.prettify do
-      {:ok, body_json } ->
-        IO.puts "\n\e[33m[Showing parsed JSON body]\e[m"
-        IO.puts body_json
-      _ -> nil
+    case extract_body(json) |> Jason.decode!() |> Jason.encode!(pretty: true) do
+      {:ok, body_json} ->
+        IO.puts("\n\e[33m[Showing parsed JSON body]\e[m")
+        IO.puts(body_json)
+
+      _ ->
+        nil
     end
   end
 
   defp extract_body(json) do
     json
-    |> JSX.decode!()
+    |> Jason.decode!()
     |> List.first()
     |> Enum.into(%{})
     |> get_in(["response", "body"])

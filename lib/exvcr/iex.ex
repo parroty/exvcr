@@ -17,22 +17,23 @@ defmodule ExVCR.IEx do
         use ExVCR.Mock, adapter: unquote(adapter)
 
         def run do
-          recorder = Recorder.start(
-            unquote(options) ++ [fixture: "", adapter: unquote(adapter)])
+          recorder = Recorder.start(unquote(options) ++ [fixture: "", adapter: unquote(adapter)])
 
           try do
             ExVCR.Mock.mock_methods(recorder, unquote(adapter))
             unquote(test)
           after
             ExVCR.MockLock.release_lock()
+
             Recorder.get(recorder)
-            |> JSX.encode!
-            |> JSX.prettify!
-            |> IO.puts
+            |> Jason.encode!(pretty: true)
+            |> IO.puts()
           end
+
           :ok
         end
       end
+
       unquote(method_name).run()
     end
   end

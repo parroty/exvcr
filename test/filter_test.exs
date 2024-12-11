@@ -8,13 +8,13 @@ defmodule ExVCR.FilterTest do
     content = "<PASSWORD>foo</PASSWORD><content>I have a secret</content>"
 
     assert ExVCR.Filter.filter_sensitive_data(content) ==
-      "PLACEHOLDER<content>I have a PLACEHOLDER</content>"
+             "PLACEHOLDER<content>I have a PLACEHOLDER</content>"
 
     ExVCR.Config.filter_sensitive_data(nil)
   end
 
   test "filter_sensitive_data handles non string values" do
-    assert ExVCR.Filter.filter_sensitive_data(60_000) ==  60000
+    assert ExVCR.Filter.filter_sensitive_data(60_000) == 60000
   end
 
   test "filter_url_params" do
@@ -29,7 +29,7 @@ defmodule ExVCR.FilterTest do
     ExVCR.Config.filter_url_params(false)
 
     assert ExVCR.Filter.filter_url_params(url) ==
-      "https://example.org/api?test1=PLACEHOLDER&test2=bar"
+             "https://example.org/api?test1=PLACEHOLDER&test2=bar"
 
     ExVCR.Config.filter_sensitive_data(nil)
   end
