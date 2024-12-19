@@ -28,11 +28,11 @@ jobs:
             global-mock: false
             experimental: false
           - otp: "27.2"
-            elixir: "1.18.0-rc.0"
+            elixir: "1.18.0"
             global-mock: true
             experimental: true
           - otp: "27.2"
-            elixir: "1.18.0-rc.0"
+            elixir: "1.18.0"
             global-mock: false
             experimental: true
     env:
