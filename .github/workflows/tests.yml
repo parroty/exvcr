@@ -54,9 +54,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-
       - run: mix deps.get
+      - run: mix test
       - uses: nick-invision/retry@v3
         with:
           timeout_minutes: 3
           max_attempts: 3
           shell: bash
           command: mix coveralls.github
+        continue-on-error: true
