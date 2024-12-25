@@ -20,12 +20,16 @@ defmodule ExVCR.Mixfile do
   end
 
   def application do
-    [applications: [:meck, :exactor, :exjsx], mod: {ExVCR.Application, []}]
+    [
+      applications: [:meck, :exactor, :exjsx],
+      extra_applications: [:logger, :ranch, :telemetry, :finch, :ibrowse, :hackney, :http_server, :httpotion, :httpoison, :inets],
+      mod: {ExVCR.Application, []},
+    ]
   end
 
   def deps do
     [
-      {:meck, "~> 0.8"},
+      {:meck, "~> 1.0"},
       {:exactor, "~> 2.2"},
       {:exjsx, "~> 4.0"},
       {:ibrowse, "4.4.0", optional: true},

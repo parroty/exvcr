@@ -155,9 +155,9 @@ defmodule ExVCR.RecorderFinchTest do
     ExVCR.Config.response_headers_blacklist(["date"])
     use_cassette "remove_blacklisted_headers" do
       {:ok, response} = Finch.build(:get, @url) |> Finch.request(ExVCRFinch)
-      assert response.headers == [
-        {"server", "Cowboy"},
-        {"content-length", "13"}
+      assert Enum.sort(response.headers) == [
+        {"content-length", "13"},
+        {"server", "Cowboy"}
       ]
     end
     ExVCR.Config.response_headers_blacklist([])
