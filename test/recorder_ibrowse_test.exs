@@ -41,7 +41,7 @@ defmodule ExVCR.RecorderIBrowseTest do
 
   test "forcefully getting response from server with error" do
     use_cassette "server_error" do
-      response = HTTPoison.get!(@url)
+      response = HTTPotion.get!(@url)
       assert response.status_code == 200
       assert String.valid?(response.body)
     end
