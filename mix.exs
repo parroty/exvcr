@@ -22,14 +22,22 @@ defmodule ExVCR.Mixfile do
   def application do
     [
       applications: [:meck, :exactor, :exjsx],
-      extra_applications: [:logger, :ranch, :telemetry, :finch, :ibrowse, :hackney, :http_server, :httpotion, :httpoison, :inets],
-      mod: {ExVCR.Application, []},
+      extra_applications: extra_applications(Mix.env()),
+      mod: {ExVCR.Application, []}
     ]
+  end
+
+  defp extra_applications(:test), do: common_extra_applications()
+  defp extra_applications(:dev), do: common_extra_applications()
+  defp extra_applications(_), do: []
+
+  defp common_extra_applications do
+    [:inets, :ranch, :telemetry, :finch, :ibrowse, :hackney, :http_server, :httpotion, :httpoison]
   end
 
   def deps do
     [
-      {:meck, "~> 1.0"},
+      {:meck, "~> 0.9"},
       {:exactor, "~> 2.2"},
       {:exjsx, "~> 4.0"},
       {:ibrowse, "4.4.0", optional: true},
