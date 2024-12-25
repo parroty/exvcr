@@ -21,7 +21,6 @@ defmodule ExVCR.Mixfile do
 
   def application do
     [
-      applications: [:meck, :exactor, :exjsx],
       extra_applications: extra_applications(Mix.env()),
       mod: {ExVCR.Application, []}
     ]
@@ -32,7 +31,7 @@ defmodule ExVCR.Mixfile do
   defp extra_applications(_), do: []
 
   defp common_extra_applications do
-    [:inets, :ranch, :telemetry, :finch, :ibrowse, :hackney, :http_server, :httpotion, :httpoison]
+    [:inets, :ranch, :telemetry, :finch, :ibrowse, :hackney, :http_server, :httpotion, :httpoison, :excoveralls]
   end
 
   def deps do
