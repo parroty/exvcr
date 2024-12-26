@@ -5,25 +5,36 @@ on: [push, pull_request]
 jobs:
   tests:
     name: Run Tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
+      fail-fast: true
       matrix:
-        otp: ['23']
-        elixir: ['1.10', '1.11']
-        global-mock: [true, false]
         include:
-          - otp: '24'
-            elixir: '1.12'
-            global-mock: true
-          - otp: '24'
-            elixir: '1.12'
-            global-mock: false
-          - otp: '26'
+          - otp: '25'
             elixir: '1.14'
             global-mock: true
-          - otp: '26'
+            experimental: false
+          - otp: '25'
             elixir: '1.14'
             global-mock: false
+            experimental: false
+          - otp: "27"
+            elixir: "1.17"
+            global-mock: true
+            experimental: false
+          - otp: "27"
+            elixir: "1.17"
+            global-mock: false
+            experimental: false
+          - otp: "27.2"
+            elixir: "1.18.0"
+            global-mock: true
+            experimental: true
+          - otp: "27.2"
+            elixir: "1.18.0"
+            global-mock: false
+            experimental: true
     env:
       MIX_ENV: test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,9 +54,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-
       - run: mix deps.get
+      - run: mix test
       - uses: nick-invision/retry@v3
         with:
           timeout_minutes: 3
           max_attempts: 3
           shell: bash
           command: mix coveralls.github
+        continue-on-error: true
