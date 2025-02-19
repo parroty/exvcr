@@ -4,13 +4,23 @@ defmodule ExVCR.Checker do
   It's for [mix vcr.check] task.
   """
 
-  use ExActor.GenServer, export: :singleton
+  use GenServer
 
-  defstart start(arg), do: initial_state(arg)
+  def start(arg) do
+    GenServer.start(__MODULE__, arg, name: :singleton)
+  end
 
-  defcall get, state: state, do: reply(state)
-  defcast set(x), do: new_state(x)
-  defcast append(x), state: state, do: new_state(%{state | files: [x|state.files]})
+  def get do
+    GenServer.call(:singleton, :get)
+  end
+
+  def set(x) do
+    GenServer.cast(:singleton, {:set, x})
+  end
+
+  def append(x) do
+    GenServer.cast(:singleton, {:append, x})
+  end
 
   @doc """
   Increment the counter for cache cassettes hit.
@@ -25,5 +35,27 @@ defmodule ExVCR.Checker do
     if ExVCR.Checker.get() != [] do
       ExVCR.Checker.append({type, ExVCR.Recorder.get_file_path(recorder)})
     end
+  end
+
+  # Callbacks
+
+  @impl true
+  def init(arg) do
+    {:ok, arg}
+  end
+
+  @impl true
+  def handle_call(:get, _from, state) do
+    {:reply, state, state}
+  end
+
+  @impl true
+  def handle_cast({:set, x}, _state) do
+    {:noreply, x}
+  end
+
+  @impl true
+  def handle_cast({:append, x}, state) do
+    {:noreply, %{state | files: [x|state.files]}}
   end
 end
