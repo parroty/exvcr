@@ -1,3 +1,8 @@
+0.16.0
+------
+#### Changes
+* Remove exactor dependency (#228)
+
 0.15.2
 ------
 #### Changes
