@@ -7,7 +7,7 @@ defmodule ExVCR.Task.Runner do
   @check_header_format   "  ~-40s ~-20s ~-20s\n"
   @check_content_format  "  ~-40s ~-20w ~-20w\n"
   @date_format   "~4..0B/~2..0B/~2..0B ~2..0B:~2..0B:~2..0B"
-  @json_file_pattern ~r/\.json$/
+  @json_file_pattern "*.json"
 
   @doc """
   Use specified path to show the list of vcr cassettes.
@@ -29,9 +29,8 @@ defmodule ExVCR.Task.Runner do
 
   defp find_json_files(path) do
     if File.exists?(path) do
-      File.ls!(path)
-      |> Enum.filter(&(&1 =~ @json_file_pattern))
-      |> Enum.sort
+      Path.wildcard("#{path}/**/#{@json_file_pattern}")
+      |> Enum.map(&Path.relative_to(&1, path))
     else
       raise ExVCR.PathNotFoundError, message: "Specified path '#{path}' for reading cassettes was not found."
     end
