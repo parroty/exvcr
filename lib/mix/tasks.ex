@@ -14,11 +14,16 @@ defmodule Mix.Tasks.Vcr do
 
   @doc "Entry point for [mix vcr] task"
   def run(args) do
-    {options, _, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom, h: :help], switches: [dir: :string, custom: :string, help: :boolean])
+    {options, _, _} =
+      OptionParser.parse(args,
+        aliases: [d: :dir, c: :custom, h: :help],
+        switches: [dir: :string, custom: :string, help: :boolean]
+      )
+
     if options[:help] do
       ExVCR.Task.Util.print_help_message()
     else
-      ExVCR.Task.Util.parse_basic_options(options) |> ExVCR.Task.Runner.show_vcr_cassettes
+      ExVCR.Task.Util.parse_basic_options(options) |> ExVCR.Task.Runner.show_vcr_cassettes()
     end
   end
 
@@ -29,21 +34,27 @@ defmodule Mix.Tasks.Vcr do
     def run(args) do
       {options, files, _} =
         OptionParser.parse(args,
-                           switches: [interactive: :boolean, all: :boolean],
-                           aliases: [d: :dir, i: :interactive, a: :all])
+          switches: [interactive: :boolean, all: :boolean],
+          aliases: [d: :dir, i: :interactive, a: :all]
+        )
 
-      pattern = cond do
-        options[:all]          -> ~r/.*/
-        Enum.count(files) == 1 -> Enum.at(files, 0)
-        true                   -> nil
-      end
+      pattern =
+        cond do
+          options[:all] -> ~r/.*/
+          Enum.count(files) == 1 -> Enum.at(files, 0)
+          true -> nil
+        end
 
       if pattern do
         ExVCR.Task.Runner.delete_cassettes(
           options[:dir] || ExVCR.Setting.get(:cassette_library_dir),
-          pattern, options[:interactive] || false)
+          pattern,
+          options[:interactive] || false
+        )
       else
-        IO.puts "[Invalid Param] Specify substring of cassette file-name to be deleted - `mix vcr.delete [pattern]`, or use `mix vcr.delete --all` for deleting all cassettes."
+        IO.puts(
+          "[Invalid Param] Specify substring of cassette file-name to be deleted - `mix vcr.delete [pattern]`, or use `mix vcr.delete --all` for deleting all cassettes."
+        )
       end
     end
   end
@@ -56,13 +67,16 @@ defmodule Mix.Tasks.Vcr do
 
     @doc "Entry point for [mix vcr.check] task."
     def run(args) do
-      {options, _files, _} = OptionParser.parse(args, aliases: [d: :dir, c: :custom], switches: [dir: :string, custom: :string])
+      {options, _files, _} =
+        OptionParser.parse(args, aliases: [d: :dir, c: :custom], switches: [dir: :string, custom: :string])
+
       dirs = ExVCR.Task.Util.parse_basic_options(options)
       ExVCR.Checker.start(%ExVCR.Checker.Results{dirs: dirs})
 
       Mix.env(:test)
       Mix.Task.run("test")
-      System.at_exit(fn(_) ->
+
+      System.at_exit(fn _ ->
         ExVCR.Task.Runner.check_cassettes(ExVCR.Checker.get())
       end)
     end

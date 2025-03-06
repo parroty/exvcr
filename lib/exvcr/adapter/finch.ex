@@ -29,10 +29,10 @@ if Code.ensure_loaded?(Finch) do
     """
     def target_methods() do
       [
-        {:request, &ExVCR.Recorder.request([&1,&2])},
-        {:request, &ExVCR.Recorder.request([&1,&2,&3])},
-        {:request!, &(ExVCR.Recorder.request([&1,&2]) |> handle_response_for_request!())},
-        {:request!, &(ExVCR.Recorder.request([&1,&2,&3]) |> handle_response_for_request!())}
+        {:request, &ExVCR.Recorder.request([&1, &2])},
+        {:request, &ExVCR.Recorder.request([&1, &2, &3])},
+        {:request!, &(ExVCR.Recorder.request([&1, &2]) |> handle_response_for_request!())},
+        {:request!, &(ExVCR.Recorder.request([&1, &2, &3]) |> handle_response_for_request!())}
       ]
     end
 
@@ -41,10 +41,10 @@ if Code.ensure_loaded?(Finch) do
     """
     def target_methods(recorder) do
       [
-        {:request, &ExVCR.Recorder.request(recorder, [&1,&2])},
-        {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3])},
-        {:request!, &(ExVCR.Recorder.request(recorder, [&1,&2]) |> handle_response_for_request!())},
-        {:request!, &(ExVCR.Recorder.request(recorder, [&1,&2,&3]) |> handle_response_for_request!())}
+        {:request, &ExVCR.Recorder.request(recorder, [&1, &2])},
+        {:request, &ExVCR.Recorder.request(recorder, [&1, &2, &3])},
+        {:request!, &(ExVCR.Recorder.request(recorder, [&1, &2]) |> handle_response_for_request!())},
+        {:request!, &(ExVCR.Recorder.request(recorder, [&1, &2, &3]) |> handle_response_for_request!())}
       ]
     end
 
@@ -88,8 +88,9 @@ if Code.ensure_loaded?(Finch) do
     end
 
     defp apply_filters(%Finch.Response{} = response) do
-      replaced_body = to_string(response.body) |> ExVCR.Filter.filter_sensitive_data
+      replaced_body = to_string(response.body) |> ExVCR.Filter.filter_sensitive_data()
       filtered_headers = ExVCR.Filter.remove_blacklisted_headers(response.headers)
+
       response
       |> Map.put(:body, replaced_body)
       |> Map.put(:headers, filtered_headers)
@@ -98,7 +99,7 @@ if Code.ensure_loaded?(Finch) do
     defp apply_filters({:error, reason}), do: {:error, reason}
 
     defp handle_response_for_request!({:ok, resp}), do: resp
-    defp handle_response_for_request!({:error, error}), do: raise error
+    defp handle_response_for_request!({:error, error}), do: raise(error)
     defp handle_response_for_request!(resp), do: resp
 
     @doc """
@@ -107,10 +108,9 @@ if Code.ensure_loaded?(Finch) do
     def default_stub_params(:headers), do: %{"content-type" => "text/html"}
     def default_stub_params(:status_code), do: 200
   end
-
 else
   defmodule ExVCR.Adapter.Finch do
-    def module_name, do: raise "Missing dependency: Finch"
-    def target_methods, do: raise "Missing dependency: Finch"
+    def module_name, do: raise("Missing dependency: Finch")
+    def target_methods, do: raise("Missing dependency: Finch")
   end
 end

@@ -4,4 +4,3 @@ defmodule ExVCR do
   It's inspired by Ruby's VCR, and trying to provide similar functionalities.
   """
 end
-
