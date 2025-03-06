@@ -14,9 +14,12 @@ defmodule ExVCR.Mixfile do
       docs: docs(),
       description: description(),
       package: package(),
-      test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [coveralls: :test]
+      test_coverage: [tool: ExCoveralls]
     ]
+  end
+
+  def cli do
+    [preferred_envs: [coveralls: :test]]
   end
 
   def application do
@@ -31,7 +34,18 @@ defmodule ExVCR.Mixfile do
   defp extra_applications(_), do: []
 
   defp common_extra_applications do
-    [:inets, :ranch, :telemetry, :finch, :ibrowse, :hackney, :http_server, :httpotion, :httpoison, :excoveralls]
+    [
+      :inets,
+      :ranch,
+      :telemetry,
+      :finch,
+      :ibrowse,
+      :hackney,
+      :http_server,
+      :httpotion,
+      :httpoison,
+      :excoveralls
+    ]
   end
 
   def deps do
