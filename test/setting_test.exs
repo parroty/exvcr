@@ -3,13 +3,14 @@ defmodule ExVCR.SettingTest do
 
   setup_all do
     cassette_library_dir = ExVCR.Setting.get(:cassette_library_dir)
-    custom_library_dir   = ExVCR.Setting.get(:custom_library_dir)
+    custom_library_dir = ExVCR.Setting.get(:custom_library_dir)
 
     on_exit(fn ->
       ExVCR.Setting.set(:cassette_library_dir, cassette_library_dir)
       ExVCR.Setting.set(:custom_library_dir, custom_library_dir)
       :ok
     end)
+
     :ok
   end
 

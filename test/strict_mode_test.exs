@@ -10,11 +10,11 @@ defmodule ExVCR.StrictModeTest do
   setup_all do
     File.rm_rf(@dummy_cassette_dir)
 
-    on_exit fn ->
+    on_exit(fn ->
       File.rm_rf(@dummy_cassette_dir)
       HttpServer.stop(@port)
       :ok
-    end
+    end)
 
     HTTPotion.start()
     HttpServer.start(@http_server_opts)
@@ -34,8 +34,8 @@ defmodule ExVCR.StrictModeTest do
   test "it throws an error when set and no cassette recorded" do
     use_cassette "strict_mode_on", strict_mode: true do
       try do
-       HTTPotion.get(@url, []).body =~ ~r/test_response/
-       assert(false, "Shouldn't get here")
+        HTTPotion.get(@url, []).body =~ ~r/test_response/
+        assert(false, "Shouldn't get here")
       catch
         "A matching cassette was not found" <> _ -> :ok
         _ -> assert(false, "Encountered unexpected `throw`")

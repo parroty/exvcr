@@ -11,9 +11,11 @@ defmodule ExVCR.IgnoreUrlsTest do
 
   setup_all do
     HTTPotion.start()
-    on_exit fn ->
+
+    on_exit(fn ->
       HttpServer.stop(@port)
-    end
+    end)
+
     :ok
   end
 

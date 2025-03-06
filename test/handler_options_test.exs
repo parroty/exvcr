@@ -8,9 +8,11 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
 
     setup_all do
       HTTPotion.start()
-      on_exit fn ->
+
+      on_exit(fn ->
         HttpServer.stop(@port)
-      end
+      end)
+
       :ok
     end
 
@@ -43,12 +45,12 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
     test "specifying match_requests_on: [:request_body] matches request_body params" do
       use_cassette "different_request_body_params_on", match_requests_on: [:request_body] do
         HttpServer.start(path: "/server", port: @port, response: "test_response_before")
-        assert HTTPotion.post(@url, [body: "p=3"]).body =~ ~r/test_response_before/
+        assert HTTPotion.post(@url, body: "p=3").body =~ ~r/test_response_before/
         HttpServer.stop(@port)
 
         # this method call should NOT be mocked as previous "test_response_before" response
         HttpServer.start(path: "/server", port: @port, response: "test_response_after")
-        assert HTTPotion.post(@url, [body: "p=4"]).body =~ ~r/test_response_after/
+        assert HTTPotion.post(@url, body: "p=4").body =~ ~r/test_response_after/
         HttpServer.stop(@port)
       end
     end
@@ -56,12 +58,12 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
     test "not specifying match_requests_on: [:request_body] ignores request_body params" do
       use_cassette "different_request_body_params_off" do
         HttpServer.start(path: "/server", port: @port, response: "test_response_before")
-        assert HTTPotion.post(@url, [body: "p=3"]).body =~ ~r/test_response_before/
+        assert HTTPotion.post(@url, body: "p=3").body =~ ~r/test_response_before/
         HttpServer.stop(@port)
 
         # this method call should be mocked as previous "test_response_before" response
         HttpServer.start(path: "/server", port: @port, response: "test_response_after")
-        assert HTTPotion.post(@url, [body: "p=4"]).body =~ ~r/test_response_before/
+        assert HTTPotion.post(@url, body: "p=4").body =~ ~r/test_response_before/
         HttpServer.stop(@port)
       end
     end
@@ -69,12 +71,12 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
     test "specifying match_requests_on: [:headers] matches header params" do
       use_cassette "different_headers_on", match_requests_on: [:headers] do
         HttpServer.start(path: "/server", port: @port, response: "test_response_before")
-        assert HTTPotion.post(@url, [body: "body", headers: ["User-Agent": "My App"]]).body =~ ~r/test_response_before/
+        assert HTTPotion.post(@url, body: "body", headers: ["User-Agent": "My App"]).body =~ ~r/test_response_before/
         HttpServer.stop(@port)
 
         # this method call should NOT be mocked as previous "test_response_before" response
         HttpServer.start(path: "/server", port: @port, response: "test_response_after")
-        assert HTTPotion.post(@url, [body: "body", headers: ["User-Agent": "Other App"]]).body =~ ~r/test_response_after/
+        assert HTTPotion.post(@url, body: "body", headers: ["User-Agent": "Other App"]).body =~ ~r/test_response_after/
         HttpServer.stop(@port)
       end
     end
@@ -82,12 +84,12 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
     test "not specifying match_requests_on: [:headers] ignores headers" do
       use_cassette "different_headers_off" do
         HttpServer.start(path: "/server", port: @port, response: "test_response_before")
-        assert HTTPotion.post(@url, [body: "p=3", headers: ["User-Agent": "My App"]]).body =~ ~r/test_response_before/
+        assert HTTPotion.post(@url, body: "p=3", headers: ["User-Agent": "My App"]).body =~ ~r/test_response_before/
         HttpServer.stop(@port)
 
         # this method call should be mocked as previous "test_response_before" response
         HttpServer.start(path: "/server", port: @port, response: "test_response_after")
-        assert HTTPotion.post(@url, [body: "p=4", headers: ["User-Agent": "Other App"]]).body =~ ~r/test_response_before/
+        assert HTTPotion.post(@url, body: "p=4", headers: ["User-Agent": "Other App"]).body =~ ~r/test_response_before/
         HttpServer.stop(@port)
       end
     end
@@ -102,9 +104,11 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
       matches_special_header = fn response, keys, _recorder_options ->
         recorded_headers = always_map(response.request.headers)
         expected_value = recorded_headers["X-Special-Header"]
+
         keys[:headers]
-        |> Enum.any?(&(match?({"X-Special-Header", ^expected_value}, &1)))
+        |> Enum.any?(&match?({"X-Special-Header", ^expected_value}, &1))
       end
+
       # This will always return true, but just so we can show you can pass an arbitrary
       # number of functions
       always_true = fn _, _, _ -> true end
@@ -136,9 +140,11 @@ defmodule ExVCR.Adapter.HandlerOptionsTest do
       matches_special_header = fn response, keys, _recorder_options ->
         recorded_headers = always_map(response.request.headers)
         expected_value = recorded_headers["X-Special-Header"]
+
         keys[:headers]
-        |> Enum.any?(&(match?({"X-Special-Header", ^expected_value}, &1)))
+        |> Enum.any?(&match?({"X-Special-Header", ^expected_value}, &1))
       end
+
       # This will always return true, but just so we can show you can pass an arbitrary
       # number of functions
       always_true = fn _, _, _ -> true end
