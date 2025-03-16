@@ -14,7 +14,7 @@ defmodule ExVCR.Recorder do
     ExVCR.Checker.start([])
 
     {:ok, act_responses} = Responses.start([])
-    {:ok, act_options}   = Options.start(options)
+    {:ok, act_options} = Options.start(options)
 
     recorder = %ExVCR.Record{options: act_options, responses: act_responses}
 
@@ -23,6 +23,7 @@ defmodule ExVCR.Recorder do
     else
       load_from_json(recorder)
     end
+
     recorder
   end
 
@@ -48,10 +49,10 @@ defmodule ExVCR.Recorder do
   Load record-data from json file.
   """
   def load_from_json(recorder) do
-    file_path   = get_file_path(recorder)
+    file_path = get_file_path(recorder)
     custom_mode = options(recorder)[:custom]
-    adapter     = options(recorder)[:adapter]
-    responses   = ExVCR.JSON.load(file_path, custom_mode, adapter)
+    adapter = options(recorder)[:adapter]
+    responses = ExVCR.JSON.load(file_path, custom_mode, adapter)
     set(responses, recorder)
   end
 
@@ -60,6 +61,7 @@ defmodule ExVCR.Recorder do
   """
   def save(recorder) do
     file_path = get_file_path(recorder)
+
     if File.exists?(file_path) == false do
       ExVCR.JSON.save(file_path, ExVCR.Recorder.get(recorder))
     end
@@ -70,17 +72,20 @@ defmodule ExVCR.Recorder do
   """
   def get_file_path(recorder) do
     opts = options(recorder)
-    directory = case opts[:custom] do
-      true  -> ExVCR.Setting.get(:custom_library_dir)
-      _     -> ExVCR.Setting.get(:cassette_library_dir)
-    end
+
+    directory =
+      case opts[:custom] do
+        true -> ExVCR.Setting.get(:custom_library_dir)
+        _ -> ExVCR.Setting.get(:cassette_library_dir)
+      end
+
     "#{directory}/#{opts[:fixture]}.json"
   end
 
-  def options(recorder),                 do: Options.get(recorder.options)
-  def get(recorder),                     do: Responses.get(recorder.responses)
-  def set(responses, recorder),          do: Responses.set(recorder.responses, responses)
-  def append(recorder, x),               do: Responses.append(recorder.responses, x)
-  def pop(recorder),                     do: Responses.pop(recorder.responses)
+  def options(recorder), do: Options.get(recorder.options)
+  def get(recorder), do: Responses.get(recorder.responses)
+  def set(responses, recorder), do: Responses.set(recorder.responses, responses)
+  def append(recorder, x), do: Responses.append(recorder.responses, x)
+  def pop(recorder), do: Responses.pop(recorder.responses)
   def update(recorder, finder, updater), do: Responses.update(recorder.responses, finder, updater)
 end

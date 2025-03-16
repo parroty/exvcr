@@ -43,7 +43,7 @@ defmodule ExVCR.Actor do
 
     @impl true
     def handle_cast({:append, x}, state) do
-      {:noreply, [x|state]}
+      {:noreply, [x | state]}
     end
 
     @impl true
@@ -58,13 +58,15 @@ defmodule ExVCR.Actor do
 
     @impl true
     def handle_call({:update, finder, updater}, _from, state) do
-      new_state = Enum.map(state, fn(record) ->
-        if finder.(record) do
-          updater.(record)
-        else
-          record
-        end
-      end)
+      new_state =
+        Enum.map(state, fn record ->
+          if finder.(record) do
+            updater.(record)
+          else
+            record
+          end
+        end)
+
       {:reply, new_state, new_state}
     end
 

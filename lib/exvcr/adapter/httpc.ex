@@ -29,8 +29,7 @@ defmodule ExVCR.Adapter.Httpc do
       {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])}
   """
   def target_methods() do
-    [ {:request, &ExVCR.Recorder.request([&1])},
-      {:request, &ExVCR.Recorder.request([&1,&2,&3,&4])} ]
+    [{:request, &ExVCR.Recorder.request([&1])}, {:request, &ExVCR.Recorder.request([&1, &2, &3, &4])}]
   end
 
   @doc """
@@ -40,10 +39,11 @@ defmodule ExVCR.Adapter.Httpc do
       {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])}
   """
   def target_methods(recorder) do
-    [ {:request, &ExVCR.Recorder.request(recorder, [&1])},
-      {:request, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4])} ]
+    [
+      {:request, &ExVCR.Recorder.request(recorder, [&1])},
+      {:request, &ExVCR.Recorder.request(recorder, [&1, &2, &3, &4])}
+    ]
   end
-
 
   @doc """
   Generate key for searching response.
@@ -52,8 +52,10 @@ defmodule ExVCR.Adapter.Httpc do
     case request do
       [method, {url, headers} | _] ->
         [url: url, method: method, request_body: nil, headers: Util.stringify_keys(headers)]
+
       [method, {url, headers, _, body} | _] ->
         [url: url, method: method, request_body: body, headers: Util.stringify_keys(headers)]
+
       [url | _] ->
         [url: url, method: :get, request_body: nil, headers: []]
     end
@@ -67,7 +69,7 @@ defmodule ExVCR.Adapter.Httpc do
   end
 
   defp apply_filters({:ok, {status_code, headers, body}}) do
-    replaced_body = to_string(body) |> ExVCR.Filter.filter_sensitive_data
+    replaced_body = to_string(body) |> ExVCR.Filter.filter_sensitive_data()
     filtered_headers = ExVCR.Filter.remove_blacklisted_headers(headers)
     {:ok, {status_code, filtered_headers, replaced_body}}
   end

@@ -26,30 +26,34 @@ defmodule ExVCR.Adapter.IBrowse do
   Implementation for global mock.
   """
   def target_methods() do
-    [ {:send_req, &ExVCR.Recorder.request([&1,&2,&3])},
-      {:send_req, &ExVCR.Recorder.request([&1,&2,&3,&4])},
-      {:send_req, &ExVCR.Recorder.request([&1,&2,&3,&4,&5])},
-      {:send_req, &ExVCR.Recorder.request([&1,&2,&3,&4,&5,&6])} ]
+    [
+      {:send_req, &ExVCR.Recorder.request([&1, &2, &3])},
+      {:send_req, &ExVCR.Recorder.request([&1, &2, &3, &4])},
+      {:send_req, &ExVCR.Recorder.request([&1, &2, &3, &4, &5])},
+      {:send_req, &ExVCR.Recorder.request([&1, &2, &3, &4, &5, &6])}
+    ]
   end
 
   @doc """
   Returns list of the mock target methods with function name and callback.
   """
   def target_methods(recorder) do
-    [ {:send_req, &ExVCR.Recorder.request(recorder, [&1,&2,&3])},
-      {:send_req, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4])},
-      {:send_req, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5])},
-      {:send_req, &ExVCR.Recorder.request(recorder, [&1,&2,&3,&4,&5,&6])} ]
+    [
+      {:send_req, &ExVCR.Recorder.request(recorder, [&1, &2, &3])},
+      {:send_req, &ExVCR.Recorder.request(recorder, [&1, &2, &3, &4])},
+      {:send_req, &ExVCR.Recorder.request(recorder, [&1, &2, &3, &4, &5])},
+      {:send_req, &ExVCR.Recorder.request(recorder, [&1, &2, &3, &4, &5, &6])}
+    ]
   end
 
   @doc """
   Generate key for searching response.
   """
   def generate_keys_for_request(request) do
-    url    = Enum.fetch!(request, 0)
+    url = Enum.fetch!(request, 0)
     method = Enum.fetch!(request, 2)
-    request_body = Enum.fetch(request, 3) |> parse_request_body
-    headers = Enum.fetch!(request, 1) |> Util.stringify_keys
+    request_body = Enum.fetch(request, 3) |> parse_request_body()
+    headers = Enum.fetch!(request, 1) |> Util.stringify_keys()
 
     [url: url, method: method, request_body: request_body, headers: headers]
   end
@@ -68,19 +72,21 @@ defmodule ExVCR.Adapter.IBrowse do
     if response.type == "error" do
       {:error, response.body}
     else
-      status_code = case response.status_code do
-        integer when is_integer(integer) ->
-          Integer.to_charlist(integer)
-        char_list when is_list(char_list) ->
-          char_list
-      end
+      status_code =
+        case response.status_code do
+          integer when is_integer(integer) ->
+            Integer.to_charlist(integer)
+
+          char_list when is_list(char_list) ->
+            char_list
+        end
 
       {:ok, status_code, response.headers, response.body}
     end
   end
 
   defp apply_filters({:ok, status_code, headers, body}) do
-    replaced_body = to_string(body) |> ExVCR.Filter.filter_sensitive_data
+    replaced_body = to_string(body) |> ExVCR.Filter.filter_sensitive_data()
     filtered_headers = ExVCR.Filter.remove_blacklisted_headers(headers)
     {:ok, status_code, filtered_headers, replaced_body}
   end

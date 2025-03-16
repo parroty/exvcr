@@ -2,7 +2,7 @@ defmodule ExVCR.ConfigLoaderTest do
   use ExUnit.Case, async: true
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes"
-  @dummy_custom_dir   "tmp/vcr_tmp/vcr_custom"
+  @dummy_custom_dir "tmp/vcr_tmp/vcr_custom"
 
   setup_all do
     File.rm_rf!(@dummy_cassette_dir)
@@ -10,10 +10,11 @@ defmodule ExVCR.ConfigLoaderTest do
   end
 
   setup do
-    on_exit fn ->
+    on_exit(fn ->
       File.rm_rf!(@dummy_cassette_dir)
       :ok
-    end
+    end)
+
     :ok
   end
 
@@ -36,10 +37,10 @@ defmodule ExVCR.ConfigLoaderTest do
 
   test "loading default setting from empty values" do
     # Backup current env values
-    vcr_cassette_library_dir    = Application.get_env(:exvcr, :vcr_cassette_library_dir)
+    vcr_cassette_library_dir = Application.get_env(:exvcr, :vcr_cassette_library_dir)
     custom_cassette_library_dir = Application.get_env(:exvcr, :custom_cassette_library_dir)
-    filter_sensitive_data       = Application.get_env(:exvcr, :filter_sensitive_data)
-    response_headers_blacklist  = Application.get_env(:exvcr, :response_headers_blacklist)
+    filter_sensitive_data = Application.get_env(:exvcr, :filter_sensitive_data)
+    response_headers_blacklist = Application.get_env(:exvcr, :response_headers_blacklist)
 
     # Remove env values
     Application.delete_env(:exvcr, :vcr_cassette_library_dir)

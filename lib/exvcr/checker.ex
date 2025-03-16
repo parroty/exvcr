@@ -26,6 +26,7 @@ defmodule ExVCR.Checker do
   Increment the counter for cache cassettes hit.
   """
   def add_cache_count(recorder), do: add_count(recorder, :cache)
+
   @doc """
   Increment the counter for server request hit.
   """
@@ -56,6 +57,6 @@ defmodule ExVCR.Checker do
 
   @impl true
   def handle_cast({:append, x}, state) do
-    {:noreply, %{state | files: [x|state.files]}}
+    {:noreply, %{state | files: [x | state.files]}}
   end
 end

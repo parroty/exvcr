@@ -7,9 +7,11 @@ defmodule ExVCR.Adapter.HttpcTest do
   setup_all do
     HttpServer.start(path: "/server", port: @port, response: "test_response")
     Application.ensure_started(:inets)
-    on_exit fn ->
+
+    on_exit(fn ->
       HttpServer.stop(@port)
-    end
+    end)
+
     :ok
   end
 
@@ -18,6 +20,7 @@ defmodule ExVCR.Adapter.HttpcTest do
       ExVCR.Actor.CurrentRecorder.default_state()
       |> ExVCR.Actor.CurrentRecorder.set()
     end
+
     url = "http://localhost:#{@port}/server" |> to_charlist()
     {:ok, result} = :httpc.request(url)
     {{_http_version, status_code, _reason_phrase}, _headers, _body} = result
@@ -26,11 +29,13 @@ defmodule ExVCR.Adapter.HttpcTest do
 
   test "passthrough works after cassette has been used" do
     url = "http://localhost:#{@port}/server" |> to_charlist()
+
     use_cassette "httpc_get_localhost" do
       {:ok, result} = :httpc.request(url)
       {{_http_version, status_code, _reason_phrase}, _headers, _body} = result
       assert status_code == 200
     end
+
     {:ok, result} = :httpc.request(url)
     {{_http_version, status_code, _reason_phrase}, _headers, _body} = result
     assert status_code == 200
@@ -56,11 +61,14 @@ defmodule ExVCR.Adapter.HttpcTest do
 
   test "example httpc request/4 with additional options" do
     use_cassette "example_httpc_request_4_additional_options" do
-      {:ok, {{_, 200, _reason_phrase}, _headers, body}} = :httpc.request(
-        :get,
-        {'http://example.com', [{'Content-Type', 'text/html'}]},
-        [connect_timeout: 3000, timeout: 5000],
-        body_format: :binary)
+      {:ok, {{_, 200, _reason_phrase}, _headers, body}} =
+        :httpc.request(
+          :get,
+          {'http://example.com', [{'Content-Type', 'text/html'}]},
+          [connect_timeout: 3000, timeout: 5000],
+          body_format: :binary
+        )
+
       assert to_string(body) =~ ~r/Example Domain/
     end
   end
@@ -73,7 +81,7 @@ defmodule ExVCR.Adapter.HttpcTest do
   end
 
   test "stub request works" do
-    use_cassette :stub, [url: 'http://example.com', body: 'Stub Response'] do
+    use_cassette :stub, url: 'http://example.com', body: 'Stub Response' do
       {:ok, result} = :httpc.request('http://example.com')
       {{_http_version, _status_code = 200, _reason_phrase}, headers, body} = result
       assert to_string(body) =~ ~r/Stub Response/

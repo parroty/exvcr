@@ -112,7 +112,7 @@ defmodule ExVCR.Config do
   Sets a list of headers to remove from the response
   """
   def response_headers_blacklist(headers_blacklist) do
-    blacklist = Enum.map(headers_blacklist, fn(x) -> String.downcase(x) end)
+    blacklist = Enum.map(headers_blacklist, fn x -> String.downcase(x) end)
     Setting.set(:response_headers_blacklist, blacklist)
   end
 

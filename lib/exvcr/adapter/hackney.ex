@@ -59,10 +59,10 @@ defmodule ExVCR.Adapter.Hackney do
   Generate key for searching response.
   """
   def generate_keys_for_request(request) do
-    url          = Enum.fetch!(request, 1)
-    method       = Enum.fetch!(request, 0)
-    request_body = Enum.fetch(request, 3) |> parse_request_body
-    headers      = Enum.at(request, 2, []) |> Util.stringify_keys()
+    url = Enum.fetch!(request, 1)
+    method = Enum.fetch!(request, 0)
+    request_body = Enum.fetch(request, 3) |> parse_request_body()
+    headers = Enum.at(request, 2, []) |> Util.stringify_keys()
 
     [url: url, method: method, request_body: request_body, headers: headers]
   end
@@ -94,12 +94,13 @@ defmodule ExVCR.Adapter.Hackney do
   def hook_response_from_cache(_request, nil), do: nil
   def hook_response_from_cache(_request, %ExVCR.Response{type: "error"} = response), do: response
   def hook_response_from_cache(_request, %ExVCR.Response{body: nil} = response), do: response
+
   def hook_response_from_cache([_, _, _, _, opts], %ExVCR.Response{body: body} = response) do
     if :with_body in opts || {:with_body, true} in opts do
       response
     else
-      client          = make_ref()
-      client_key_atom = client |> inspect |> String.to_atom
+      client = make_ref()
+      client_key_atom = client |> inspect() |> String.to_atom()
       Store.set(client_key_atom, body)
       %{response | body: client}
     end
@@ -119,7 +120,8 @@ defmodule ExVCR.Adapter.Hackney do
   end
 
   defp handle_body_request(recorder, [client, max_length]) do
-    client_key_atom = client |> inspect |> String.to_atom
+    client_key_atom = client |> inspect() |> String.to_atom()
+
     if body = Store.get(client_key_atom) do
       Store.delete(client_key_atom)
       {:ok, body}
@@ -129,15 +131,19 @@ defmodule ExVCR.Adapter.Hackney do
           body = ExVCR.Filter.filter_sensitive_data(body)
 
           client_key_string = inspect(client)
-          ExVCR.Recorder.update(recorder,
-            fn(%{request: _request, response: response}) ->
+
+          ExVCR.Recorder.update(
+            recorder,
+            fn %{request: _request, response: response} ->
               response.body == client_key_string
             end,
-            fn(%{request: request, response: response}) ->
+            fn %{request: request, response: response} ->
               %{request: request, response: %{response | body: body}}
             end
           )
+
           {:ok, body}
+
         {ret, body} ->
           {ret, body}
       end
@@ -153,7 +159,7 @@ defmodule ExVCR.Adapter.Hackney do
     else
       case response.body do
         nil -> {:ok, response.status_code, response.headers}
-        _   -> {:ok, response.status_code, response.headers, response.body}
+        _ -> {:ok, response.status_code, response.headers, response.body}
       end
     end
   end

@@ -3,7 +3,7 @@ defmodule ExVCR.ConfigLoader do
   Load configuration parameters from config.exs.
   """
 
-  @default_vcr_path    "fixture/vcr_cassettes"
+  @default_vcr_path "fixture/vcr_cassettes"
   @default_custom_path "fixture/custom_cassettes"
 
   alias ExVCR.Config
@@ -16,29 +16,39 @@ defmodule ExVCR.ConfigLoader do
 
     if env[:vcr_cassette_library_dir] != nil do
       Config.cassette_library_dir(
-        env[:vcr_cassette_library_dir], env[:custom_cassette_library_dir])
+        env[:vcr_cassette_library_dir],
+        env[:custom_cassette_library_dir]
+      )
     else
       Config.cassette_library_dir(
-        @default_vcr_path, @default_custom_path)
+        @default_vcr_path,
+        @default_custom_path
+      )
     end
 
-    Config.filter_sensitive_data(nil) # reset to empty list
+    # reset to empty list
+    Config.filter_sensitive_data(nil)
+
     if env[:filter_sensitive_data] != nil do
-      Enum.each(env[:filter_sensitive_data], fn(data) ->
+      Enum.each(env[:filter_sensitive_data], fn data ->
         Config.filter_sensitive_data(data[:pattern], data[:placeholder])
       end)
     end
 
-    Config.filter_request_headers(nil) # reset to empty list
+    # reset to empty list
+    Config.filter_request_headers(nil)
+
     if env[:filter_request_headers] != nil do
-      Enum.each(env[:filter_request_headers], fn(header) ->
+      Enum.each(env[:filter_request_headers], fn header ->
         Config.filter_request_headers(header)
       end)
     end
 
-    Config.filter_request_options(nil) # reset to empty list
+    # reset to empty list
+    Config.filter_request_options(nil)
+
     if env[:filter_request_options] != nil do
-      Enum.each(env[:filter_request_options], fn(option) ->
+      Enum.each(env[:filter_request_options], fn option ->
         Config.filter_request_options(option)
       end)
     end

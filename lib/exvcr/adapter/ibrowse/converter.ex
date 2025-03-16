@@ -6,7 +6,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
   use ExVCR.Converter
 
   defp string_to_response(string) do
-    response = Enum.map(string, fn({x, y}) -> {String.to_atom(x), y} end)
+    response = Enum.map(string, fn {x, y} -> {String.to_atom(x), y} end)
     response = struct(ExVCR.Response, response)
 
     response =
@@ -26,9 +26,11 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
 
     response =
       if is_map(response.headers) do
-        headers = response.headers
-                  |> Map.to_list
-                  |> Enum.map(fn({k,v}) -> {to_charlist(k), to_charlist(v)} end)
+        headers =
+          response.headers
+          |> Map.to_list()
+          |> Enum.map(fn {k, v} -> {to_charlist(k), to_charlist(v)} end)
+
         %{response | headers: headers}
       else
         response
@@ -37,12 +39,15 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
     response
   end
 
-  defp string_to_error_reason([reason, details]), do: { String.to_atom(reason), binary_to_tuple(details) }
+  defp string_to_error_reason([reason, details]), do: {String.to_atom(reason), binary_to_tuple(details)}
   defp string_to_error_reason([reason]), do: String.to_atom(reason)
 
   defp request_to_string([url, headers, method]), do: request_to_string([url, headers, method, [], []])
   defp request_to_string([url, headers, method, body]), do: request_to_string([url, headers, method, body, []])
-  defp request_to_string([url, headers, method, body, options]), do: request_to_string([url, headers, method, body, options, 5000])
+
+  defp request_to_string([url, headers, method, body, options]),
+    do: request_to_string([url, headers, method, body, options, 5000])
+
   defp request_to_string([url, headers, method, body, options, _timeout]) do
     %ExVCR.Request{
       url: parse_url(url),
@@ -55,7 +60,7 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
 
   # If option value is tuple, make it as list, for encoding as json.
   defp sanitize_options(options) do
-    Enum.map(options, fn({key, value}) ->
+    Enum.map(options, fn {key, value} ->
       if is_tuple(value) do
         {key, Tuple.to_list(value)}
       else
@@ -84,14 +89,15 @@ defmodule ExVCR.Adapter.IBrowse.Converter do
   defp error_reason_to_string(reason), do: [Atom.to_string(reason)]
 
   defp tuple_to_binary(tuple) do
-    Enum.map(Tuple.to_list(tuple), fn(x) ->
+    Enum.map(Tuple.to_list(tuple), fn x ->
       if is_atom(x), do: Atom.to_string(x), else: x
     end)
   end
 
   defp binary_to_tuple(list) do
-    Enum.map(list, fn(x) ->
+    Enum.map(list, fn x ->
       if is_binary(x), do: String.to_atom(x), else: x
-    end) |> List.to_tuple
+    end)
+    |> List.to_tuple()
   end
 end

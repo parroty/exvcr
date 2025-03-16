@@ -31,7 +31,7 @@ defmodule ExVCR.Setting do
     if Application.get_env(:exvcr, :enable_global_settings) do
       :exvcr_setting
     else
-      :"exvcr_setting#{inspect self()}"
+      :"exvcr_setting#{inspect(self())}"
     end
   end
 end
