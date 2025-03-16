@@ -50,9 +50,9 @@ defmodule ExVCR.Mixfile do
 
   def deps do
     [
-      {:meck, "~> 0.9"},
+      {:meck, "~> 1.0"},
       {:exjsx, "~> 4.0"},
-      {:ibrowse, "4.4.0", optional: true},
+      {:ibrowse, "~> 4.4", optional: true},
       {:httpotion, "~> 3.1", optional: true},
       {:httpoison, "~> 1.0 or ~> 2.0", optional: true},
       {:finch, "~> 0.16", optional: true},
