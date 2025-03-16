@@ -1,7 +1,14 @@
+0.17.0
+------
+#### Changes
+* Move preferred_cli_env into def cli (#230).
+* Update locked dependencies (#232).
+* Format code and ensure formatting in CI (#234).
+
 0.16.0
 ------
 #### Changes
-* Remove exactor dependency (#228)
+* Remove exactor dependency (#228).
 
 0.15.2
 ------
