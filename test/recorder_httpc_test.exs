@@ -26,19 +26,19 @@ defmodule ExVCR.RecorderHttpcTest do
   test "forcefully getting response from server by removing json in advance" do
     use_cassette "server1" do
       {:ok, {_, _, body}} = :httpc.request(@url)
-      assert body =~ ~r/test_response/
+      assert to_string(body) =~ ~r/test_response/
     end
   end
 
   test "forcefully getting response from server, then loading from cache by recording twice" do
     use_cassette "server2" do
       {:ok, {_, _, body}} = :httpc.request(@url)
-      assert body =~ ~r/test_response/
+      assert to_string(body) =~ ~r/test_response/
     end
 
     use_cassette "server2" do
       {:ok, {_, _, body}} = :httpc.request(@url)
-      assert body =~ ~r/test_response/
+      assert to_string(body) =~ ~r/test_response/
     end
   end
 
@@ -47,7 +47,7 @@ defmodule ExVCR.RecorderHttpcTest do
 
     use_cassette "server_sensitive_data_in_body" do
       {:ok, {_, _, body}} = :httpc.request(@url)
-      assert body =~ ~r/PLACEHOLDER/
+      assert to_string(body) =~ ~r/PLACEHOLDER/
     end
 
     ExVCR.Config.filter_sensitive_data(nil)
@@ -58,7 +58,7 @@ defmodule ExVCR.RecorderHttpcTest do
 
     use_cassette "server_sensitive_data_in_query" do
       {:ok, {_, _, body}} = :httpc.request(@url_with_query)
-      assert body =~ ~r/test_response/
+      assert to_string(body) =~ ~r/test_response/
     end
 
     # The recorded cassette should contain replaced data.
@@ -74,7 +74,7 @@ defmodule ExVCR.RecorderHttpcTest do
 
     use_cassette "sensitive_data_in_request_header" do
       {:ok, {_, _, body}} = :httpc.request(:get, {@url_with_query, [{'X-My-Secret-Token', 'my-secret-token'}]}, [], [])
-      assert body == "test_response"
+      assert to_string(body) == "test_response"
     end
 
     # The recorded cassette should contain replaced data.
@@ -111,7 +111,7 @@ defmodule ExVCR.RecorderHttpcTest do
 
     use_cassette "example_ignore_url_params" do
       {:ok, {_, _, body}} = :httpc.request('#{@url}?should_not_be_contained')
-      assert body =~ ~r/test_response/
+      assert to_string(body) =~ ~r/test_response/
     end
 
     json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
