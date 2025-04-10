@@ -67,7 +67,6 @@ defmodule ExVCR.RecorderFinchTest do
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
 
     use_cassette "server_sensitive_data_in_body" do
-      # require IEx; IEx.pry
       {:ok, response} = Finch.build(:get, @url) |> Finch.request(ExVCRFinch)
       assert response.body =~ ~r/PLACEHOLDER/
     end

@@ -42,7 +42,6 @@ defmodule ExVCR.Mixfile do
       :ibrowse,
       :hackney,
       :http_server,
-      :httpotion,
       :httpoison,
       :excoveralls
     ]
@@ -53,7 +52,6 @@ defmodule ExVCR.Mixfile do
       {:meck, "~> 1.0"},
       {:exjsx, "~> 4.0"},
       {:ibrowse, "~> 4.4", optional: true},
-      {:httpotion, "~> 3.1", optional: true},
       {:httpoison, "~> 1.0 or ~> 2.0", optional: true},
       {:finch, "~> 0.16", optional: true},
       {:excoveralls, "~> 0.18", only: :test},

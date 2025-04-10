@@ -1,6 +1,6 @@
 defmodule ExVCR.StrictModeTest do
-  use ExVCR.Mock
   use ExUnit.Case, async: false
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_strict_mode"
   @port 34007
@@ -16,7 +16,7 @@ defmodule ExVCR.StrictModeTest do
       :ok
     end)
 
-    HTTPotion.start()
+    HTTPoison.start()
     HttpServer.start(@http_server_opts)
     :ok
   end
@@ -27,14 +27,14 @@ defmodule ExVCR.StrictModeTest do
 
   test "it makes HTTP calls if not set" do
     use_cassette "strict_mode_off", strict_mode: false do
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response/
+      assert HTTPoison.get!(@url, []).body =~ ~r/test_response/
     end
   end
 
   test "it throws an error when set and no cassette recorded" do
     use_cassette "strict_mode_on", strict_mode: true do
       try do
-        HTTPotion.get(@url, []).body =~ ~r/test_response/
+        HTTPoison.get!(@url, []).body =~ ~r/test_response/
         assert(false, "Shouldn't get here")
       catch
         "A matching cassette was not found" <> _ -> :ok
@@ -45,11 +45,11 @@ defmodule ExVCR.StrictModeTest do
 
   test "it uses a cassette if it exists" do
     use_cassette "strict_mode_cassette", strict_mode: false do
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response/
+      assert HTTPoison.get!(@url, []).body =~ ~r/test_response/
     end
 
     use_cassette "strict_mode_cassette", strict_mode: true do
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response/
+      assert HTTPoison.get!(@url, []).body =~ ~r/test_response/
     end
   end
 
@@ -57,15 +57,15 @@ defmodule ExVCR.StrictModeTest do
     ExVCR.Setting.set(:strict_mode, true)
 
     use_cassette "strict_mode_cassette", strict_mode: false do
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response/
+      assert HTTPoison.get!(@url, []).body =~ ~r/test_response/
     end
 
     use_cassette "strict_mode_cassette" do
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response/
+      assert HTTPoison.get!(@url, []).body =~ ~r/test_response/
     end
 
     use_cassette "strict_mode_cassette", strict_mode: true do
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response/
+      assert HTTPoison.get!(@url, []).body =~ ~r/test_response/
     end
 
     ExVCR.Setting.set(:strict_mode, false)

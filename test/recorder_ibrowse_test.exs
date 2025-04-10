@@ -4,8 +4,8 @@ defmodule ExVCR.RecorderIBrowseTest do
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_ibrowse"
   @port 34000
-  @url "http://localhost:#{@port}/server"
-  @url_with_query "http://localhost:#{@port}/server?password=sample"
+  @url ~c"http://localhost:#{@port}/server"
+  @url_with_query ~c"http://localhost:#{@port}/server?password=sample"
 
   setup_all do
     on_exit(fn ->
@@ -23,27 +23,30 @@ defmodule ExVCR.RecorderIBrowseTest do
     ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
   end
 
-  test "forcefully getting response from server by removing json in advance" do
+  test "getting response from server by removing json in advance" do
     use_cassette "server1" do
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response/
+      assert {:ok, _http_code, _headers, resp_body} = :ibrowse.send_req(@url, [], :get)
+      assert resp_body =~ ~r/test_response/
     end
   end
 
-  test "forcefully getting response from server, then loading from cache by recording twice" do
+  test "getting response from server, then loading from cache by recording twice" do
     use_cassette "server2" do
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response/
+      assert {:ok, _http_code, _headers, resp_body} = :ibrowse.send_req(@url, [], :get)
+      assert resp_body =~ ~r/test_response/
     end
 
     use_cassette "server2" do
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response/
+      assert {:ok, _http_code, _headers, resp_body} = :ibrowse.send_req(@url, [], :get)
+      assert resp_body =~ ~r/test_response/
     end
   end
 
-  test "forcefully getting response from server with error" do
+  test "getting response from server with error" do
     use_cassette "server_error" do
-      response = HTTPotion.get!(@url)
-      assert response.status_code == 200
-      assert String.valid?(response.body)
+      assert {:ok, ~c"200", _headers, resp_body} = :ibrowse.send_req(@url, [], :get)
+      assert String.valid?(resp_body)
+      assert resp_body == "test_response"
     end
   end
 
@@ -51,7 +54,8 @@ defmodule ExVCR.RecorderIBrowseTest do
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
 
     use_cassette "server_sensitive_data_in_body" do
-      assert HTTPotion.get(@url, []).body =~ ~r/PLACEHOLDER/
+      assert {:ok, _http_code, _headers, resp_body} = :ibrowse.send_req(@url, [], :get)
+      assert resp_body =~ ~r/PLACEHOLDER/
     end
 
     ExVCR.Config.filter_sensitive_data(nil)
@@ -61,7 +65,8 @@ defmodule ExVCR.RecorderIBrowseTest do
     ExVCR.Config.filter_sensitive_data("password=[a-z]+", "password=***")
 
     use_cassette "server_sensitive_data_in_query" do
-      assert HTTPotion.get(@url_with_query, []).body =~ ~r/test_response/
+      assert {:ok, _http_code, _headers, resp_body} = :ibrowse.send_req(@url_with_query, [], :get)
+      assert resp_body =~ ~r/test_response/
     end
 
     # The recorded cassette should contain replaced data.
@@ -76,7 +81,16 @@ defmodule ExVCR.RecorderIBrowseTest do
     ExVCR.Config.filter_request_headers("X-My-Secret-Token")
 
     use_cassette "sensitive_data_in_request_header" do
-      assert HTTPotion.get(@url_with_query, headers: ["X-My-Secret-Token": "my-secret-token"]).body =~ ~r/test_response/
+      assert {:ok, _http_code, _headers, resp_body} =
+               :ibrowse.send_req(
+                 @url_with_query,
+                 [
+                   {~c"X-My-Secret-Token", ~c"my-secret-token"}
+                 ],
+                 :get
+               )
+
+      assert resp_body =~ ~r/test_response/
     end
 
     # The recorded cassette should contain replaced data.
@@ -91,7 +105,16 @@ defmodule ExVCR.RecorderIBrowseTest do
     ExVCR.Config.filter_sensitive_data("Basic [a-z]+", "Basic ***")
 
     use_cassette "sensitive_data_matches_in_request_headers", match_requests_on: [:headers] do
-      assert HTTPotion.get(@url_with_query, headers: [Authorization: "Basic credentials"]).body =~ ~r/test_response/
+      assert {:ok, _http_code, _headers, resp_body} =
+               :ibrowse.send_req(
+                 @url_with_query,
+                 [
+                   {:Authorization, ~c"Basic credentials"}
+                 ],
+                 :get
+               )
+
+      assert resp_body =~ ~r/test_response/
     end
 
     # The recorded cassette should contain replaced data.
@@ -100,7 +123,16 @@ defmodule ExVCR.RecorderIBrowseTest do
 
     # Attempt another request should match on filtered header
     use_cassette "sensitive_data_matches_in_request_headers", match_requests_on: [:headers] do
-      assert HTTPotion.get(@url_with_query, headers: [Authorization: "Basic credentials"]).body =~ ~r/test_response/
+      assert {:ok, _http_code, _headers, resp_body} =
+               :ibrowse.send_req(
+                 @url_with_query,
+                 [
+                   {:Authorization, ~c"Basic credentials"}
+                 ],
+                 :get
+               )
+
+      assert resp_body =~ ~r/test_response/
     end
 
     ExVCR.Config.filter_sensitive_data(nil)
@@ -110,7 +142,10 @@ defmodule ExVCR.RecorderIBrowseTest do
     ExVCR.Config.filter_request_options("basic_auth")
 
     use_cassette "sensitive_data_in_request_options" do
-      assert HTTPotion.get(@url_with_query, basic_auth: {"username", "password"}).body =~ ~r/test_response/
+      assert {:ok, _http_code, _headers, resp_body} =
+               :ibrowse.send_req(@url_with_query, [], :get, [], basic_auth: {~c"username", ~c"password"})
+
+      assert resp_body =~ ~r/test_response/
     end
 
     # The recorded cassette should contain replaced data.
@@ -125,7 +160,10 @@ defmodule ExVCR.RecorderIBrowseTest do
     ExVCR.Config.filter_url_params(true)
 
     use_cassette "example_ignore_url_params" do
-      assert HTTPotion.get("#{@url}?should_not_be_contained", []).body =~ ~r/test_response/
+      assert {:ok, _http_code, _headers, resp_body} =
+               :ibrowse.send_req(@url ++ ~c"?should_not_be_contained", [], :get)
+
+      assert resp_body =~ ~r/test_response/
     end
 
     json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
@@ -137,9 +175,9 @@ defmodule ExVCR.RecorderIBrowseTest do
     ExVCR.Config.response_headers_blacklist(["date"])
 
     use_cassette "remove_blacklisted_headers" do
-      assert HTTPotion.get(@url, []).headers == %HTTPotion.Headers{
-               hdrs: %{"content-length" => "13", "server" => "Cowboy"}
-             }
+      assert {:ok, _http_code, headers, _resp_body} = :ibrowse.send_req(@url, [], :get)
+
+      assert headers == [{~c"server", ~c"Cowboy"}, {~c"content-length", ~c"13"}]
     end
 
     ExVCR.Config.response_headers_blacklist([])
