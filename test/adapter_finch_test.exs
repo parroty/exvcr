@@ -244,6 +244,6 @@ defmodule ExVCR.Adapter.FinchTest do
     assert response.status in 200..299
     assert Map.new(response.headers)["connection"] == "keep-alive"
     assert is_binary(response.body)
-    unless function == nil, do: function.(response)
+    if function != nil, do: function.(response)
   end
 end

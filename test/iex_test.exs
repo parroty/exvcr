@@ -19,7 +19,7 @@ defmodule ExVCR.IExTest do
   test "print request/response" do
     assert capture_io(fn ->
              ExVCR.IEx.print do
-               :ibrowse.send_req('http://localhost:34005/server', [], :get)
+               :ibrowse.send_req(~c"http://localhost:34005/server", [], :get)
              end
            end) =~ ~r/\"body\": \"test_response\"/
   end

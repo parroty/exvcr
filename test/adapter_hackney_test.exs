@@ -241,6 +241,6 @@ defmodule ExVCR.Adapter.HackneyTest do
   defp assert_response(response, function \\ nil) do
     assert response.status_code == 200
     assert is_binary(response.body)
-    unless function == nil, do: function.(response)
+    if function != nil, do: function.(response)
   end
 end

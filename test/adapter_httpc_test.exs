@@ -43,18 +43,20 @@ defmodule ExVCR.Adapter.HttpcTest do
 
   test "example httpc request/1" do
     use_cassette "example_httpc_request_1" do
-      {:ok, result} = :httpc.request('http://example.com')
+      {:ok, result} = :httpc.request(~c"http://example.com")
       {{http_version, _status_code = 200, reason_phrase}, headers, body} = result
       assert to_string(body) =~ ~r/Example Domain/
-      assert http_version == 'HTTP/1.1'
-      assert reason_phrase == 'OK'
-      assert List.keyfind(headers, 'content-type', 0) == {'content-type', 'text/html'}
+      assert http_version == ~c"HTTP/1.1"
+      assert reason_phrase == ~c"OK"
+      assert List.keyfind(headers, ~c"content-type", 0) == {~c"content-type", ~c"text/html"}
     end
   end
 
   test "example httpc request/4" do
     use_cassette "example_httpc_request_4" do
-      {:ok, {{_, 200, _reason_phrase}, _headers, body}} = :httpc.request(:get, {'http://example.com', ''}, '', '')
+      {:ok, {{_, 200, _reason_phrase}, _headers, body}} =
+        :httpc.request(:get, {~c"http://example.com", ~c""}, ~c"", ~c"")
+
       assert to_string(body) =~ ~r/Example Domain/
     end
   end
@@ -64,7 +66,7 @@ defmodule ExVCR.Adapter.HttpcTest do
       {:ok, {{_, 200, _reason_phrase}, _headers, body}} =
         :httpc.request(
           :get,
-          {'http://example.com', [{'Content-Type', 'text/html'}]},
+          {~c"http://example.com", [{~c"Content-Type", ~c"text/html"}]},
           [connect_timeout: 3000, timeout: 5000],
           body_format: :binary
         )
@@ -75,17 +77,17 @@ defmodule ExVCR.Adapter.HttpcTest do
 
   test "example httpc request error" do
     use_cassette "example_httpc_request_error" do
-      {:error, {reason, _detail}} = :httpc.request('http://invalidurl')
+      {:error, {reason, _detail}} = :httpc.request(~c"http://invalidurl")
       assert reason == :failed_connect
     end
   end
 
   test "stub request works" do
-    use_cassette :stub, url: 'http://example.com', body: 'Stub Response' do
-      {:ok, result} = :httpc.request('http://example.com')
+    use_cassette :stub, url: ~c"http://example.com", body: ~c"Stub Response" do
+      {:ok, result} = :httpc.request(~c"http://example.com")
       {{_http_version, _status_code = 200, _reason_phrase}, headers, body} = result
       assert to_string(body) =~ ~r/Stub Response/
-      assert List.keyfind(headers, 'content-type', 0) == {'content-type', 'text/html'}
+      assert List.keyfind(headers, ~c"content-type", 0) == {~c"content-type", ~c"text/html"}
     end
   end
 end
