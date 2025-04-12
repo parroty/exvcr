@@ -2,7 +2,7 @@
 ------
 #### Changes
 * Fix charlist warnings in tests (#236).
-
+* Remove deprecated httpotion (#237).
 
 0.17.0
 ------
