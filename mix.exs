@@ -2,7 +2,7 @@ defmodule ExVCR.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/parroty/exvcr"
-  @version "0.17.0"
+  @version "0.17.1"
 
   def project do
     [

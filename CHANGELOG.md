@@ -1,3 +1,9 @@
+0.17.1
+------
+#### Changes
+* Fix charlist warnings in tests (#236).
+
+
 0.17.0
 ------
 #### Changes
