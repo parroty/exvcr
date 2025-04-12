@@ -26,7 +26,7 @@ defmodule ExVCR.Config do
         ExVCR.Config.filter_sensitive_data("<PASSWORD>.+</PASSWORD>", "PLACEHOLDER")
 
         use_cassette "sensitive_data" do
-          assert HTTPotion.get("http://something.example.com", []).body =~ ~r/PLACEHOLDER/
+          assert HTTPoison.get!("http://something.example.com", []).body =~ ~r/PLACEHOLDER/
         end
 
         # Now clear the previous filter

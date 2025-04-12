@@ -66,63 +66,6 @@ defmodule ExVCR.Adapter.IBrowseTest do
     end
   end
 
-  test "httpotion" do
-    use_cassette "example_httpotion" do
-      response = HTTPotion.get("http://example.com", [])
-      assert response.body =~ ~r/Example Domain/
-      assert response.headers[:"Content-Type"] == "text/html"
-      assert response.status_code == 200
-    end
-  end
-
-  test "httpotion error" do
-    use_cassette "httpotion_get_error" do
-      assert_raise HTTPotion.HTTPError, fn ->
-        HTTPotion.get!("http://invalid_url", [])
-      end
-    end
-  end
-
-  test "post method" do
-    use_cassette "httpotion_post" do
-      assert_response(HTTPotion.post("http://httpbin.org/post", body: "test"))
-    end
-  end
-
-  test "put method" do
-    use_cassette "httpotion_put" do
-      assert_response(HTTPotion.put("http://httpbin.org/put", body: "test", timeout: 10000))
-    end
-  end
-
-  test "patch method" do
-    use_cassette "httpotion_patch" do
-      assert_response(HTTPotion.patch("http://httpbin.org/patch", body: "test"))
-    end
-  end
-
-  test "delete method" do
-    use_cassette "httpotion_delete" do
-      assert_response(HTTPotion.delete("http://httpbin.org/delete", timeout: 10000))
-    end
-  end
-
-  test "get fails with timeout" do
-    assert_raise HTTPotion.HTTPError, fn ->
-      use_cassette "httpotion_get_timeout" do
-        assert HTTPotion.get!("http://example.com", timeout: 1)
-      end
-    end
-  end
-
-  test "get request with basic_auth" do
-    use_cassette "httpotion_get_basic_auth" do
-      response = HTTPotion.get!("http://example.com", basic_auth: {"user", "password"})
-      assert response.body =~ ~r/Example Domain/
-      assert response.status_code == 200
-    end
-  end
-
   test "using recorded cassette, but requesting with different url should return error" do
     use_cassette "example_ibrowse_different" do
       {:ok, status_code, _headers, body} = :ibrowse.send_req(~c"http://example.com", [], :get)
@@ -145,15 +88,6 @@ defmodule ExVCR.Adapter.IBrowseTest do
     end
   end
 
-  test "stub request works for HTTPotion" do
-    use_cassette :stub, url: "http://example.com", body: "Stub Response", status_code: 200 do
-      response = HTTPotion.get("http://example.com", [])
-      assert response.body =~ ~r/Stub Response/
-      assert response.headers[:"Content-Type"] == "text/html"
-      assert response.status_code == 200
-    end
-  end
-
   test "stub multiple requests works for ibrowse" do
     stubs = [
       [url: "http://example.com/1", body: "Stub Response 1", status_code: 200],
@@ -169,12 +103,5 @@ defmodule ExVCR.Adapter.IBrowseTest do
       assert status_code == ~c"404"
       assert to_string(body) =~ ~r/Stub Response 2/
     end
-  end
-
-  defp assert_response(response, function \\ nil) do
-    assert HTTPotion.Response.success?(response, :extra)
-    assert response.headers[:Connection] == "keep-alive"
-    assert is_binary(response.body)
-    if function != nil, do: function.(response)
   end
 end

@@ -15,7 +15,6 @@ functionalities.
 The following HTTP libraries can be applied.
 
   - [ibrowse](https://github.com/cmullaparthi/ibrowse)-based libraries.
-    - [HTTPotion](https://github.com/myfreeweb/httpotion)
   - [hackney](https://github.com/benoitc/hackney)-based libraries.
     - [HTTPoison](https://github.com/edgurgel/httpoison)
     - support is very limited, and tested only with sync request of HTTPoison yet.
@@ -80,13 +79,6 @@ defmodule ExVCR.Adapter.IBrowseTest do
       {:ok, status_code, _headers, body} = :ibrowse.send_req('http://example.com', [], :get)
       assert status_code == '200'
       assert to_string(body) =~ ~r/Example Domain/
-    end
-  end
-
-  test "httpotion" do
-    use_cassette "example_httpotion" do
-      HTTPotion.start
-      assert HTTPotion.get("http://example.com", []).body =~ ~r/Example Domain/
     end
   end
 end
@@ -199,7 +191,7 @@ defmodule ExVCR.MockTest do
 
   test "custom with valid response" do
     use_cassette "response_mocking", custom: true do
-      assert HTTPotion.get("http://example.com", []).body =~ ~r/Custom Response/
+      assert HTTPoison.get!("http://example.com", []).body =~ ~r/Custom Response/
     end
   end
 ```
@@ -242,7 +234,7 @@ Replacements happen both in URLs and request and response bodies.
 test "replace sensitive data" do
   ExVCR.Config.filter_sensitive_data("<PASSWORD>.+</PASSWORD>", "PLACEHOLDER")
   use_cassette "sensitive_data" do
-    assert HTTPotion.get("http://something.example.com", []).body =~ ~r/PLACEHOLDER/
+    assert HTTPoison.get!("http://something.example.com", []).body =~ ~r/PLACEHOLDER/
   end
 end
 ```
@@ -311,7 +303,7 @@ will be ignored when recording cassettes.
 test "filter url param flag removes url params when recording cassettes" do
   ExVCR.Config.filter_url_params(true)
   use_cassette "example_ignore_url_params" do
-    assert HTTPotion.get(
+    assert HTTPoison.get!(
       "http://localhost:34000/server?should_not_be_contained", []).body =~ ~r/test_response/
   end
   json = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.json")
@@ -348,8 +340,8 @@ params, specify `match_requests_on: [:query]` for `use_cassette` call.
 ```elixir
 test "matching query params with match_requests_on params" do
   use_cassette "different_query_params", match_requests_on: [:query] do
-    assert HTTPotion.get("http://localhost/server?p=3", []).body =~ ~r/test_response3/
-    assert HTTPotion.get("http://localhost/server?p=4", []).body =~ ~r/test_response4/
+    assert HTTPoison.get!("http://localhost/server?p=3", []).body =~ ~r/test_response3/
+    assert HTTPoison.get!("http://localhost/server?p=4", []).body =~ ~r/test_response4/
   end
 end
 ```
@@ -362,8 +354,8 @@ body, specify `match_requests_on: [:request_body]` for `use_cassette` call.
 ```elixir
 test "matching request body with match_requests_on params" do
   use_cassette "different_request_body_params", match_requests_on: [:request_body] do
-    assert HTTPotion.post("http://localhost/server", [body: "p=3"]).body =~ ~r/test_response3/
-    assert HTTPotion.post("http://localhost/server", [body: "p=4"]).body =~ ~r/test_response4/
+    assert HTTPoison.post!("http://localhost/server", [body: "p=3"]).body =~ ~r/test_response3/
+    assert HTTPoison.post!("http://localhost/server", [body: "p=4"]).body =~ ~r/test_response4/
   end
 end
 ```
@@ -385,13 +377,13 @@ test "matching special header with custom_matchers" do
 
   use_cassette "special_header_match", custom_matchers: [matches_special_header] do
     # These two requests will match with each other since our custom matcher matches (even if without matching all headers)
-    assert HTTPotion.post("http://localhost/server",
+    assert HTTPoison.post!("http://localhost/server",
         [headers: ["User-Agent": "My App", "X-Special-Header": "Value One"]]).body =~ ~r/test_response_one/
-    assert HTTPotion.post("http://localhost/server",
+    assert HTTPoison.post!("http://localhost/server",
         [headers: ["User-Agent": "Other App", "X-Special-Header": "Value One"]]).body =~ ~r/test_response_one/
 
     # This will not match since the header has a different value:
-    assert HTTPotion.post("http://localhost/server",
+    assert HTTPoison.post!("http://localhost/server",
         [headers: ["User-Agent": "My App", "X-Special-Header": "Value Two"]]).body =~ ~r/test_response_two/
   end
 end
@@ -470,13 +462,13 @@ The following tasks are added by including `exvcr` package.
 $ mix vcr
 Showing list of cassettes in [fixture/vcr_cassettes]
   [File Name]                              [Last Update]
-  example_httpotion.json                   2013/11/07 23:24:49
+  example_httpoison.json                   2013/11/07 23:24:49
   example_ibrowse.json                     2013/11/07 23:24:49
   example_ibrowse_multiple.json            2013/11/07 23:24:48
-  httpotion_delete.json                    2013/11/07 23:24:47
-  httpotion_patch.json                     2013/11/07 23:24:50
-  httpotion_post.json                      2013/11/07 23:24:51
-  httpotion_put.json                       2013/11/07 23:24:52
+  httpoison_delete.json                    2013/11/07 23:24:47
+  httpoison_patch.json                     2013/11/07 23:24:50
+  httpoison_post.json                      2013/11/07 23:24:51
+  httpoison_put.json                       2013/11/07 23:24:52
 
 Showing list of cassettes in [fixture/custom_cassettes]
   [File Name]                              [Last Update]
@@ -524,13 +516,13 @@ $ mix vcr.check
 31 tests, 0 failures
 Showing hit counts of cassettes in [fixture/vcr_cassettes]
   [File Name]                              [Cassette Counts]    [Server Counts]
-  example_httpotion.json                   1                    0
+  example_httpoison.json                   1                    0
   example_ibrowse.json                     1                    0
   example_ibrowse_multiple.json            2                    0
-  httpotion_delete.json                    1                    0
-  httpotion_patch.json                     1                    0
-  httpotion_post.json                      1                    0
-  httpotion_put.json                       1                    0
+  httpoison_delete.json                    1                    0
+  httpoison_patch.json                     1                    0
+  httpoison_post.json                      1                    0
+  httpoison_put.json                       1                    0
   sensitive_data.json                      0                    2
   server1.json                             0                    2
   server2.json                             2                    2
@@ -551,7 +543,7 @@ $ mix vcr.check test/exvcr_test.exs
 13 tests, 0 failures
 Showing hit counts of cassettes in [fixture/vcr_cassettes]
   [File Name]                              [Cassette Counts]    [Server Counts]
-  example_httpotion.json                   1                    0
+  example_httpoison.json                   1                    0
 ...
 ...
 ```
@@ -668,15 +660,6 @@ Specifying `:stub` as fixture name allows directly stubbing the response
 header/body information based on parameter.
 
 ```elixir
-test "stub request works for HTTPotion" do
-  use_cassette :stub, [url: "http://example.com", body: "Stub Response", status_code: 200] do
-    response = HTTPotion.get("http://example.com", [])
-    assert response.body =~ ~r/Stub Response/
-    assert response.headers[:"Content-Type"] == "text/html"
-    assert response.status_code == 200
-  end
-end
-
 test "stub request works for HTTPoison" do
   use_cassette :stub, [url: "http://www.example.com", body: "Stub Response"] do
     response = HTTPoison.get!("http://www.example.com")

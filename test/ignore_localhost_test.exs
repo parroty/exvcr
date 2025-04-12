@@ -1,12 +1,12 @@
 defmodule ExVCR.IgnoreLocalhostTest do
-  use ExVCR.Mock
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
   use ExUnit.Case, async: false
 
   @port 34012
   @url "http://localhost:#{@port}/server"
 
   setup_all do
-    HTTPotion.start()
+    HTTPoison.start()
 
     on_exit(fn ->
       HttpServer.stop(@port)
@@ -18,11 +18,11 @@ defmodule ExVCR.IgnoreLocalhostTest do
   test "it does not record localhost requests when the config has been set" do
     use_cassette "ignore_localhost_on", ignore_localhost: true do
       HttpServer.start(path: "/server", port: @port, response: "test_response_before")
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response_before/
+      assert HTTPoison.get!(@url, []).body =~ ~r/test_response_before/
       HttpServer.stop(@port)
       # this method call should NOT be mocked
       HttpServer.start(path: "/server", port: @port, response: "test_response_after")
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response_after/
+      assert HTTPoison.get!(@url, []).body =~ ~r/test_response_after/
       HttpServer.stop(@port)
     end
   end
@@ -30,11 +30,11 @@ defmodule ExVCR.IgnoreLocalhostTest do
   test "it records localhost requests when the config has not been set" do
     use_cassette "ignore_localhost_unset" do
       HttpServer.start(path: "/server", port: @port, response: "test_response_before")
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response_before/
+      assert HTTPoison.get!(@url, []).body =~ ~r/test_response_before/
       HttpServer.stop(@port)
       # this method call should be mocked
       HttpServer.start(path: "/server", port: @port, response: "test_response_after")
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response_before/
+      assert HTTPoison.get!(@url, []).body =~ ~r/test_response_before/
       HttpServer.stop(@port)
     end
   end
@@ -43,11 +43,11 @@ defmodule ExVCR.IgnoreLocalhostTest do
     use_cassette "ignore_localhost_with_headers", ignore_localhost: true do
       non_localhost_url = "http://127.0.0.1:#{@port}/server"
       HttpServer.start(path: "/server", port: @port, response: "test_response_before")
-      assert HTTPotion.get(non_localhost_url, headers: ["User-Agent": "ExVCR"]).body =~ ~r/test_response_before/
+      assert HTTPoison.get!(non_localhost_url, [{"User-Agent", "ExVCR"}]).body =~ ~r/test_response_before/
       HttpServer.stop(@port)
       # this method call should be mocked
       HttpServer.start(path: "/server", port: @port, response: "test_response_after")
-      assert HTTPotion.get(non_localhost_url, headers: ["User-Agent": "ExVCR"]).body =~ ~r/test_response_before/
+      assert HTTPoison.get!(non_localhost_url, [{"User-Agent", "ExVCR"}]).body =~ ~r/test_response_before/
       HttpServer.stop(@port)
     end
   end
@@ -57,11 +57,11 @@ defmodule ExVCR.IgnoreLocalhostTest do
 
     use_cassette "ignore_localhost_unset", ignore_localhost: false do
       HttpServer.start(path: "/server", port: @port, response: "test_response_before")
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response_before/
+      assert HTTPoison.get!(@url, []).body =~ ~r/test_response_before/
       HttpServer.stop(@port)
       # this method call should be mocked
       HttpServer.start(path: "/server", port: @port, response: "test_response_after")
-      assert HTTPotion.get(@url, []).body =~ ~r/test_response_before/
+      assert HTTPoison.get!(@url, []).body =~ ~r/test_response_before/
       HttpServer.stop(@port)
     end
 
